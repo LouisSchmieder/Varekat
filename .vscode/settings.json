@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "*.vv": "v",
+        "glew.h": "c",
+        "vulkan.h": "c"
+    }
+}

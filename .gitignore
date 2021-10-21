@@ -1,0 +1,8 @@
+# Binaries for programs and plugins
+main
+vengine
+*.exe
+*.exe~
+*.so
+*.dylib
+*.dll
