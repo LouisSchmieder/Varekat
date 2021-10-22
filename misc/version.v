@@ -8,7 +8,7 @@ pub mut:
 }
 
 pub fn make_version(major u32, minor u32, patch u32) Version {
-	return Version {
+	return Version{
 		major: major
 		minor: minor
 		patch: patch

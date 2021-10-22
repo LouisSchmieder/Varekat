@@ -33,3 +33,48 @@ pub fn create_vk_instance(create_info &C.VkInstanceCreateInfo) ?C.VkInstance {
 	handle_error(result) ?
 	return *instance
 }
+
+pub fn get_vk_physical_devices_amount(instance C.VkInstance) ?u32 {
+	mut amount := u32(0)
+	result := C.vkEnumeratePhysicalDevices(instance, &amount, voidptr(0))
+	handle_error(result) ?
+	return amount
+}
+
+pub fn get_vk_physical_devices(instance C.VkInstance) ?[]C.VkPhysicalDevice {
+	amount := get_vk_physical_devices_amount(instance) ?
+	devices := unsafe { &C.VkPhysicalDevice(malloc(int(sizeof(C.VkPhysicalDevice) * amount))) }
+	result := C.vkEnumeratePhysicalDevices(instance, &amount, devices)
+	handle_error(result) ?
+	mut res := []C.VkPhysicalDevice{len: int(amount)}
+	for i in 0 .. amount {
+		unsafe {
+			res[i] = devices[i]
+		}
+	}
+	unsafe {
+		free(devices)
+	}
+	return res
+}
+
+pub fn get_vk_physical_device_properties(device C.VkPhysicalDevice) C.VkPhysicalDeviceProperties {
+	props := C.VkPhysicalDeviceProperties{}
+	C.vkGetPhysicalDeviceProperties(device, &props)
+	return props
+}
+
+pub fn get_vk_physical_device_features(device C.VkPhysicalDevice) C.VkPhysicalDeviceFeatures {
+	features := C.VkPhysicalDeviceFeatures{}
+	C.vkGetPhysicalDeviceFeatures(device, &features)
+	return features
+}
+
+pub fn get_vk_physical_device_memory_properties(device C.VkPhysicalDevice) C.VkPhysicalDeviceMemoryProperties {
+	mem_props := C.VkPhysicalDeviceMemoryProperties{
+		memoryTypes: voidptr(0)
+		memoryHeaps: voidptr(0)
+	}
+	C.vkGetPhysicalDeviceMemoryProperties(device, &mem_props)
+	return mem_props
+}
