@@ -14,3 +14,7 @@ pub fn make_version(major u32, minor u32, patch u32) Version {
 		patch: patch
 	}
 }
+
+pub fn (ver Version) str() string {
+	return '${ver.major}.${ver.minor}.$ver.patch'
+}

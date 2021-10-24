@@ -7,6 +7,10 @@ const (
 
 type VkResult = u32
 type VkBool = u32
+type VkDeviceAddress = u64
+type VkDeviceSize = u64
+
+type VkVoidFunction = fn ()
 
 [heap; typedef]
 struct C.VkApplicationInfo {
@@ -47,10 +51,9 @@ struct C.VkPhysicalDeviceProperties {
 	deviceName    charptr
 }
 
-[typedef]
+[heap; typedef]
 struct C.VkPhysicalDeviceFeatures {
 	robustBufferAccess                      VkBool
-	fullDrawIndexUint32                     VkBool
 	imageCubeArray                          VkBool
 	independentBlend                        VkBool
 	geometryShader                          VkBool
@@ -107,6 +110,20 @@ struct C.VkPhysicalDeviceFeatures {
 }
 
 [typedef]
+struct C.VkLayerProperties {
+	layerName             charptr
+	specVersion           u32
+	implementationVersion u32
+	description           charptr
+}
+
+[typedef]
+struct C.VkExtensionProperties {
+	extensionName charptr
+	specVersion   u32
+}
+
+[typedef]
 struct C.VkPhysicalDeviceMemoryProperties {
 	memoryTypeCount u32
 	memoryTypes     &C.VkMemoryType
@@ -125,3 +142,43 @@ struct C.VkMemoryHeap {
 	size  u64
 	flags u32
 }
+
+[typedef]
+struct C.VkQueueFamilyProperties {
+	queueFlags         u32
+	queueCount         u32
+	timestampValidBits u32
+}
+
+[typedef]
+struct C.VkDeviceQueueCreateInfo {
+	sType            int
+	pNext            voidptr
+	flags            u32
+	queueFamilyIndex u32
+	queueCount       u32
+	pQueuePriorities &f32
+}
+
+[typedef]
+struct C.VkDeviceCreateInfo {
+	sType                   int
+	pNext                   voidptr
+	flags                   u32
+	queueCreateInfoCount    u32
+	pQueueCreateInfos       &C.VkDeviceQueueCreateInfo
+	enabledLayerCount       u32
+	ppEnabledLayerNames     &charptr
+	enabledExtensionCount   u32
+	ppEnabledExtensionNames &charptr
+	pEnabledFeatures        &C.VkPhysicalDeviceFeatures
+}
+
+[typedef]
+struct C.VkDevice {}
+
+[typedef]
+struct C.VkQueue {}
+
+[typedef]
+struct C.VkSurfaceKHR {}
