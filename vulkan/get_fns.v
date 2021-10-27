@@ -23,3 +23,10 @@ pub fn get_vk_device_queue(device C.VkDevice, queue_family_idx u32, queue_idx u3
 	C.vkGetDeviceQueue(device, queue_family_idx, queue_idx, queue)
 	return *queue
 }
+
+pub fn get_vk_physical_device_surface_capabilities(device C.VkPhysicalDevice, surface C.VkSurfaceKHR) ?C.VkSurfaceCapabilitiesKHR {
+	cap := unsafe { &C.VkSurfaceCapabilitiesKHR(malloc(int(sizeof(C.VkSurfaceCapabilitiesKHR)))) }
+	res := C.vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, surface, cap)
+	handle_error(res) ?
+	return *cap
+}

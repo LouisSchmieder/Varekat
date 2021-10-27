@@ -18,3 +18,8 @@ pub fn number_to_version(num u32) misc.Version {
 		patch: C.VK_VERSION_PATCH(num)
 	}
 }
+
+pub fn create_identity_mapping_component() C.VkComponentMapping {
+	return create_vk_component_mapping(u32(C.VK_COMPONENT_SWIZZLE_IDENTITY), u32(C.VK_COMPONENT_SWIZZLE_IDENTITY),
+		u32(C.VK_COMPONENT_SWIZZLE_IDENTITY), u32(C.VK_COMPONENT_SWIZZLE_IDENTITY))
+}

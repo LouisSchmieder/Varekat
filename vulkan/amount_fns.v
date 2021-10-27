@@ -30,3 +30,24 @@ pub fn get_vk_instance_extension_properties_amount(layer_name string) ?u32 {
 	handle_error(result) ?
 	return amount
 }
+
+pub fn get_vk_physical_device_surface_formats_amount(device C.VkPhysicalDevice, surface C.VkSurfaceKHR) ?u32 {
+	mut amount := u32(0)
+	res := C.vkGetPhysicalDeviceSurfaceFormatsKHR(device, surface, &amount, voidptr(0))
+	handle_error(res) ?
+	return amount
+}
+
+pub fn get_vk_physical_device_surface_present_modes_amount(device C.VkPhysicalDevice, surface C.VkSurfaceKHR) ?u32 {
+	mut amount := u32(0)
+	res := C.vkGetPhysicalDeviceSurfacePresentModesKHR(device, surface, &amount, voidptr(0))
+	handle_error(res) ?
+	return amount
+}
+
+pub fn get_vk_swapchain_image_amount(device C.VkDevice, swapchain C.VkSwapchainKHR) ?u32 {
+	mut amount := u32(0)
+	res := C.vkGetSwapchainImagesKHR(device, swapchain, &amount, voidptr(0))
+	handle_error(res) ?
+	return amount
+}
