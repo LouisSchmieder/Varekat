@@ -164,6 +164,8 @@ fn (mut game Game) start_vulkan() ? {
 
 	game.pipeline_layout = vulkan.create_vk_pipeline_layout(game.device, pipeline_layout_create_info,
 		voidptr(0)) ?
+
+	attachment_description := vulkan.create_vk_attachment_description(0, format.format)
 }
 
 fn (mut game Game) game_loop() {

@@ -5,6 +5,48 @@ pub enum ShaderType {
 	vertex = 0x00000001
 }
 
+pub enum AttachmentLoadOp {
+	vk_attachment_load_op_load = 0
+	vk_attachment_load_op_clear = 1
+	vk_attachment_load_op_dont_care = 2
+}
+
+pub enum AttachmentStoreOp {
+	vk_attachment_store_op_store = 0
+	vk_attachment_store_op_dont_care = 1
+	vk_attachment_store_op_none_ext = 1000301000
+}
+
+pub enum ImageLayout {
+	vk_image_layout_undefined = 0
+	vk_image_layout_general = 1
+	vk_image_layout_color_attachment_optimal = 2
+	vk_image_layout_depth_stencil_attachment_optimal = 3
+	vk_image_layout_depth_stencil_read_only_optimal = 4
+	vk_image_layout_shader_read_only_optimal = 5
+	vk_image_layout_transfer_src_optimal = 6
+	vk_image_layout_transfer_dst_optimal = 7
+	vk_image_layout_preinitialized = 8
+	vk_image_layout_depth_read_only_stencil_attachment_optimal = 1000117000
+	vk_image_layout_depth_attachment_stencil_read_only_optimal = 1000117001
+	vk_image_layout_depth_attachment_optimal = 1000241000
+	vk_image_layout_depth_read_only_optimal = 1000241001
+	vk_image_layout_stencil_attachment_optimal = 1000241002
+	vk_image_layout_stencil_read_only_optimal = 1000241003
+	vk_image_layout_present_src_khr = 1000001002
+	vk_image_layout_video_decode_dst_khr = 1000024000
+	vk_image_layout_video_decode_src_khr = 1000024001
+	vk_image_layout_video_decode_dpb_khr = 1000024002
+	vk_image_layout_shared_present_khr = 1000111000
+	vk_image_layout_fragment_density_map_optimal_ext = 1000218000
+	vk_image_layout_fragment_shading_rate_attachment_optimal_khr = 1000164003
+	vk_image_layout_video_encode_dst_khr = 1000299000
+	vk_image_layout_video_encode_src_khr = 1000299001
+	vk_image_layout_video_encode_dpb_khr = 1000299002
+	vk_image_layout_read_only_optimal_khr = 1000314000
+	vk_image_layout_attachment_optimal_khr = 1000314001
+}
+
 pub enum LogicOp {
 	vk_logic_op_clear = 0
 	vk_logic_op_and = 1

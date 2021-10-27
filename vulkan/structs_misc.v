@@ -217,6 +217,13 @@ struct C.VkPushConstantRange {
 
 [typedef]
 struct C.VkAttachmentDescription {
-	flags  u32
-	format u32
+	flags          u32
+	format         u32
+	samples        u32
+	loadOp         AttachmentLoadOp
+	storeOp        AttachmentStoreOp
+	stencilLoadOp  AttachmentLoadOp
+	stencilStoreOp AttachmentStoreOp
+	initialLayout  ImageLayout
+	finalLayout    ImageLayout
 }
