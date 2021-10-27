@@ -6,3 +6,4 @@ vengine
 *.so
 *.dylib
 *.dll
+*.spv

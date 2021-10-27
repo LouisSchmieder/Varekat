@@ -4,7 +4,7 @@ import misc
 
 pub fn create_vk_application_info(p_next voidptr, app_name string, app_version misc.Version, engine_name string, engine_version misc.Version, api_version misc.Version) C.VkApplicationInfo {
 	return C.VkApplicationInfo{
-		sType: C.VK_STRUCTURE_TYPE_APPLICATION_INFO
+		sType: .vk_structure_type_application_info
 		pNext: p_next
 		pApplicationName: app_name.str
 		applicationVersion: version_to_number(app_version)
@@ -16,7 +16,7 @@ pub fn create_vk_application_info(p_next voidptr, app_name string, app_version m
 
 pub fn create_vk_instance_create_info(p_next voidptr, flags u32, app_info &C.VkApplicationInfo, enabled_layers []string, enabled_extensions []string) C.VkInstanceCreateInfo {
 	info := C.VkInstanceCreateInfo{
-		sType: C.VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO
+		sType: .vk_structure_type_instance_create_info
 		pNext: p_next
 		flags: flags
 		pApplicationInfo: app_info
@@ -37,7 +37,7 @@ pub fn create_vk_instance(create_info &C.VkInstanceCreateInfo) ?C.VkInstance {
 
 pub fn create_vk_device_queue_create_info(p_next voidptr, flags u32, queue_family_idx u32, queue_count u32, queue_priorities []f32) C.VkDeviceQueueCreateInfo {
 	return C.VkDeviceQueueCreateInfo{
-		sType: C.VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO
+		sType: .vk_structure_type_device_queue_create_info
 		pNext: p_next
 		flags: flags
 		queueFamilyIndex: queue_family_idx
@@ -48,7 +48,7 @@ pub fn create_vk_device_queue_create_info(p_next voidptr, flags u32, queue_famil
 
 pub fn create_vk_device_create_info(p_next voidptr, flags u32, create_infos []C.VkDeviceQueueCreateInfo, enabled_layers []string, enabled_extensions []string, enabled_features &C.VkPhysicalDeviceFeatures) C.VkDeviceCreateInfo {
 	return C.VkDeviceCreateInfo{
-		sType: C.VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO
+		sType: .vk_structure_type_device_create_info
 		pNext: p_next
 		flags: flags
 		queueCreateInfoCount: u32(create_infos.len)
@@ -63,7 +63,7 @@ pub fn create_vk_device_create_info(p_next voidptr, flags u32, create_infos []C.
 
 pub fn create_vk_swapchain_create_info(p_next voidptr, flags u32, surface C.VkSurfaceKHR, min_image_count u32, format C.VkSurfaceFormatKHR, image_extent C.VkExtent2D, image_array_layers u32, image_usage u32, image_sharing_mode u32, queue_family_indicies []u32, pre_transform u32, composite_alpha u32, present_mode VkPresentModeKHR, clipped C.VkBool32, old_swapchain C.VkSwapchainKHR) C.VkSwapchainCreateInfoKHR {
 	return C.VkSwapchainCreateInfoKHR{
-		sType: C.VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR
+		sType: .vk_structure_type_swapchain_create_info_khr
 		pNext: p_next
 		flags: flags
 		surface: surface
@@ -86,7 +86,7 @@ pub fn create_vk_swapchain_create_info(p_next voidptr, flags u32, surface C.VkSu
 
 pub fn create_vk_image_view_create_info(p_next voidptr, flags u32, image C.VkImage, view_type u32, format u32, swizzle C.VkComponentMapping, subresource_range C.VkImageSubresourceRange) C.VkImageViewCreateInfo {
 	return C.VkImageViewCreateInfo{
-		sType: C.VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO
+		sType: .vk_structure_type_image_view_create_info
 		pNext: p_next
 		flags: flags
 		image: image
@@ -97,12 +97,162 @@ pub fn create_vk_image_view_create_info(p_next voidptr, flags u32, image C.VkIma
 	}
 }
 
+pub fn create_vk_shader_module_create_info(p_next voidptr, flags u32, code []byte) C.VkShaderModuleCreateInfo {
+	return C.VkShaderModuleCreateInfo{
+		sType: .vk_structure_type_shader_module_create_info
+		pNext: p_next
+		flags: flags
+		codeSize: u32(code.len)
+		pCode: &u32(code.data)
+	}
+}
+
+pub fn create_vk_pipeline_shader_stage_create_info(p_next voidptr, flags u32, stage u32, modul C.VkShaderModule, name string, specialization_info voidptr) C.VkPipelineShaderStageCreateInfo {
+	return C.VkPipelineShaderStageCreateInfo{
+		sType: .vk_structure_type_pipeline_shader_stage_create_info
+		pNext: p_next
+		flags: flags
+		stage: stage
+		@module: modul
+		pName: terminate_vstring(name)
+		pSpecializationInfo: specialization_info
+	}
+}
+
+pub fn create_vk_pipeline_vertex_input_state_create_info(p_next voidptr, flags u32, vertex_binding_desc []C.VkVertexInputBindingDescription, vertex_binding_attr []C.VkVertexInputAttributeDescription) C.VkPipelineVertexInputStateCreateInfo {
+	return C.VkPipelineVertexInputStateCreateInfo{
+		sType: .vk_structure_type_pipeline_vertex_input_state_create_info
+		pNext: p_next
+		flags: flags
+		vertexBindingDescriptionCount: u32(vertex_binding_desc.len)
+		pVertexBindingDescriptions: vertex_binding_desc.data
+		vertexAttributeDescriptionCount: u32(vertex_binding_attr.len)
+		pVertexAttributeDescriptions: vertex_binding_attr.data
+	}
+}
+
+pub fn create_vk_pipeline_input_assembly_state_create_info(p_next voidptr, flags u32, topology u32, primitive_restart_enable C.VkBool32) C.VkPipelineInputAssemblyStateCreateInfo {
+	return C.VkPipelineInputAssemblyStateCreateInfo{
+		sType: .vk_structure_type_pipeline_input_assembly_state_create_info
+		pNext: p_next
+		flags: flags
+		topology: topology
+		primitiveRestartEnable: primitive_restart_enable
+	}
+}
+
+pub fn create_vk_pipeline_viewport_state_create_info(p_next voidptr, flags u32, viewports []C.VkViewport, scissors []C.VkRect2D) C.VkPipelineViewportStateCreateInfo {
+	return C.VkPipelineViewportStateCreateInfo {
+		sType: .vk_structure_type_pipeline_viewport_state_create_info
+		pNext: p_next
+		flags: flags
+		viewportCount: u32(viewports.len)
+		pViewports: viewports.data
+		scissorCount: u32(scissors.len)
+		pScissors: scissors.data
+	}
+}
+
+pub fn create_vk_pipeline_rasterization_state_create_info(p_next voidptr, flags u32, depth_clamp_enabled C.VkBool32, rasterizer_discard_enable C.VkBool32, polygon_mode u32, cull_mode u32, front_face u32, depth_bias_enable C.VkBool32, depth_bias_constant_factor f32, depth_bias_clamp f32, depth_bias_slope_factor f32, line_width f32) C.VkPipelineRasterizationStateCreateInfo {
+	return C.VkPipelineRasterizationStateCreateInfo{
+		sType: .vk_structure_type_pipeline_rasterization_state_create_info
+		pNext: p_next
+		flags: flags
+		depthClampEnable: depth_clamp_enabled
+		rasterizerDiscardEnable: rasterizer_discard_enable
+		polygonMode: polygon_mode
+		cullMode: cull_mode
+		frontFace: front_face
+		depthBiasEnable: depth_bias_enable
+		depthBiasConstantFactor: depth_bias_constant_factor
+		depthBiasClamp: depth_bias_clamp
+		depthBiasSlopeFactor: depth_bias_slope_factor
+		lineWidth: line_width
+	}
+}
+
+pub fn create_vk_viewport(x f32, y f32, width f32, height f32, min_depth f32, max_depth f32) C.VkViewport {
+	return C.VkViewport{
+		x: x
+		y: y
+		width: width
+		height: height
+		minDepth: min_depth
+		maxDepth: max_depth
+	}
+}
+
+pub fn create_vk_pipeline_multisample_state_create_info(p_next voidptr, flags u32, rasterization_samples u32, sample_shading_enable C.VkBool32, min_sample_shading f32, sample_mask &C.VkSampleMask, alpha_to_coverage_enable C.VkBool32, alpha_to_one_enable C.VkBool32) C.VkPipelineMultisampleStateCreateInfo {
+	return C.VkPipelineMultisampleStateCreateInfo {
+		sType: .vk_structure_type_pipeline_multisample_state_create_info
+		pNext: p_next
+		flags: flags
+		rasterizationSamples: rasterization_samples
+		sampleShadingEnable: sample_shading_enable
+		minSampleShading: min_sample_shading
+		pSampleMask: sample_mask
+		alphaToCoverageEnable: alpha_to_coverage_enable
+		alphaToOneEnable: alpha_to_one_enable
+	}
+}
+
+pub fn create_vk_pipeline_color_blend_attachment_state(blend_enable C.VkBool32, src_color_blend_factor BlendFactor, dst_color_blend_factor BlendFactor, color_blend_op BlendOp, src_alpha_blend_factor BlendFactor, dst_alpha_blend_factor BlendFactor, alpha_blend_op BlendOp, color_write_mask u32)  C.VkPipelineColorBlendAttachmentState {
+	return C.VkPipelineColorBlendAttachmentState{
+		blendEnable: blend_enable
+		srcColorBlendFactor: src_color_blend_factor
+		dstColorBlendFactor: dst_color_blend_factor
+		colorBlendOp: color_blend_op
+		srcAlphaBlendFactor: src_alpha_blend_factor
+		dstAlphaBlendFactor: dst_alpha_blend_factor
+		alphaBlendOp: alpha_blend_op
+		colorWriteMask: color_write_mask
+	}
+}
+
+pub fn create_vk_pipeline_color_blend_state_create_info(p_next voidptr, flags u32, logic_op_enable C.VkBool32, logic_op LogicOp, attachments []C.VkPipelineColorBlendAttachmentState, blend_constants []f32) C.VkPipelineColorBlendStateCreateInfo {
+	return C.VkPipelineColorBlendStateCreateInfo {
+		sType: .vk_structure_type_pipeline_color_blend_state_create_info
+		pNext: p_next
+		flags: flags
+		logicOpEnable: logic_op_enable
+		logicOp: logic_op
+		attachmentCount: u32(attachments.len)
+		pAttachments: attachments.data
+		blendConstants: blend_constants
+	}
+}
+
+pub fn create_vk_pipeline_layout_create_info(p_next voidptr, flags u32, layouts []C.VkDescriptorSetLayout, push_constant_range []C.VkPushConstantRange) C.VkPipelineLayoutCreateInfo {
+	return C.VkPipelineLayoutCreateInfo{
+		sType: .vk_structure_type_pipeline_layout_create_info
+		pNext: p_next
+		flags: flags
+		setLayoutCount: u32(layouts.len)
+		pSetLayouts: layouts.data
+		pushConstantRangeCount: u32(push_constant_range.len)
+		pPushConstantRanges: push_constant_range.data
+	}
+}
+
 pub fn create_vk_component_mapping(r u32, g u32, b u32, a u32) C.VkComponentMapping {
 	return C.VkComponentMapping{
 		r: r
 		g: g
 		b: b
 		a: a
+	}
+}
+
+pub fn create_vk_rect_2d(offset_x int, offset_y int, width u32, height u32) C.VkRect2D {
+	return C.VkRect2D {
+		offset: C.VkOffset2D{
+			x: offset_x
+			y: offset_y
+		}
+		extent: C.VkExtent2D{
+			width: width
+			height: height
+		}
 	}
 }
 
@@ -142,4 +292,18 @@ pub fn create_vk_image_view(device C.VkDevice, create_info &C.VkImageViewCreateI
 	res := C.vkCreateImageView(device, create_info, alloc, image_view)
 	handle_error(res) ?
 	return *image_view
+}
+
+pub fn create_vk_shader_module(device C.VkDevice, create_info &C.VkShaderModuleCreateInfo, alloc voidptr) ?C.VkShaderModule {
+	mut shader_module := unsafe { &C.VkShaderModule(malloc(int(sizeof(C.VkShaderModule)))) }
+	res := C.vkCreateShaderModule(device, create_info, alloc, shader_module)
+	handle_error(res) ?
+	return *shader_module
+}
+
+pub fn create_vk_pipeline_layout(device C.VkDevice, create_info &C.VkPipelineLayoutCreateInfo, alloc voidptr) ?C.VkPipelineLayout {
+	mut pipeline_layout := unsafe { &C.VkPipelineLayout(malloc(int(sizeof(C.VkPipelineLayout)))) }
+	res := C.vkCreatePipelineLayout(device, create_info, alloc, pipeline_layout)
+	handle_error(res) ?
+	return *pipeline_layout
 }

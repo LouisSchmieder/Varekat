@@ -9,6 +9,8 @@ fn C.vkEnumerateInstanceLayerProperties(&u32, &C.VkLayerProperties) VkResult
 fn C.vkEnumerateInstanceExtensionProperties(charptr, &u32, &C.VkExtensionProperties) VkResult
 fn C.vkCreateSwapchainKHR(C.VkDevice, &C.VkSwapchainCreateInfoKHR, voidptr, &C.VkSwapchainKHR) VkResult
 fn C.vkCreateImageView(C.VkDevice, &C.VkImageViewCreateInfo, voidptr, &C.VkImageView) VkResult
+fn C.vkCreateShaderModule(C.VkDevice, &C.VkShaderModuleCreateInfo, voidptr, &C.VkShaderModule) VkResult
+fn C.vkCreatePipelineLayout(C.VkDevice, &C.VkPipelineLayoutCreateInfo, voidptr, &C.VkPipelineLayout) VkResult
 fn C.glfwCreateWindowSurface(C.VkInstance, &C.GLFWwindow, voidptr, &C.VkSurfaceKHR) VkResult
 
 fn C.vkGetPhysicalDeviceProperties(C.VkPhysicalDevice, &C.VkPhysicalDeviceProperties)
@@ -27,7 +29,9 @@ fn C.vkDeviceWaitIdle(C.VkDevice)
 fn C.vkDestroyInstance(C.VkInstance, voidptr)
 fn C.vkDestroyDevice(C.VkDevice, voidptr)
 fn C.vkDestroyImageView(C.VkDevice, C.VkImageView, voidptr)
+fn C.vkDestroyShaderModule(C.VkDevice, C.VkShaderModule, voidptr)
 fn C.vkDestroySwapchainKHR(C.VkDevice, C.VkSwapchainKHR, voidptr)
+fn C.vkDestroyPipelineLayout(C.VkDevice, C.VkPipelineLayout, voidptr)
 fn C.vkDestroySurfaceKHR(C.VkInstance, C.VkSurfaceKHR, voidptr)
 
 fn handle_error(res VkResult) ? {
@@ -63,8 +67,26 @@ pub fn vk_destroy_swapchain(device C.VkDevice, swapchain C.VkSwapchainKHR, alloc
 	C.vkDestroySwapchainKHR(device, swapchain, allocator)
 }
 
+pub fn vk_destroy_pipeline_layout(device C.VkDevice, pipeline_layout C.VkPipelineLayout, allocator voidptr) {
+	C.vkDestroyPipelineLayout(device, pipeline_layout, allocator)
+}
+
 pub fn vk_destroy_device(device C.VkDevice, allocator voidptr) {
 	C.vkDestroyDevice(device, allocator)
+}
+
+pub fn vk_destroy_shader_module(device C.VkDevice, modul C.VkShaderModule, alloc voidptr) {
+	C.vkDestroyShaderModule(device, modul, alloc)
+}
+
+pub fn create_shader(p_next voidptr, flags u32, code []byte, device C.VkDevice, shader_type ShaderType, entry_point string) ?(C.VkShaderModule, C.VkPipelineShaderStageCreateInfo) {
+	info := create_vk_shader_module_create_info(p_next, flags, code)
+	shader_module := create_vk_shader_module(device, info, voidptr(0)) ?
+
+
+	pipeline_stage_info := create_vk_pipeline_shader_stage_create_info(voidptr(0), 0, u32(shader_type), shader_module, entry_point, voidptr(0))
+
+	return shader_module, pipeline_stage_info
 }
 
 pub fn print_layer_properties(layer C.VkLayerProperties) string {

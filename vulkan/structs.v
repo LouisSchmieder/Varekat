@@ -14,7 +14,7 @@ type VkVoidFunction = fn ()
 
 [heap; typedef]
 struct C.VkApplicationInfo {
-	sType              int
+	sType              StructureType
 	pNext              voidptr
 	pApplicationName   charptr
 	applicationVersion u32
@@ -25,7 +25,7 @@ struct C.VkApplicationInfo {
 
 [typedef]
 struct C.VkInstanceCreateInfo {
-	sType                   int
+	sType                   StructureType
 	pNext                   voidptr
 	flags                   u32
 	pApplicationInfo        &C.VkApplicationInfo
@@ -152,7 +152,7 @@ struct C.VkQueueFamilyProperties {
 
 [typedef]
 struct C.VkDeviceQueueCreateInfo {
-	sType            int
+	sType            StructureType
 	pNext            voidptr
 	flags            u32
 	queueFamilyIndex u32
@@ -162,7 +162,7 @@ struct C.VkDeviceQueueCreateInfo {
 
 [typedef]
 struct C.VkDeviceCreateInfo {
-	sType                   int
+	sType                   StructureType
 	pNext                   voidptr
 	flags                   u32
 	queueCreateInfoCount    u32
@@ -190,6 +190,18 @@ struct C.VkExtent2D {
 }
 
 [typedef]
+struct C.VkOffset2D {
+	x int
+	y int
+}
+
+[typedef]
+struct C.VkRect2D {
+	offset C.VkOffset2D
+	extent C.VkExtent2D
+}
+
+[typedef]
 struct C.VkSurfaceCapabilitiesKHR {
 	minImageCount           u32
 	maxImageCount           u32
@@ -214,7 +226,7 @@ struct C.VkSwapchainKHR {}
 
 [typedef]
 struct C.VkSwapchainCreateInfoKHR {
-	sType                 int
+	sType                 StructureType
 	pNext                 voidptr
 	flags                 u32
 	surface               C.VkSurfaceKHR
@@ -242,7 +254,7 @@ struct C.VkImage {}
 
 [typedef]
 struct C.VkImageViewCreateInfo {
-	sType            int
+	sType            StructureType
 	pNext            voidptr
 	flags            u32
 	image            C.VkImage
@@ -272,3 +284,163 @@ struct C.VkImageSubresourceRange {
 [typedef]
 struct C.VkImageView {
 }
+
+[typedef]
+struct C.VkShaderModuleCreateInfo {
+	sType    StructureType
+	pNext    voidptr
+	flags    u32
+	codeSize u32
+	pCode    &u32
+}
+
+[typedef]
+struct C.VkShaderModule {}
+
+[typedef]
+struct C.VkPipelineShaderStageCreateInfo {
+	sType               StructureType
+	pNext               voidptr
+	flags               u32
+	stage               u32
+	@module             C.VkShaderModule
+	pName               charptr
+	pSpecializationInfo voidptr
+}
+
+[typedef]
+struct C.VkVertexInputBindingDescription {
+	binding   u32
+	stride    u32
+	inputRate u32
+}
+
+[typedef]
+struct C.VkVertexInputAttributeDescription {
+	location u32
+	binding  u32
+	format   u32
+	offset   u32
+}
+
+[typedef]
+struct C.VkPipelineVertexInputStateCreateInfo {
+	sType                           StructureType
+	pNext                           voidptr
+	flags                           u32
+	vertexBindingDescriptionCount   u32
+	pVertexBindingDescriptions      &C.VkVertexInputBindingDescription
+	vertexAttributeDescriptionCount u32
+	pVertexAttributeDescriptions    &C.VkVertexInputAttributeDescription
+}
+
+[typedef]
+struct C.VkPipelineInputAssemblyStateCreateInfo {
+	sType                  StructureType
+	pNext                  voidptr
+	flags                  u32
+	topology               u32
+	primitiveRestartEnable C.VkBool32
+}
+
+[typedef]
+struct C.VkViewport {
+	x        f32
+	y        f32
+	width    f32
+	height   f32
+	minDepth f32
+	maxDepth f32
+}
+
+[typedef]
+struct C.VkPipelineViewportStateCreateInfo {
+	sType         StructureType
+	pNext         voidptr
+	flags         u32
+	viewportCount u32
+	pViewports    &C.VkViewport
+	scissorCount  u32
+	pScissors     &C.VkRect2D
+}
+
+[typedef]
+struct C.VkPipelineRasterizationStateCreateInfo {
+	sType                   StructureType
+	pNext                   voidptr
+	flags                   u32
+	depthClampEnable        C.VkBool32
+	rasterizerDiscardEnable C.VkBool32
+	polygonMode             u32
+	cullMode                u32
+	frontFace               u32
+	depthBiasEnable         C.VkBool32
+	depthBiasConstantFactor f32
+	depthBiasClamp          f32
+	depthBiasSlopeFactor    f32
+	lineWidth               f32
+}
+
+[heap; typedef]
+struct C.VkSampleMask {}
+
+[typedef]
+struct C.VkPipelineMultisampleStateCreateInfo {
+	sType                 StructureType
+	pNext                 voidptr
+	flags                 u32
+	rasterizationSamples  u32
+	sampleShadingEnable   C.VkBool32
+	minSampleShading      f32
+	pSampleMask           &C.VkSampleMask
+	alphaToCoverageEnable C.VkBool32
+	alphaToOneEnable      C.VkBool32
+}
+
+[typedef]
+struct C.VkPipelineColorBlendAttachmentState {
+	blendEnable         C.VkBool32
+	srcColorBlendFactor BlendFactor
+	dstColorBlendFactor BlendFactor
+	colorBlendOp        BlendOp
+	srcAlphaBlendFactor BlendFactor
+	dstAlphaBlendFactor BlendFactor
+	alphaBlendOp        BlendOp
+	colorWriteMask      u32
+}
+
+[typedef]
+struct C.VkPipelineColorBlendStateCreateInfo {
+	sType StructureType
+	pNext voidptr
+	flags u32
+	logicOpEnable C.VkBool32
+	logicOp LogicOp
+	attachmentCount u32
+	pAttachments &C.VkPipelineColorBlendAttachmentState
+	blendConstants []f32
+}
+
+[typedef]
+struct C.VkDescriptorSetLayout {}
+
+[typedef]
+struct C.VkPushConstantRange {
+	stageFlags u32
+	offset u32
+	size u32
+}
+
+[typedef]
+struct C.VkPipelineLayoutCreateInfo {
+	sType StructureType
+	pNext voidptr
+	flags u32
+	setLayoutCount u32
+	pSetLayouts &C.VkDescriptorSetLayout
+	pushConstantRangeCount u32
+	pPushConstantRanges &C.VkPushConstantRange
+}
+
+[typedef]
+struct C.VkPipelineLayout {}
