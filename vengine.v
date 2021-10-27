@@ -153,13 +153,17 @@ fn (mut game Game) start_vulkan() ? {
 		0, u32(C.VK_SAMPLE_COUNT_1_BIT), vulkan.vk_false, 1.0, voidptr(0), vulkan.vk_false,
 		vulkan.vk_false)
 	pipeline_color_blend_attachment_state := vulkan.create_vk_pipeline_color_blend_attachment_state(vulkan.vk_true,
-		.vk_blend_factor_src_alpha, .vk_blend_factor_one_minus_src_alpha, .vk_blend_op_add, .vk_blend_factor_one,
-		.vk_blend_factor_zero, .vk_blend_op_add, vulkan.vk_color_component_all)
-	pipeline_blend_create_info := vulkan.create_vk_pipeline_color_blend_state_create_info(voidptr(0), 0, vulkan.vk_false,
-		.vk_logic_op_no_op, [pipeline_color_blend_attachment_state], []f32{len: 4, init: 0.0})
-	pipeline_layout_create_info := vulkan.create_vk_pipeline_layout_create_info(voidptr(0), 0, [], [])
+		.vk_blend_factor_src_alpha, .vk_blend_factor_one_minus_src_alpha, .vk_blend_op_add,
+		.vk_blend_factor_one, .vk_blend_factor_zero, .vk_blend_op_add, vulkan.vk_color_component_all)
+	pipeline_blend_create_info := vulkan.create_vk_pipeline_color_blend_state_create_info(voidptr(0),
+		0, vulkan.vk_false, .vk_logic_op_no_op, [
+		pipeline_color_blend_attachment_state,
+	], []f32{len: 4, init: 0.0})
+	pipeline_layout_create_info := vulkan.create_vk_pipeline_layout_create_info(voidptr(0),
+		0, [], [])
 
-	game.pipeline_layout = vulkan.create_vk_pipeline_layout(game.device, pipeline_layout_create_info, voidptr(0)) ?
+	game.pipeline_layout = vulkan.create_vk_pipeline_layout(game.device, pipeline_layout_create_info,
+		voidptr(0)) ?
 }
 
 fn (mut game Game) game_loop() {

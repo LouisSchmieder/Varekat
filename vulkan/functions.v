@@ -83,8 +83,8 @@ pub fn create_shader(p_next voidptr, flags u32, code []byte, device C.VkDevice, 
 	info := create_vk_shader_module_create_info(p_next, flags, code)
 	shader_module := create_vk_shader_module(device, info, voidptr(0)) ?
 
-
-	pipeline_stage_info := create_vk_pipeline_shader_stage_create_info(voidptr(0), 0, u32(shader_type), shader_module, entry_point, voidptr(0))
+	pipeline_stage_info := create_vk_pipeline_shader_stage_create_info(voidptr(0), 0,
+		u32(shader_type), shader_module, entry_point, voidptr(0))
 
 	return shader_module, pipeline_stage_info
 }

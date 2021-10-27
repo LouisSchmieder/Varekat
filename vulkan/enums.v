@@ -1,9 +1,5 @@
 module vulkan
 
-pub const (
-	vk_color_component_all = u32(C.VK_COLOR_COMPONENT_R_BIT | C.VK_COLOR_COMPONENT_G_BIT | C.VK_COLOR_COMPONENT_B_BIT | C.VK_COLOR_COMPONENT_A_BIT)
-)
-
 pub enum ShaderType {
 	fragment = 0x00000010
 	vertex = 0x00000001
@@ -11,100 +7,100 @@ pub enum ShaderType {
 
 pub enum LogicOp {
 	vk_logic_op_clear = 0
-    vk_logic_op_and = 1
-    vk_logic_op_and_reverse = 2
-    vk_logic_op_copy = 3
-    vk_logic_op_and_inverted = 4
-    vk_logic_op_no_op = 5
-    vk_logic_op_xor = 6
-    vk_logic_op_or = 7
-    vk_logic_op_nor = 8
-    vk_logic_op_equivalent = 9
-    vk_logic_op_invert = 10
-    vk_logic_op_or_reverse = 11
-    vk_logic_op_copy_inverted = 12
-    vk_logic_op_or_inverted = 13
-    vk_logic_op_nand = 14
-    vk_logic_op_set = 15
-    vk_logic_op_max_enum = 0x7fffffff
+	vk_logic_op_and = 1
+	vk_logic_op_and_reverse = 2
+	vk_logic_op_copy = 3
+	vk_logic_op_and_inverted = 4
+	vk_logic_op_no_op = 5
+	vk_logic_op_xor = 6
+	vk_logic_op_or = 7
+	vk_logic_op_nor = 8
+	vk_logic_op_equivalent = 9
+	vk_logic_op_invert = 10
+	vk_logic_op_or_reverse = 11
+	vk_logic_op_copy_inverted = 12
+	vk_logic_op_or_inverted = 13
+	vk_logic_op_nand = 14
+	vk_logic_op_set = 15
+	vk_logic_op_max_enum = 0x7fffffff
 }
 
 pub enum BlendFactor {
-    vk_blend_factor_zero = 0
-    vk_blend_factor_one = 1
-    vk_blend_factor_src_color = 2
-    vk_blend_factor_one_minus_src_color = 3
-    vk_blend_factor_dst_color = 4
-    vk_blend_factor_one_minus_dst_color = 5
-    vk_blend_factor_src_alpha = 6
-    vk_blend_factor_one_minus_src_alpha = 7
-    vk_blend_factor_dst_alpha = 8
-    vk_blend_factor_one_minus_dst_alpha = 9
-    vk_blend_factor_constant_color = 10
-    vk_blend_factor_one_minus_constant_color = 11
-    vk_blend_factor_constant_alpha = 12
-    vk_blend_factor_one_minus_constant_alpha = 13
-    vk_blend_factor_src_alpha_saturate = 14
-    vk_blend_factor_src1_color = 15
-    vk_blend_factor_one_minus_src1_color = 16
-    vk_blend_factor_src1_alpha = 17
-    vk_blend_factor_one_minus_src1_alpha = 18
-    vk_blend_factor_max_enum = 0x7fffffff
+	vk_blend_factor_zero = 0
+	vk_blend_factor_one = 1
+	vk_blend_factor_src_color = 2
+	vk_blend_factor_one_minus_src_color = 3
+	vk_blend_factor_dst_color = 4
+	vk_blend_factor_one_minus_dst_color = 5
+	vk_blend_factor_src_alpha = 6
+	vk_blend_factor_one_minus_src_alpha = 7
+	vk_blend_factor_dst_alpha = 8
+	vk_blend_factor_one_minus_dst_alpha = 9
+	vk_blend_factor_constant_color = 10
+	vk_blend_factor_one_minus_constant_color = 11
+	vk_blend_factor_constant_alpha = 12
+	vk_blend_factor_one_minus_constant_alpha = 13
+	vk_blend_factor_src_alpha_saturate = 14
+	vk_blend_factor_src1_color = 15
+	vk_blend_factor_one_minus_src1_color = 16
+	vk_blend_factor_src1_alpha = 17
+	vk_blend_factor_one_minus_src1_alpha = 18
+	vk_blend_factor_max_enum = 0x7fffffff
 }
 
 pub enum BlendOp {
-    vk_blend_op_add = 0
-    vk_blend_op_subtract = 1
-    vk_blend_op_reverse_subtract = 2
-    vk_blend_op_min = 3
-    vk_blend_op_max = 4
-    vk_blend_op_zero_ext = 1000148000
-    vk_blend_op_src_ext = 1000148001
-    vk_blend_op_dst_ext = 1000148002
-    vk_blend_op_src_over_ext = 1000148003
-    vk_blend_op_dst_over_ext = 1000148004
-    vk_blend_op_src_in_ext = 1000148005
-    vk_blend_op_dst_in_ext = 1000148006
-    vk_blend_op_src_out_ext = 1000148007
-    vk_blend_op_dst_out_ext = 1000148008
-    vk_blend_op_src_atop_ext = 1000148009
-    vk_blend_op_dst_atop_ext = 1000148010
-    vk_blend_op_xor_ext = 1000148011
-    vk_blend_op_multiply_ext = 1000148012
-    vk_blend_op_screen_ext = 1000148013
-    vk_blend_op_overlay_ext = 1000148014
-    vk_blend_op_darken_ext = 1000148015
-    vk_blend_op_lighten_ext = 1000148016
-    vk_blend_op_colordodge_ext = 1000148017
-    vk_blend_op_colorburn_ext = 1000148018
-    vk_blend_op_hardlight_ext = 1000148019
-    vk_blend_op_softlight_ext = 1000148020
-    vk_blend_op_difference_ext = 1000148021
-    vk_blend_op_exclusion_ext = 1000148022
-    vk_blend_op_invert_ext = 1000148023
-    vk_blend_op_invert_rgb_ext = 1000148024
-    vk_blend_op_lineardodge_ext = 1000148025
-    vk_blend_op_linearburn_ext = 1000148026
-    vk_blend_op_vividlight_ext = 1000148027
-    vk_blend_op_linearlight_ext = 1000148028
-    vk_blend_op_pinlight_ext = 1000148029
-    vk_blend_op_hardmix_ext = 1000148030
-    vk_blend_op_hsl_hue_ext = 1000148031
-    vk_blend_op_hsl_saturation_ext = 1000148032
-    vk_blend_op_hsl_color_ext = 1000148033
-    vk_blend_op_hsl_luminosity_ext = 1000148034
-    vk_blend_op_plus_ext = 1000148035
-    vk_blend_op_plus_clamped_ext = 1000148036
-    vk_blend_op_plus_clamped_alpha_ext = 1000148037
-    vk_blend_op_plus_darker_ext = 1000148038
-    vk_blend_op_minus_ext = 1000148039
-    vk_blend_op_minus_clamped_ext = 1000148040
-    vk_blend_op_contrast_ext = 1000148041
-    vk_blend_op_invert_ovg_ext = 1000148042
-    vk_blend_op_red_ext = 1000148043
-    vk_blend_op_green_ext = 1000148044
-    vk_blend_op_blue_ext = 1000148045
-    vk_blend_op_max_enum = 0x7fffffff
+	vk_blend_op_add = 0
+	vk_blend_op_subtract = 1
+	vk_blend_op_reverse_subtract = 2
+	vk_blend_op_min = 3
+	vk_blend_op_max = 4
+	vk_blend_op_zero_ext = 1000148000
+	vk_blend_op_src_ext = 1000148001
+	vk_blend_op_dst_ext = 1000148002
+	vk_blend_op_src_over_ext = 1000148003
+	vk_blend_op_dst_over_ext = 1000148004
+	vk_blend_op_src_in_ext = 1000148005
+	vk_blend_op_dst_in_ext = 1000148006
+	vk_blend_op_src_out_ext = 1000148007
+	vk_blend_op_dst_out_ext = 1000148008
+	vk_blend_op_src_atop_ext = 1000148009
+	vk_blend_op_dst_atop_ext = 1000148010
+	vk_blend_op_xor_ext = 1000148011
+	vk_blend_op_multiply_ext = 1000148012
+	vk_blend_op_screen_ext = 1000148013
+	vk_blend_op_overlay_ext = 1000148014
+	vk_blend_op_darken_ext = 1000148015
+	vk_blend_op_lighten_ext = 1000148016
+	vk_blend_op_colordodge_ext = 1000148017
+	vk_blend_op_colorburn_ext = 1000148018
+	vk_blend_op_hardlight_ext = 1000148019
+	vk_blend_op_softlight_ext = 1000148020
+	vk_blend_op_difference_ext = 1000148021
+	vk_blend_op_exclusion_ext = 1000148022
+	vk_blend_op_invert_ext = 1000148023
+	vk_blend_op_invert_rgb_ext = 1000148024
+	vk_blend_op_lineardodge_ext = 1000148025
+	vk_blend_op_linearburn_ext = 1000148026
+	vk_blend_op_vividlight_ext = 1000148027
+	vk_blend_op_linearlight_ext = 1000148028
+	vk_blend_op_pinlight_ext = 1000148029
+	vk_blend_op_hardmix_ext = 1000148030
+	vk_blend_op_hsl_hue_ext = 1000148031
+	vk_blend_op_hsl_saturation_ext = 1000148032
+	vk_blend_op_hsl_color_ext = 1000148033
+	vk_blend_op_hsl_luminosity_ext = 1000148034
+	vk_blend_op_plus_ext = 1000148035
+	vk_blend_op_plus_clamped_ext = 1000148036
+	vk_blend_op_plus_clamped_alpha_ext = 1000148037
+	vk_blend_op_plus_darker_ext = 1000148038
+	vk_blend_op_minus_ext = 1000148039
+	vk_blend_op_minus_clamped_ext = 1000148040
+	vk_blend_op_contrast_ext = 1000148041
+	vk_blend_op_invert_ovg_ext = 1000148042
+	vk_blend_op_red_ext = 1000148043
+	vk_blend_op_green_ext = 1000148044
+	vk_blend_op_blue_ext = 1000148045
+	vk_blend_op_max_enum = 0x7fffffff
 }
 
 pub enum StructureType {
@@ -676,7 +672,8 @@ pub enum StructureType {
 	vk_structure_type_queue_family_global_priority_properties_ext = 1000388001
 	vk_structure_type_physical_device_multi_draw_features_ext = 1000392000
 	vk_structure_type_physical_device_multi_draw_properties_ext = 1000392001
-	/*vk_structure_type_physical_device_variable_pointer_features = vk_structure_type_physical_device_variable_pointers_features
+	/*
+	vk_structure_type_physical_device_variable_pointer_features = vk_structure_type_physical_device_variable_pointers_features
 	vk_structure_type_physical_device_shader_draw_parameter_features = vk_structure_type_physical_device_shader_draw_parameters_features
 	vk_structure_type_debug_report_create_info_ext = vk_structure_type_debug_report_callback_create_info_ext
 	vk_structure_type_render_pass_multiview_create_info_khr = vk_structure_type_render_pass_multiview_create_info
@@ -789,6 +786,7 @@ pub enum StructureType {
 	vk_structure_type_buffer_opaque_capture_address_create_info_khr = vk_structure_type_buffer_opaque_capture_address_create_info
 	vk_structure_type_memory_opaque_capture_address_allocate_info_khr = vk_structure_type_memory_opaque_capture_address_allocate_info
 	vk_structure_type_device_memory_opaque_capture_address_info_khr = vk_structure_type_device_memory_opaque_capture_address_info
-	vk_structure_type_physical_device_host_query_reset_features_ext = vk_structure_type_physical_device_host_query_reset_features*/
+	vk_structure_type_physical_device_host_query_reset_features_ext = vk_structure_type_physical_device_host_query_reset_features
+	*/
 	vk_structure_type_max_enum = 0x7fffffff
 }

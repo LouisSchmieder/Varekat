@@ -142,7 +142,7 @@ pub fn create_vk_pipeline_input_assembly_state_create_info(p_next voidptr, flags
 }
 
 pub fn create_vk_pipeline_viewport_state_create_info(p_next voidptr, flags u32, viewports []C.VkViewport, scissors []C.VkRect2D) C.VkPipelineViewportStateCreateInfo {
-	return C.VkPipelineViewportStateCreateInfo {
+	return C.VkPipelineViewportStateCreateInfo{
 		sType: .vk_structure_type_pipeline_viewport_state_create_info
 		pNext: p_next
 		flags: flags
@@ -183,7 +183,7 @@ pub fn create_vk_viewport(x f32, y f32, width f32, height f32, min_depth f32, ma
 }
 
 pub fn create_vk_pipeline_multisample_state_create_info(p_next voidptr, flags u32, rasterization_samples u32, sample_shading_enable C.VkBool32, min_sample_shading f32, sample_mask &C.VkSampleMask, alpha_to_coverage_enable C.VkBool32, alpha_to_one_enable C.VkBool32) C.VkPipelineMultisampleStateCreateInfo {
-	return C.VkPipelineMultisampleStateCreateInfo {
+	return C.VkPipelineMultisampleStateCreateInfo{
 		sType: .vk_structure_type_pipeline_multisample_state_create_info
 		pNext: p_next
 		flags: flags
@@ -196,7 +196,7 @@ pub fn create_vk_pipeline_multisample_state_create_info(p_next voidptr, flags u3
 	}
 }
 
-pub fn create_vk_pipeline_color_blend_attachment_state(blend_enable C.VkBool32, src_color_blend_factor BlendFactor, dst_color_blend_factor BlendFactor, color_blend_op BlendOp, src_alpha_blend_factor BlendFactor, dst_alpha_blend_factor BlendFactor, alpha_blend_op BlendOp, color_write_mask u32)  C.VkPipelineColorBlendAttachmentState {
+pub fn create_vk_pipeline_color_blend_attachment_state(blend_enable C.VkBool32, src_color_blend_factor BlendFactor, dst_color_blend_factor BlendFactor, color_blend_op BlendOp, src_alpha_blend_factor BlendFactor, dst_alpha_blend_factor BlendFactor, alpha_blend_op BlendOp, color_write_mask u32) C.VkPipelineColorBlendAttachmentState {
 	return C.VkPipelineColorBlendAttachmentState{
 		blendEnable: blend_enable
 		srcColorBlendFactor: src_color_blend_factor
@@ -210,7 +210,7 @@ pub fn create_vk_pipeline_color_blend_attachment_state(blend_enable C.VkBool32, 
 }
 
 pub fn create_vk_pipeline_color_blend_state_create_info(p_next voidptr, flags u32, logic_op_enable C.VkBool32, logic_op LogicOp, attachments []C.VkPipelineColorBlendAttachmentState, blend_constants []f32) C.VkPipelineColorBlendStateCreateInfo {
-	return C.VkPipelineColorBlendStateCreateInfo {
+	return C.VkPipelineColorBlendStateCreateInfo{
 		sType: .vk_structure_type_pipeline_color_blend_state_create_info
 		pNext: p_next
 		flags: flags
@@ -244,7 +244,7 @@ pub fn create_vk_component_mapping(r u32, g u32, b u32, a u32) C.VkComponentMapp
 }
 
 pub fn create_vk_rect_2d(offset_x int, offset_y int, width u32, height u32) C.VkRect2D {
-	return C.VkRect2D {
+	return C.VkRect2D{
 		offset: C.VkOffset2D{
 			x: offset_x
 			y: offset_y
