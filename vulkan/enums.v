@@ -5,6 +5,13 @@ pub enum ShaderType {
 	vertex = 0x00000001
 }
 
+pub enum PipelineBindPoint {
+	vk_pipeline_bind_point_graphics = 0
+	vk_pipeline_bind_point_compute = 1
+	vk_pipeline_bind_point_ray_tracing_khr = 1000165000
+	vk_pipeline_bind_point_subpass_shading_huawei = 1000369003
+}
+
 pub enum AttachmentLoadOp {
 	vk_attachment_load_op_load = 0
 	vk_attachment_load_op_clear = 1

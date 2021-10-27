@@ -11,6 +11,9 @@ fn C.vkCreateSwapchainKHR(C.VkDevice, &C.VkSwapchainCreateInfoKHR, voidptr, &C.V
 fn C.vkCreateImageView(C.VkDevice, &C.VkImageViewCreateInfo, voidptr, &C.VkImageView) VkResult
 fn C.vkCreateShaderModule(C.VkDevice, &C.VkShaderModuleCreateInfo, voidptr, &C.VkShaderModule) VkResult
 fn C.vkCreatePipelineLayout(C.VkDevice, &C.VkPipelineLayoutCreateInfo, voidptr, &C.VkPipelineLayout) VkResult
+fn C.vkCreateRenderPass(C.VkDevice, &C.VkRenderPassCreateInfo, voidptr, &C.VkRenderPass) VkResult
+fn C.vkCreateGraphicsPipelines(C.VkDevice, C.VkPipelineCache, u32, &C.VkGraphicsPipelineCreateInfo, voidptr, &C.VkPipeline) VkResult
+fn C.vkCreateFramebuffer(C.VkDevice, &C.VkFramebufferCreateInfo, voidptr, &C.VkFramebuffer) VkResult
 fn C.glfwCreateWindowSurface(C.VkInstance, &C.GLFWwindow, voidptr, &C.VkSurfaceKHR) VkResult
 
 fn C.vkGetPhysicalDeviceProperties(C.VkPhysicalDevice, &C.VkPhysicalDeviceProperties)
@@ -31,6 +34,9 @@ fn C.vkDestroyDevice(C.VkDevice, voidptr)
 fn C.vkDestroyImageView(C.VkDevice, C.VkImageView, voidptr)
 fn C.vkDestroyShaderModule(C.VkDevice, C.VkShaderModule, voidptr)
 fn C.vkDestroySwapchainKHR(C.VkDevice, C.VkSwapchainKHR, voidptr)
+fn C.vkDestroyRenderPass(C.VkDevice, C.VkRenderPass, voidptr)
+fn C.vkDestroyPipeline(C.VkDevice, C.VkPipeline, voidptr)
+fn C.vkDestroyFramebuffer(C.VkDevice, C.VkFramebuffer, voidptr)
 fn C.vkDestroyPipelineLayout(C.VkDevice, C.VkPipelineLayout, voidptr)
 fn C.vkDestroySurfaceKHR(C.VkInstance, C.VkSurfaceKHR, voidptr)
 
@@ -69,6 +75,18 @@ pub fn vk_destroy_swapchain(device C.VkDevice, swapchain C.VkSwapchainKHR, alloc
 
 pub fn vk_destroy_pipeline_layout(device C.VkDevice, pipeline_layout C.VkPipelineLayout, allocator voidptr) {
 	C.vkDestroyPipelineLayout(device, pipeline_layout, allocator)
+}
+
+pub fn vk_destroy_render_pass(device C.VkDevice, render_pass C.VkRenderPass, allocator voidptr) {
+	C.vkDestroyRenderPass(device, render_pass, allocator)
+}
+
+pub fn vk_destroy_framebuffer(device C.VkDevice, framebuffer C.VkFramebuffer, allocator voidptr) {
+	C.vkDestroyFramebuffer(device, framebuffer, allocator)
+}
+
+pub fn vk_destroy_graphics_pipeline(device C.VkDevice, pipeline C.VkPipeline, allocator voidptr) {
+	C.vkDestroyPipeline(device, pipeline, allocator)
 }
 
 pub fn vk_destroy_device(device C.VkDevice, allocator voidptr) {

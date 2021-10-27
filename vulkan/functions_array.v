@@ -75,3 +75,11 @@ pub fn get_vk_swapchain_image(device C.VkDevice, swapchain C.VkSwapchainKHR) ?[]
 	handle_error(res) ?
 	return to_v_array<C.VkImage>(images, amount)
 }
+
+pub fn create_vk_graphics_pipelines(device C.VkDevice, cache C.VkPipelineCache, create_infos []C.VkGraphicsPipelineCreateInfo, alloc voidptr) ?[]C.VkPipeline {
+	mut pipelines := create_c_array<C.VkPipeline>(u32(create_infos.len))
+	res := C.vkCreateGraphicsPipelines(device, cache, create_infos.len, create_infos.data,
+		alloc, pipelines)
+	handle_error(res) ?
+	return to_v_array<C.VkPipeline>(pipelines, u32(create_infos.len))
+}

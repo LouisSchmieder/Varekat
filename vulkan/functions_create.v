@@ -1,5 +1,27 @@
 module vulkan
 
+pub fn create_vk_subpass_description(flags u32, pipeline_bind_point PipelineBindPoint, input_attachment []C.VkAttachmentReference, color_attachments []C.VkAttachmentReference, resolve_attachments []C.VkAttachmentReference, depth_stencil_attachment []C.VkAttachmentReference, preserve_attachments []u32) C.VkSubpassDescription {
+	return C.VkSubpassDescription{
+		flags: flags
+		pipelineBindPoint: pipeline_bind_point
+		inputAttachmentCount: u32(input_attachment.len)
+		pInputAttachments: input_attachment.data
+		colorAttachmentCount: u32(color_attachments.len)
+		pColorAttachments: color_attachments.data
+		pResolveAttachments: resolve_attachments.data
+		pDepthStencilAttachment: depth_stencil_attachment.data
+		preserveAttachmentCount: u32(preserve_attachments.len)
+		pPreserveAttachments: preserve_attachments.data
+	}
+}
+
+pub fn create_vk_attachment_reference(attachment u32, layout ImageLayout) C.VkAttachmentReference {
+	return C.VkAttachmentReference{
+		attachment: attachment
+		layout: layout
+	}
+}
+
 pub fn create_vk_attachment_description(flags u32, format u32, samples u32, load_op AttachmentLoadOp, store_op AttachmentStoreOp, stencil_load_op AttachmentLoadOp, stencil_store_op AttachmentStoreOp, initial_layout ImageLayout, final_layout ImageLayout) C.VkAttachmentDescription {
 	return C.VkAttachmentDescription{
 		flags: flags
@@ -104,4 +126,18 @@ pub fn create_vk_pipeline_layout(device C.VkDevice, create_info &C.VkPipelineLay
 	res := C.vkCreatePipelineLayout(device, create_info, alloc, pipeline_layout)
 	handle_error(res) ?
 	return *pipeline_layout
+}
+
+pub fn create_vk_render_pass(device C.VkDevice, create_info &C.VkRenderPassCreateInfo, alloc voidptr) ?C.VkRenderPass {
+	mut render_pass := unsafe { &C.VkRenderPass(malloc(int(sizeof(C.VkRenderPass)))) }
+	res := C.vkCreateRenderPass(device, create_info, alloc, render_pass)
+	handle_error(res) ?
+	return *render_pass
+}
+
+pub fn create_vk_framebuffer(device C.VkDevice, create_info &C.VkFramebufferCreateInfo, alloc voidptr) ?C.VkFramebuffer {
+	mut framebuffer := unsafe { &C.VkFramebuffer(malloc(int(sizeof(C.VkFramebuffer)))) }
+	res := C.vkCreateFramebuffer(device, create_info, alloc, framebuffer)
+	handle_error(res) ?
+	return *framebuffer
 }

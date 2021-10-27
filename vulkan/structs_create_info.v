@@ -101,7 +101,7 @@ struct C.VkPipelineShaderStageCreateInfo {
 	pSpecializationInfo voidptr
 }
 
-[typedef]
+[heap; typedef]
 struct C.VkPipelineVertexInputStateCreateInfo {
 	sType                           StructureType
 	pNext                           voidptr
@@ -112,7 +112,7 @@ struct C.VkPipelineVertexInputStateCreateInfo {
 	pVertexAttributeDescriptions    &C.VkVertexInputAttributeDescription
 }
 
-[typedef]
+[heap; typedef]
 struct C.VkPipelineInputAssemblyStateCreateInfo {
 	sType                  StructureType
 	pNext                  voidptr
@@ -121,7 +121,7 @@ struct C.VkPipelineInputAssemblyStateCreateInfo {
 	primitiveRestartEnable C.VkBool32
 }
 
-[typedef]
+[heap; typedef]
 struct C.VkPipelineRasterizationStateCreateInfo {
 	sType                   StructureType
 	pNext                   voidptr
@@ -138,7 +138,7 @@ struct C.VkPipelineRasterizationStateCreateInfo {
 	lineWidth               f32
 }
 
-[typedef]
+[heap; typedef]
 struct C.VkPipelineMultisampleStateCreateInfo {
 	sType                 StructureType
 	pNext                 voidptr
@@ -162,7 +162,7 @@ struct C.VkPipelineLayoutCreateInfo {
 	pPushConstantRanges    &C.VkPushConstantRange
 }
 
-[typedef]
+[heap; typedef]
 struct C.VkPipelineColorBlendStateCreateInfo {
 	sType           StructureType
 	pNext           voidptr
@@ -174,7 +174,7 @@ struct C.VkPipelineColorBlendStateCreateInfo {
 	blendConstants  []f32
 }
 
-[typedef]
+[heap; typedef]
 struct C.VkPipelineViewportStateCreateInfo {
 	sType         StructureType
 	pNext         voidptr
@@ -183,4 +183,53 @@ struct C.VkPipelineViewportStateCreateInfo {
 	pViewports    &C.VkViewport
 	scissorCount  u32
 	pScissors     &C.VkRect2D
+}
+
+[typedef]
+struct C.VkRenderPassCreateInfo {
+	sType           StructureType
+	pNext           voidptr
+	flags           u32
+	attachmentCount u32
+	pAttachments    &C.VkAttachmentDescription
+	subpassCount    u32
+	pSubpasses      &C.VkSubpassDescription
+	dependencyCount u32
+	pDependencies   &C.VkSubpassDependency
+}
+
+[typedef]
+struct C.VkGraphicsPipelineCreateInfo {
+	sType               StructureType
+	pNext               voidptr
+	flags               u32
+	stageCount          u32
+	pStages             &C.VkPipelineShaderStageCreateInfo
+	pVertexInputState   &C.VkPipelineVertexInputStateCreateInfo
+	pInputAssemblyState &C.VkPipelineInputAssemblyStateCreateInfo
+	pTessellationState  &C.VkPipelineTessellationStateCreateInfo
+	pViewportState      &C.VkPipelineViewportStateCreateInfo
+	pRasterizationState &C.VkPipelineRasterizationStateCreateInfo
+	pMultisampleState   &C.VkPipelineMultisampleStateCreateInfo
+	pDepthStencilState  &C.VkPipelineDepthStencilStateCreateInfo
+	pColorBlendState    &C.VkPipelineColorBlendStateCreateInfo
+	pDynamicState       &C.VkPipelineDynamicStateCreateInfo
+	layout              C.VkPipelineLayout
+	renderPass          C.VkRenderPass
+	subpass             u32
+	basePipelineHandle  C.VkPipeline
+	basePipelineIndex   int
+}
+
+[typedef]
+struct C.VkFramebufferCreateInfo {
+	sType           StructureType
+	pNext           voidptr
+	flags           u32
+	renderPass      C.VkRenderPass
+	attachmentCount u32
+	pAttachments    &C.VkImageView
+	width           u32
+	height          u32
+	layers          u32
 }

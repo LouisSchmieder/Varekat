@@ -227,3 +227,28 @@ struct C.VkAttachmentDescription {
 	initialLayout  ImageLayout
 	finalLayout    ImageLayout
 }
+
+[typedef]
+struct C.VkAttachmentReference {
+	attachment u32
+	layout     ImageLayout
+}
+
+[typedef]
+struct C.VkSubpassDescription {
+	flags                   u32
+	pipelineBindPoint       PipelineBindPoint
+	inputAttachmentCount    u32
+	pInputAttachments       &C.VkAttachmentReference
+	colorAttachmentCount    u32
+	pColorAttachments       &C.VkAttachmentReference
+	pResolveAttachments     &C.VkAttachmentReference
+	pDepthStencilAttachment &C.VkAttachmentReference
+	preserveAttachmentCount u32
+	pPreserveAttachments    &u32
+}
+
+[typedef]
+struct C.VkSubpassDependency {
+	// TODO fill
+}

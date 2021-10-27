@@ -15,7 +15,7 @@ pub fn create_vk_application_info(p_next voidptr, app_name string, app_version m
 }
 
 pub fn create_vk_instance_create_info(p_next voidptr, flags u32, app_info &C.VkApplicationInfo, enabled_layers []string, enabled_extensions []string) C.VkInstanceCreateInfo {
-	info := C.VkInstanceCreateInfo{
+	return C.VkInstanceCreateInfo{
 		sType: .vk_structure_type_instance_create_info
 		pNext: p_next
 		flags: flags
@@ -25,7 +25,6 @@ pub fn create_vk_instance_create_info(p_next voidptr, flags u32, app_info &C.VkA
 		enabledExtensionCount: u32(enabled_extensions.len)
 		ppEnabledExtensionNames: terminate_vstring_array(enabled_extensions)
 	}
-	return info
 }
 
 pub fn create_vk_device_queue_create_info(p_next voidptr, flags u32, queue_family_idx u32, queue_count u32, queue_priorities []f32) C.VkDeviceQueueCreateInfo {
@@ -213,5 +212,57 @@ pub fn create_vk_pipeline_layout_create_info(p_next voidptr, flags u32, layouts 
 		pSetLayouts: layouts.data
 		pushConstantRangeCount: u32(push_constant_range.len)
 		pPushConstantRanges: push_constant_range.data
+	}
+}
+
+pub fn create_vk_render_pass_create_info(p_next voidptr, flags u32, attachments []C.VkAttachmentDescription, subpasses []C.VkSubpassDescription, dependencies []C.VkSubpassDependency) C.VkRenderPassCreateInfo {
+	return C.VkRenderPassCreateInfo{
+		sType: .vk_structure_type_render_pass_create_info
+		pNext: p_next
+		flags: flags
+		attachmentCount: u32(attachments.len)
+		pAttachments: attachments.data
+		subpassCount: u32(subpasses.len)
+		pSubpasses: subpasses.data
+		dependencyCount: u32(dependencies.len)
+		pDependencies: dependencies.data
+	}
+}
+
+pub fn create_vk_graphics_pipeline_create_info(p_next voidptr, flags u32, stages []C.VkPipelineShaderStageCreateInfo, p_vertex_input_state &C.VkPipelineVertexInputStateCreateInfo, p_input_assembly_state &C.VkPipelineInputAssemblyStateCreateInfo, p_tessellation_state &C.VkPipelineTessellationStateCreateInfo, p_viewport_state &C.VkPipelineViewportStateCreateInfo, p_rasterization_state &C.VkPipelineRasterizationStateCreateInfo, p_multisample_state &C.VkPipelineMultisampleStateCreateInfo, p_depth_stencil_state &C.VkPipelineDepthStencilStateCreateInfo, p_color_blend_state &C.VkPipelineColorBlendStateCreateInfo, p_dynamic_state &C.VkPipelineDynamicStateCreateInfo, layout C.VkPipelineLayout, render_pass C.VkRenderPass, subpass u32, base_pipeline_handle C.VkPipeline, base_pipeline_index int) C.VkGraphicsPipelineCreateInfo {
+	return C.VkGraphicsPipelineCreateInfo{
+		sType: .vk_structure_type_graphics_pipeline_create_info
+		pNext: p_next
+		flags: flags
+		stageCount: u32(stages.len)
+		pStages: stages.data
+		pVertexInputState: p_vertex_input_state
+		pInputAssemblyState: p_input_assembly_state
+		pTessellationState: p_tessellation_state
+		pViewportState: p_viewport_state
+		pRasterizationState: p_rasterization_state
+		pMultisampleState: p_multisample_state
+		pDepthStencilState: p_depth_stencil_state
+		pColorBlendState: p_color_blend_state
+		pDynamicState: p_dynamic_state
+		layout: layout
+		renderPass: render_pass
+		subpass: subpass
+		basePipelineHandle: base_pipeline_handle
+		basePipelineIndex: base_pipeline_index
+	}
+}
+
+pub fn create_vk_framebuffer_create_info(p_next voidptr, flags u32, render_pass C.VkRenderPass, attachments []C.VkImageView, width u32, height u32, layers u32) C.VkFramebufferCreateInfo {
+	return C.VkFramebufferCreateInfo{
+		sType: .vk_structure_type_framebuffer_create_info
+		pNext: p_next
+		flags: flags
+		renderPass: render_pass
+		attachmentCount: u32(attachments.len)
+		pAttachments: attachments.data
+		width: width
+		height: height
+		layers: layers
 	}
 }

@@ -38,3 +38,25 @@ struct C.VkInstance {}
 
 [typedef]
 struct C.VkPhysicalDevice {}
+
+[typedef]
+struct C.VkRenderPass {}
+
+[typedef]
+struct C.VkPipeline {}
+
+[typedef]
+struct C.VkFramebuffer {}
+
+// TODO complete
+[heap; typedef]
+struct C.VkPipelineTessellationStateCreateInfo {}
+
+[heap; typedef]
+struct C.VkPipelineDepthStencilStateCreateInfo {}
+
+[heap; typedef]
+struct C.VkPipelineDynamicStateCreateInfo {}
+
+[typedef]
+struct C.VkPipelineCache {}
