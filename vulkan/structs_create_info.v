@@ -233,3 +233,39 @@ struct C.VkFramebufferCreateInfo {
 	height          u32
 	layers          u32
 }
+
+[typedef]
+struct C.VkCommandPoolCreateInfo {
+	sType            StructureType
+	pNext            voidptr
+	flags            u32
+	queueFamilyIndex u32
+}
+
+[typedef]
+struct C.VkCommandBufferAllocateInfo {
+	sType              StructureType
+	pNext              voidptr
+	commandPool        C.VkCommandPool
+	level              CommandBufferLevel
+	commandBufferCount u32
+}
+
+[typedef]
+struct C.VkCommandBufferBeginInfo {
+	sType            StructureType
+	pNext            voidptr
+	flags            u32
+	pInheritanceInfo &C.VkCommandBufferInheritanceInfo
+}
+
+[typedef]
+struct C.VkRenderPassBeginInfo {
+	sType           StructureType
+	pNext           voidptr
+	renderPass      C.VkRenderPass
+	framebuffer     C.VkFramebuffer
+	renderArea      C.VkRect2D
+	clearValueCount u32
+	pClearValues    &C.VkClearValue
+}

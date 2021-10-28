@@ -14,6 +14,13 @@ fn C.vkCreatePipelineLayout(C.VkDevice, &C.VkPipelineLayoutCreateInfo, voidptr, 
 fn C.vkCreateRenderPass(C.VkDevice, &C.VkRenderPassCreateInfo, voidptr, &C.VkRenderPass) VkResult
 fn C.vkCreateGraphicsPipelines(C.VkDevice, C.VkPipelineCache, u32, &C.VkGraphicsPipelineCreateInfo, voidptr, &C.VkPipeline) VkResult
 fn C.vkCreateFramebuffer(C.VkDevice, &C.VkFramebufferCreateInfo, voidptr, &C.VkFramebuffer) VkResult
+fn C.vkCreateCommandPool(C.VkDevice, &C.VkCommandPoolCreateInfo, voidptr, &C.VkCommandPool) VkResult
+fn C.vkAllocateCommandBuffers(C.VkDevice, &C.VkCommandBufferAllocateInfo, &C.VkCommandBuffer) VkResult
+fn C.vkBeginCommandBuffer(C.VkCommandBuffer, &C.VkCommandBufferBeginInfo) VkResult
+fn C.vkEndCommandBuffer(C.VkCommandBuffer) VkResult
+fn C.vkCmdBeginRenderPass(C.VkCommandBuffer, &C.VkRenderPassBeginInfo, u32)
+fn C.vkCmdEndRenderPass(C.VkCommandBuffer)
+fn C.vkCmdBindPipeline(C.VkCommandBuffer, PipelineBindPoint, C.VkPipeline)
 fn C.glfwCreateWindowSurface(C.VkInstance, &C.GLFWwindow, voidptr, &C.VkSurfaceKHR) VkResult
 
 fn C.vkGetPhysicalDeviceProperties(C.VkPhysicalDevice, &C.VkPhysicalDeviceProperties)
@@ -36,9 +43,11 @@ fn C.vkDestroyShaderModule(C.VkDevice, C.VkShaderModule, voidptr)
 fn C.vkDestroySwapchainKHR(C.VkDevice, C.VkSwapchainKHR, voidptr)
 fn C.vkDestroyRenderPass(C.VkDevice, C.VkRenderPass, voidptr)
 fn C.vkDestroyPipeline(C.VkDevice, C.VkPipeline, voidptr)
+fn C.vkDestroyCommandPool(C.VkDevice, C.VkCommandPool, voidptr)
 fn C.vkDestroyFramebuffer(C.VkDevice, C.VkFramebuffer, voidptr)
 fn C.vkDestroyPipelineLayout(C.VkDevice, C.VkPipelineLayout, voidptr)
 fn C.vkDestroySurfaceKHR(C.VkInstance, C.VkSurfaceKHR, voidptr)
+fn C.vkFreeCommandBuffers(C.VkDevice, C.VkCommandPool, u32, &C.VkCommandBuffer)
 
 fn handle_error(res VkResult) ? {
 	if res != 0 {
@@ -55,6 +64,32 @@ pub fn vk_physical_device_surface_support(device C.VkPhysicalDevice, queue_famil
 
 pub fn vk_device_wait_idle(device C.VkDevice) {
 	C.vkDeviceWaitIdle(device)
+}
+
+pub fn vk_cmd_begin_render_pass(buffer C.VkCommandBuffer, info &C.VkRenderPassBeginInfo, typ u32) {
+	C.vkCmdBeginRenderPass(buffer, info, typ)
+}
+
+pub fn vk_cmd_end_render_pass(buffer C.VkCommandBuffer) {
+	C.vkCmdEndRenderPass(buffer)
+}
+
+pub fn vk_cmd_bind_pipeline(buffer C.VkCommandBuffer, bind_point PipelineBindPoint, pipeline C.VkPipeline) {
+	C.vkCmdBindPipeline(buffer, bind_point, pipeline)
+}
+
+pub fn vk_begin_command_buffer(buffer C.VkCommandBuffer, info &C.VkCommandBufferBeginInfo) ? {
+	res := C.vkBeginCommandBuffer(buffer, info)
+	handle_error(res) ?
+}
+
+pub fn vk_end_command_buffer(buffer C.VkCommandBuffer) ? {
+	res := C.vkEndCommandBuffer(buffer)
+	handle_error(res) ?
+}
+
+pub fn vk_free_command_buffers(device C.VkDevice, command_pool C.VkCommandPool, buffers []C.VkCommandBuffer) {
+	C.vkFreeCommandBuffers(device, command_pool, u32(buffers.len), buffers.data)
 }
 
 pub fn vk_destroy_image_view(device C.VkDevice, image_view C.VkImageView, alloc voidptr) {
@@ -87,6 +122,10 @@ pub fn vk_destroy_framebuffer(device C.VkDevice, framebuffer C.VkFramebuffer, al
 
 pub fn vk_destroy_graphics_pipeline(device C.VkDevice, pipeline C.VkPipeline, allocator voidptr) {
 	C.vkDestroyPipeline(device, pipeline, allocator)
+}
+
+pub fn vk_destroy_command_pool(device C.VkDevice, command_pool C.VkCommandPool, allocator voidptr) {
+	C.vkDestroyCommandPool(device, command_pool, allocator)
 }
 
 pub fn vk_destroy_device(device C.VkDevice, allocator voidptr) {

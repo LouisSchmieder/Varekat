@@ -48,6 +48,12 @@ struct C.VkPipeline {}
 [typedef]
 struct C.VkFramebuffer {}
 
+[typedef]
+struct C.VkCommandPool {}
+
+[typedef]
+struct C.VkCommandBuffer {}
+
 // TODO complete
 [heap; typedef]
 struct C.VkPipelineTessellationStateCreateInfo {}
@@ -57,6 +63,9 @@ struct C.VkPipelineDepthStencilStateCreateInfo {}
 
 [heap; typedef]
 struct C.VkPipelineDynamicStateCreateInfo {}
+
+[heap; typedef]
+struct C.VkCommandBufferInheritanceInfo {}
 
 [typedef]
 struct C.VkPipelineCache {}

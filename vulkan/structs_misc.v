@@ -252,3 +252,22 @@ struct C.VkSubpassDescription {
 struct C.VkSubpassDependency {
 	// TODO fill
 }
+
+[typedef]
+union C.VkClearColorValue {
+	float32 [4]f32
+	int32   [4]int
+	uint32  [4]u32
+}
+
+[typedef]
+struct C.VkClearDepthStencilValue {
+	depth   f32
+	stencil u32
+}
+
+[typedef]
+union C.VkClearValue {
+	color        C.VkClearColorValue
+	depthStencil C.VkClearDepthStencilValue
+}

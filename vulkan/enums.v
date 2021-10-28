@@ -5,6 +5,11 @@ pub enum ShaderType {
 	vertex = 0x00000001
 }
 
+pub enum CommandBufferLevel {
+	vk_command_buffer_level_primary = 0
+	vk_command_buffer_level_secondary = 1
+}
+
 pub enum PipelineBindPoint {
 	vk_pipeline_bind_point_graphics = 0
 	vk_pipeline_bind_point_compute = 1

@@ -17,6 +17,8 @@ mut:
 	swapchain                    C.VkSwapchainKHR
 	pipeline_layout              C.VkPipelineLayout
 	render_pass                  C.VkRenderPass
+	command_pool                 C.VkCommandPool
+	command_buffers              []C.VkCommandBuffer
 	pipelines                    []C.VkPipeline
 	image_views                  []C.VkImageView
 	framebuffers                 []C.VkFramebuffer
@@ -62,7 +64,7 @@ fn (mut game Game) start_vulkan() ? {
 		nullptr) ?
 
 	physical_devices := vulkan.get_vk_physical_devices(game.instance) ?
-	all_settings, idx := vulkan.analyse(physical_devices)
+	all_settings, idx := vulkan.analyse(physical_devices, [u32(C.VK_QUEUE_GRAPHICS_BIT)]) ?
 
 	settings := all_settings[idx]
 	physical_device := physical_devices[idx]
@@ -105,7 +107,33 @@ fn (mut game Game) start_vulkan() ? {
 
 	game.setup_swapchain(format, min_image_count, image_extent, present_mode, physical_device) ?
 	game.setup_pipeline(format) ?
-	game.setup_framebuffer() ?
+
+	for view in game.image_views {
+		framebuffer_info := vulkan.create_vk_framebuffer_create_info(nullptr, 0, game.render_pass, [view], game.width, game.height, 1)
+		game.framebuffers << vulkan.create_vk_framebuffer(game.device, &framebuffer_info, nullptr) ?
+	}
+	command_pool_create_info := vulkan.create_vk_command_pool_create_info(nullptr, 0, settings.queue_family_idx)
+	game.command_pool = vulkan.create_vk_command_pool(game.device, &command_pool_create_info, nullptr) ?
+
+	command_buffer_allocate_info := vulkan.create_vk_command_buffer_allocate_info(nullptr, game.command_pool, .vk_command_buffer_level_primary, u32(game.image_views.len))
+	game.command_buffers = vulkan.allocate_vk_command_buffers(game.device, &command_buffer_allocate_info) ?
+
+	command_buffer_begin_info := vulkan.create_vk_command_buffer_begin_info(nullptr, u32(C.VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT), nullptr)
+
+	for i, buffer in game.command_buffers {
+		vulkan.vk_begin_command_buffer(buffer, &command_buffer_begin_info) ?
+
+		render_area := vulkan.create_vk_rect_2d(0, 0, game.width, game.height)
+
+		render_pass_begin_info := vulkan.create_vk_render_pass_begin_info(nullptr, game.render_pass, game.framebuffers[i], render_area, [vulkan.create_vk_clear_value(0.0, 0.0, 0.0, 1.0)])
+
+		vulkan.vk_cmd_begin_render_pass(buffer, &render_pass_begin_info, u32(C.VK_SUBPASS_CONTENTS_INLINE))
+
+		vulkan.vk_cmd_bind_pipeline(buffer, .vk_pipeline_bind_point_graphics, game.pipelines[0])
+
+		vulkan.vk_cmd_end_render_pass(buffer)
+		vulkan.vk_end_command_buffer(buffer) ?
+	}
 }
 
 fn (mut game Game) setup_swapchain(format C.VkSurfaceFormatKHR, min_image_count u32, image_extent C.VkExtent2D, present_mode vulkan.VkPresentModeKHR, physical_device C.VkPhysicalDevice) ? {
@@ -206,13 +234,6 @@ fn (mut game Game) setup_pipeline(format C.VkSurfaceFormatKHR) ? {
 		[graphics_pipeline_create_info], nullptr) ?
 }
 
-fn (mut game Game) setup_framebuffer() ? {
-	for view in game.image_views {
-		framebuffer_info := vulkan.create_vk_framebuffer_create_info(nullptr, 0, game.render_pass, [view], game.width, game.height, 1)
-		game.framebuffers << vulkan.create_vk_framebuffer(game.device, &framebuffer_info, nullptr) ?
-	}
-}
-
 fn (mut game Game) game_loop() {
 	for !glfw.should_close(game.window) {
 		glfw.poll_events()
@@ -221,6 +242,7 @@ fn (mut game Game) game_loop() {
 
 fn (mut game Game) shutdown_vulkan() {
 	vulkan.vk_device_wait_idle(game.device)
+	vulkan.vk_destroy_command_pool(game.device, game.command_pool, nullptr)
 	for framebuffer in game.framebuffers {
 		vulkan.vk_destroy_framebuffer(game.device, framebuffer, nullptr)
 	}

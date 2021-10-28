@@ -266,3 +266,43 @@ pub fn create_vk_framebuffer_create_info(p_next voidptr, flags u32, render_pass 
 		layers: layers
 	}
 }
+
+pub fn create_vk_command_pool_create_info(p_next voidptr, flags u32, queue_family_idx u32) C.VkCommandPoolCreateInfo {
+	return C.VkCommandPoolCreateInfo{
+		sType: .vk_structure_type_command_pool_create_info
+		pNext: p_next
+		flags: flags
+		queueFamilyIndex: queue_family_idx
+	}
+}
+
+pub fn create_vk_command_buffer_allocate_info(p_next voidptr, command_pool C.VkCommandPool, level CommandBufferLevel, count u32) C.VkCommandBufferAllocateInfo {
+	return C.VkCommandBufferAllocateInfo{
+		sType: .vk_structure_type_command_buffer_allocate_info
+		pNext: p_next
+		commandPool: command_pool
+		level: level
+		commandBufferCount: count
+	}
+}
+
+pub fn create_vk_command_buffer_begin_info(p_next voidptr, flags u32, inheritance_info &C.VkCommandBufferInheritanceInfo) C.VkCommandBufferBeginInfo {
+	return C.VkCommandBufferBeginInfo{
+		sType: .vk_structure_type_command_buffer_begin_info
+		pNext: p_next
+		flags: flags
+		pInheritanceInfo: inheritance_info
+	}
+}
+
+pub fn create_vk_render_pass_begin_info(p_next voidptr, render_pass C.VkRenderPass, framebuffer C.VkFramebuffer, render_area C.VkRect2D, clear_values []C.VkClearValue) C.VkRenderPassBeginInfo {
+	return C.VkRenderPassBeginInfo{
+		sType: .vk_structure_type_render_pass_begin_info
+		pNext: p_next
+		renderPass: render_pass
+		framebuffer: framebuffer
+		renderArea: render_area
+		clearValueCount: u32(clear_values.len)
+		pClearValues: clear_values.data
+	}
+}

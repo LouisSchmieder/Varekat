@@ -79,6 +79,19 @@ pub fn create_vk_image_subresource_range(aspect_mask u32, base_mip_level u32, le
 	}
 }
 
+pub fn create_vk_clear_value(r f32, g f32, b f32, a f32) C.VkClearValue {
+	mut vals := [4]f32{}
+	vals[0] = r
+	vals[1] = g
+	vals[2] = b
+	vals[3] = a
+	return C.VkClearValue{
+		color: C.VkClearColorValue{
+			float32: vals
+		}
+	}
+}
+
 pub fn create_vk_instance(create_info &C.VkInstanceCreateInfo) ?C.VkInstance {
 	mut instance := unsafe { &C.VkInstance(malloc(int(sizeof(C.VkInstance)))) }
 	result := C.vkCreateInstance(create_info, voidptr(0), instance)
@@ -140,4 +153,11 @@ pub fn create_vk_framebuffer(device C.VkDevice, create_info &C.VkFramebufferCrea
 	res := C.vkCreateFramebuffer(device, create_info, alloc, framebuffer)
 	handle_error(res) ?
 	return *framebuffer
+}
+
+pub fn create_vk_command_pool(device C.VkDevice, create_info &C.VkCommandPoolCreateInfo, alloc voidptr) ?C.VkCommandPool {
+	mut command_pool := unsafe { &C.VkCommandPool(malloc(int(sizeof(C.VkCommandPool)))) }
+	res := C.vkCreateCommandPool(device, create_info, alloc, command_pool)
+	handle_error(res) ?
+	return *command_pool
 }

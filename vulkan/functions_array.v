@@ -83,3 +83,10 @@ pub fn create_vk_graphics_pipelines(device C.VkDevice, cache C.VkPipelineCache, 
 	handle_error(res) ?
 	return to_v_array<C.VkPipeline>(pipelines, u32(create_infos.len))
 }
+
+pub fn allocate_vk_command_buffers(device C.VkDevice, create_info &C.VkCommandBufferAllocateInfo) ?[]C.VkCommandBuffer {
+	mut buffers := create_c_array<C.VkCommandBuffer>(create_info.commandBufferCount)
+	res := C.vkAllocateCommandBuffers(device, create_info, buffers)
+	handle_error(res) ?
+	return to_v_array<C.VkCommandBuffer>(buffers, create_info.commandBufferCount)
+}
