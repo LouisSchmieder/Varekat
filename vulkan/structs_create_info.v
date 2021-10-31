@@ -269,3 +269,35 @@ struct C.VkRenderPassBeginInfo {
 	clearValueCount u32
 	pClearValues    &C.VkClearValue
 }
+
+[typedef]
+struct C.VkSemaphoreCreateInfo {
+	sType StructureType
+	pNext voidptr
+	flags u32
+}
+
+[typedef]
+struct C.VkSubmitInfo {
+	sType                StructureType
+	pNext                voidptr
+	waitSemaphoreCount   u32
+	pWaitSemaphores      &C.VkSemaphore
+	pWaitDstStageMask    &PipelineStageFlagBits
+	commandBufferCount   u32
+	pCommandBuffers      &C.VkCommandBuffer
+	signalSemaphoreCount u32
+	pSignalSemaphores    &C.VkSemaphore
+}
+
+[typedef]
+struct C.VkPresentInfoKHR {
+	sType              StructureType
+	pNext              voidptr
+	waitSemaphoreCount u32
+	pWaitSemaphores    &C.VkSemaphore
+	swapchainCount     u32
+	pSwapchains        &C.VkSwapchainKHR
+	pImageIndices      &u32
+	pResults           &VkResult
+}

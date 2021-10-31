@@ -29,6 +29,36 @@ pub enum AttachmentStoreOp {
 	vk_attachment_store_op_none_ext = 1000301000
 }
 
+pub enum PipelineStageFlagBits {
+	vk_pipeline_stage_top_of_pipe_bit = 0x00000001
+	vk_pipeline_stage_draw_indirect_bit = 0x00000002
+	vk_pipeline_stage_vertex_input_bit = 0x00000004
+	vk_pipeline_stage_vertex_shader_bit = 0x00000008
+	vk_pipeline_stage_tessellation_control_shader_bit = 0x00000010
+	vk_pipeline_stage_tessellation_evaluation_shader_bit = 0x00000020
+	vk_pipeline_stage_geometry_shader_bit = 0x00000040
+	vk_pipeline_stage_fragment_shader_bit = 0x00000080
+	vk_pipeline_stage_early_fragment_tests_bit = 0x00000100
+	vk_pipeline_stage_late_fragment_tests_bit = 0x00000200
+	vk_pipeline_stage_color_attachment_output_bit = 0x00000400
+	vk_pipeline_stage_compute_shader_bit = 0x00000800
+	vk_pipeline_stage_transfer_bit = 0x00001000
+	vk_pipeline_stage_bottom_of_pipe_bit = 0x00002000
+	vk_pipeline_stage_host_bit = 0x00004000
+	vk_pipeline_stage_all_graphics_bit = 0x00008000
+	vk_pipeline_stage_all_commands_bit = 0x00010000
+	vk_pipeline_stage_transform_feedback_bit_ext = 0x01000000
+	vk_pipeline_stage_conditional_rendering_bit_ext = 0x00040000
+	vk_pipeline_stage_acceleration_structure_build_bit_khr = 0x02000000
+	vk_pipeline_stage_ray_tracing_shader_bit_khr = 0x00200000
+	vk_pipeline_stage_task_shader_bit_nv = 0x00080000
+	vk_pipeline_stage_mesh_shader_bit_nv = 0x00100000
+	vk_pipeline_stage_fragment_density_process_bit_ext = 0x00800000
+	vk_pipeline_stage_fragment_shading_rate_attachment_bit_khr = 0x00400000
+	vk_pipeline_stage_command_preprocess_bit_nv = 0x00020000
+	vk_pipeline_stage_none_khr = 0
+}
+
 pub enum ImageLayout {
 	vk_image_layout_undefined = 0
 	vk_image_layout_general = 1

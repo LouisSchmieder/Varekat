@@ -306,3 +306,38 @@ pub fn create_vk_render_pass_begin_info(p_next voidptr, render_pass C.VkRenderPa
 		pClearValues: clear_values.data
 	}
 }
+
+pub fn create_vk_semaphore_create_info(p_next voidptr, flags u32) C.VkSemaphoreCreateInfo {
+	return C.VkSemaphoreCreateInfo{
+		sType: .vk_structure_type_semaphore_create_info
+		pNext: p_next
+		flags: flags
+	}
+}
+
+pub fn create_vk_submit_info(p_next voidptr, wait_semaphores []C.VkSemaphore, p_wait_dst_stage_mask []PipelineStageFlagBits, command_buffers []C.VkCommandBuffer, signal_semaphores []C.VkSemaphore) C.VkSubmitInfo {
+	return C.VkSubmitInfo{
+		sType: .vk_structure_type_submit_info
+		pNext: p_next
+		waitSemaphoreCount: u32(wait_semaphores.len)
+		pWaitSemaphores: wait_semaphores.data
+		pWaitDstStageMask: p_wait_dst_stage_mask.data
+		commandBufferCount: u32(command_buffers.len)
+		pCommandBuffers: command_buffers.data
+		signalSemaphoreCount: u32(signal_semaphores.len)
+		pSignalSemaphores: signal_semaphores.data
+	}
+}
+
+pub fn create_vk_present_info(p_next voidptr, wait_semaphores []C.VkSemaphore, swapchains []C.VkSwapchainKHR, image_indicies []u32, results []VkResult) C.VkPresentInfoKHR {
+	return C.VkPresentInfoKHR{
+		sType: .vk_structure_type_present_info_khr
+		pNext: p_next
+		waitSemaphoreCount: u32(wait_semaphores.len)
+		pWaitSemaphores: wait_semaphores.data
+		swapchainCount: u32(swapchains.len)
+		pSwapchains: swapchains.data
+		pImageIndices: image_indicies.data
+		pResults: results.data
+	}
+}

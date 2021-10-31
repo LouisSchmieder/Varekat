@@ -27,6 +27,13 @@ pub fn get_vk_device_queue(device C.VkDevice, queue_family_idx u32, queue_idx u3
 pub fn get_vk_physical_device_surface_capabilities(device C.VkPhysicalDevice, surface C.VkSurfaceKHR) ?C.VkSurfaceCapabilitiesKHR {
 	cap := unsafe { &C.VkSurfaceCapabilitiesKHR(malloc(int(sizeof(C.VkSurfaceCapabilitiesKHR)))) }
 	res := C.vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, surface, cap)
-	handle_error(res) ?
+	handle_error(res, 'get_vk_physical_device_surface_capabilities') ?
 	return *cap
+}
+
+pub fn acquire_vk_next_image(device C.VkDevice, swapchain C.VkSwapchainKHR, timeout u64, semaphore C.VkSemaphore, fence C.VkFence) ?u32 {
+	idx := u32(0)
+	res := C.vkAcquireNextImageKHR(device, swapchain, timeout, semaphore, fence, &idx)
+	handle_error(res, 'acquire_vk_next_image') ?
+	return idx
 }

@@ -54,6 +54,12 @@ struct C.VkCommandPool {}
 [typedef]
 struct C.VkCommandBuffer {}
 
+[typedef]
+struct C.VkSemaphore {}
+
+[typedef]
+struct C.VkFence {}
+
 // TODO complete
 [heap; typedef]
 struct C.VkPipelineTessellationStateCreateInfo {}

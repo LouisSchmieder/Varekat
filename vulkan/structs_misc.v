@@ -250,7 +250,13 @@ struct C.VkSubpassDescription {
 
 [typedef]
 struct C.VkSubpassDependency {
-	// TODO fill
+	srcSubpass      u32
+	dstSubpass      u32
+	srcStageMask    PipelineStageFlagBits
+	dstStageMask    PipelineStageFlagBits
+	srcAccessMask   u32
+	dstAccessMask   u32
+	dependencyFlags u32
 }
 
 [typedef]

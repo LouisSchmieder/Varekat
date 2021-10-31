@@ -92,72 +92,91 @@ pub fn create_vk_clear_value(r f32, g f32, b f32, a f32) C.VkClearValue {
 	}
 }
 
+pub fn create_vk_subpass_dependency(src_subpass u32, dst_subpass u32, src_stage_mask PipelineStageFlagBits, dst_stage_mask PipelineStageFlagBits, src_access_mask u32, dst_access_mask u32, dependency_flags u32) C.VkSubpassDependency {
+	return C.VkSubpassDependency{
+		srcSubpass: src_subpass
+		dstSubpass: dst_subpass
+		srcStageMask: src_stage_mask
+		dstStageMask: dst_stage_mask
+		srcAccessMask: src_access_mask
+		dstAccessMask: dst_access_mask
+		dependencyFlags: dependency_flags
+	}
+}
+
 pub fn create_vk_instance(create_info &C.VkInstanceCreateInfo) ?C.VkInstance {
 	mut instance := unsafe { &C.VkInstance(malloc(int(sizeof(C.VkInstance)))) }
 	result := C.vkCreateInstance(create_info, voidptr(0), instance)
-	handle_error(result) ?
+	handle_error(result, 'create_vk_instance') ?
 	return *instance
 }
 
 pub fn create_vk_device(physical_device C.VkPhysicalDevice, device_create_info &C.VkDeviceCreateInfo) ?C.VkDevice {
 	mut device := unsafe { &C.VkDevice(malloc(int(sizeof(C.VkDevice)))) }
 	result := C.vkCreateDevice(physical_device, device_create_info, voidptr(0), device)
-	handle_error(result) ?
+	handle_error(result, 'create_vk_device') ?
 	return *device
 }
 
 pub fn create_vk_create_window_surface(instance C.VkInstance, window &C.GLFWwindow, alloc voidptr) ?C.VkSurfaceKHR {
 	mut surface := unsafe { &C.VkSurfaceKHR(malloc(int(sizeof(C.VkSurfaceKHR)))) }
 	res := C.glfwCreateWindowSurface(instance, window, alloc, surface)
-	handle_error(res) ?
+	handle_error(res, 'create_vk_create_window_surface') ?
 	return *surface
 }
 
 pub fn create_vk_swapchain(device C.VkDevice, create_info &C.VkSwapchainCreateInfoKHR, alloc voidptr) ?C.VkSwapchainKHR {
 	mut swapchain := unsafe { &C.VkSwapchainKHR(malloc(int(sizeof(C.VkSwapchainKHR)))) }
 	res := C.vkCreateSwapchainKHR(device, create_info, alloc, swapchain)
-	handle_error(res) ?
+	handle_error(res, 'create_vk_swapchain') ?
 	return *swapchain
 }
 
 pub fn create_vk_image_view(device C.VkDevice, create_info &C.VkImageViewCreateInfo, alloc voidptr) ?C.VkImageView {
 	mut image_view := unsafe { &C.VkImageView(malloc(int(sizeof(C.VkImageView)))) }
 	res := C.vkCreateImageView(device, create_info, alloc, image_view)
-	handle_error(res) ?
+	handle_error(res, 'create_vk_image_view') ?
 	return *image_view
 }
 
 pub fn create_vk_shader_module(device C.VkDevice, create_info &C.VkShaderModuleCreateInfo, alloc voidptr) ?C.VkShaderModule {
 	mut shader_module := unsafe { &C.VkShaderModule(malloc(int(sizeof(C.VkShaderModule)))) }
 	res := C.vkCreateShaderModule(device, create_info, alloc, shader_module)
-	handle_error(res) ?
+	handle_error(res, 'create_vk_shader_module') ?
 	return *shader_module
 }
 
 pub fn create_vk_pipeline_layout(device C.VkDevice, create_info &C.VkPipelineLayoutCreateInfo, alloc voidptr) ?C.VkPipelineLayout {
 	mut pipeline_layout := unsafe { &C.VkPipelineLayout(malloc(int(sizeof(C.VkPipelineLayout)))) }
 	res := C.vkCreatePipelineLayout(device, create_info, alloc, pipeline_layout)
-	handle_error(res) ?
+	handle_error(res, 'create_vk_pipeline_layout') ?
 	return *pipeline_layout
 }
 
 pub fn create_vk_render_pass(device C.VkDevice, create_info &C.VkRenderPassCreateInfo, alloc voidptr) ?C.VkRenderPass {
 	mut render_pass := unsafe { &C.VkRenderPass(malloc(int(sizeof(C.VkRenderPass)))) }
 	res := C.vkCreateRenderPass(device, create_info, alloc, render_pass)
-	handle_error(res) ?
+	handle_error(res, 'create_vk_render_pass') ?
 	return *render_pass
 }
 
 pub fn create_vk_framebuffer(device C.VkDevice, create_info &C.VkFramebufferCreateInfo, alloc voidptr) ?C.VkFramebuffer {
 	mut framebuffer := unsafe { &C.VkFramebuffer(malloc(int(sizeof(C.VkFramebuffer)))) }
 	res := C.vkCreateFramebuffer(device, create_info, alloc, framebuffer)
-	handle_error(res) ?
+	handle_error(res, 'create_vk_framebuffer') ?
 	return *framebuffer
 }
 
 pub fn create_vk_command_pool(device C.VkDevice, create_info &C.VkCommandPoolCreateInfo, alloc voidptr) ?C.VkCommandPool {
 	mut command_pool := unsafe { &C.VkCommandPool(malloc(int(sizeof(C.VkCommandPool)))) }
 	res := C.vkCreateCommandPool(device, create_info, alloc, command_pool)
-	handle_error(res) ?
+	handle_error(res, 'create_vk_command_pool') ?
 	return *command_pool
+}
+
+pub fn create_vk_semaphore(device C.VkDevice, create_info &C.VkSemaphoreCreateInfo, alloc voidptr) ?C.VkSemaphore {
+	mut semaphore := unsafe { &C.VkSemaphore(malloc(int(sizeof(C.VkSemaphore)))) }
+	res := C.vkCreateSemaphore(device, create_info, alloc, semaphore)
+	handle_error(res, 'create_vk_semaphore') ?
+	return *semaphore
 }
