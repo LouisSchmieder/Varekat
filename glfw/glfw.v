@@ -23,9 +23,14 @@ fn C.glfwGetRequiredInstanceExtensions(&u32) &charptr
 fn C.glfwGetWindowUserPointer(&C.GLFWwindow) voidptr
 fn C.glfwSetWindowUserPointer(&C.GLFWwindow, voidptr)
 fn C.glfwSetWindowSizeCallback(&C.GLFWwindow, voidptr)
+fn C.glfwTerminate()
 
 pub fn glfw_init() {
 	C.glfwInit()
+}
+
+pub fn glfw_terminate() {
+	C.glfwTerminate()
 }
 
 pub fn window_hint(hint int, value int) {

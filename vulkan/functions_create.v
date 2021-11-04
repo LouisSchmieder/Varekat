@@ -69,6 +69,23 @@ pub fn create_vk_rect_2d(offset_x int, offset_y int, width u32, height u32) C.Vk
 	}
 }
 
+pub fn create_vk_vertex_input_binding_description(binding u32, stride u32, input_rate VertexInputRate) C.VkVertexInputBindingDescription {
+	return C.VkVertexInputBindingDescription{
+		binding: binding
+		stride: stride
+		inputRate: u32(input_rate)
+	}
+}
+
+pub fn create_vk_vertex_input_attribute_description(location u32, binding u32, format u32, offset u32) C.VkVertexInputAttributeDescription {
+	return C.VkVertexInputAttributeDescription{
+		location: location
+		binding: binding
+		format: format
+		offset: offset
+	}
+}
+
 pub fn create_vk_image_subresource_range(aspect_mask u32, base_mip_level u32, level_count u32, base_array_layer u32, layer_count u32) C.VkImageSubresourceRange {
 	return C.VkImageSubresourceRange{
 		aspectMask: aspect_mask
@@ -179,4 +196,11 @@ pub fn create_vk_semaphore(device C.VkDevice, create_info &C.VkSemaphoreCreateIn
 	res := C.vkCreateSemaphore(device, create_info, alloc, semaphore)
 	handle_error(res, 'create_vk_semaphore') ?
 	return *semaphore
+}
+
+pub fn create_vk_buffer(device C.VkDevice, create_info &C.VkBufferCreateInfo, alloc voidptr) ?C.VkBuffer {
+	mut buffer := unsafe { &C.VkBuffer(malloc(int(sizeof(C.VkBuffer)))) }
+	res := C.vkCreateBuffer(device, create_info, alloc, buffer)
+	handle_error(res, 'create_vk_buffer') ?
+	return *buffer
 }

@@ -20,6 +20,7 @@ fn C.vkCreateGraphicsPipelines(C.VkDevice, C.VkPipelineCache, u32, &C.VkGraphics
 fn C.vkCreateFramebuffer(C.VkDevice, &C.VkFramebufferCreateInfo, voidptr, &C.VkFramebuffer) VkResult
 fn C.vkCreateCommandPool(C.VkDevice, &C.VkCommandPoolCreateInfo, voidptr, &C.VkCommandPool) VkResult
 fn C.vkCreateSemaphore(C.VkDevice, &C.VkSemaphoreCreateInfo, voidptr, &C.VkSemaphore) VkResult
+fn C.vkCreateBuffer(C.VkDevice, &C.VkBufferCreateInfo, voidptr, &C.VkBuffer) VkResult
 
 fn C.vkAllocateCommandBuffers(C.VkDevice, &C.VkCommandBufferAllocateInfo, &C.VkCommandBuffer) VkResult
 fn C.vkBeginCommandBuffer(C.VkCommandBuffer, &C.VkCommandBufferBeginInfo) VkResult
@@ -31,6 +32,8 @@ fn C.vkEndCommandBuffer(C.VkCommandBuffer) VkResult
 fn C.vkCmdBeginRenderPass(C.VkCommandBuffer, &C.VkRenderPassBeginInfo, u32)
 fn C.vkCmdEndRenderPass(C.VkCommandBuffer)
 fn C.vkCmdBindPipeline(C.VkCommandBuffer, PipelineBindPoint, C.VkPipeline)
+fn C.vkCmdSetViewport(C.VkCommandBuffer, u32, u32, &C.VkViewport)
+fn C.vkCmdSetScissor(C.VkCommandBuffer, u32, u32, &C.VkRect2D)
 fn C.vkCmdDraw(C.VkCommandBuffer, u32, u32, u32, u32)
 
 fn C.glfwCreateWindowSurface(C.VkInstance, &C.GLFWwindow, voidptr, &C.VkSurfaceKHR) VkResult
@@ -60,6 +63,7 @@ fn C.vkDestroyCommandPool(C.VkDevice, C.VkCommandPool, voidptr)
 fn C.vkDestroyFramebuffer(C.VkDevice, C.VkFramebuffer, voidptr)
 fn C.vkDestroyPipelineLayout(C.VkDevice, C.VkPipelineLayout, voidptr)
 fn C.vkDestroySurfaceKHR(C.VkInstance, C.VkSurfaceKHR, voidptr)
+fn C.vkDestroyBuffer(C.VkDevice, C.VkBuffer, voidptr)
 fn C.vkFreeCommandBuffers(C.VkDevice, C.VkCommandPool, u32, &C.VkCommandBuffer)
 
 fn handle_error(res VkResult, loc string) ? {
@@ -105,6 +109,14 @@ pub fn vk_cmd_draw(buffer C.VkCommandBuffer, vertex_count u32, instance_count u3
 	C.vkCmdDraw(buffer, vertex_count, instance_count, first_vertex, first_instance)
 }
 
+pub fn vk_cmd_set_viewport(buffer C.VkCommandBuffer, first_viewport u32, viewports []C.VkViewport) {
+	C.vkCmdSetViewport(buffer, first_viewport, u32(viewports.len), viewports.data)
+}
+
+pub fn vk_cmd_set_scissor(buffer C.VkCommandBuffer, first_scissor u32, scissors []C.VkRect2D) {
+	C.vkCmdSetViewport(buffer, first_scissor, u32(scissors.len), scissors.data)
+}
+
 pub fn vk_begin_command_buffer(buffer C.VkCommandBuffer, info &C.VkCommandBufferBeginInfo) ? {
 	res := C.vkBeginCommandBuffer(buffer, info)
 	handle_error(res, 'vk_begin_command_buffer') ?
@@ -143,6 +155,10 @@ pub fn vk_destroy_render_pass(device C.VkDevice, render_pass C.VkRenderPass, all
 	C.vkDestroyRenderPass(device, render_pass, allocator)
 }
 
+pub fn vk_destroy_buffer(device C.VkDevice, buffer C.VkBuffer, allocator voidptr) {
+	C.vkDestroyBuffer(device, buffer, allocator)
+}
+
 pub fn vk_destroy_framebuffer(device C.VkDevice, framebuffer C.VkFramebuffer, allocator voidptr) {
 	C.vkDestroyFramebuffer(device, framebuffer, allocator)
 }
@@ -165,6 +181,18 @@ pub fn vk_destroy_device(device C.VkDevice, allocator voidptr) {
 
 pub fn vk_destroy_shader_module(device C.VkDevice, modul C.VkShaderModule, alloc voidptr) {
 	C.vkDestroyShaderModule(device, modul, alloc)
+}
+
+pub fn get_binding_description(size u32) C.VkVertexInputBindingDescription {
+	return create_vk_vertex_input_binding_description(0, size, .vk_vertex_input_rate_vertex)
+}
+
+pub fn get_attribute_descriptions(offsets []u32, binding []u32, format []u32) []C.VkVertexInputAttributeDescription {
+	mut desc := []C.VkVertexInputAttributeDescription{}
+	for i, offset in offsets {
+		desc << create_vk_vertex_input_attribute_description(u32(i), binding[i], format[i], offset)
+	}
+	return desc
 }
 
 pub fn create_shader(p_next voidptr, flags u32, code []byte, device C.VkDevice, shader_type ShaderType, entry_point string) ?(C.VkShaderModule, C.VkPipelineShaderStageCreateInfo) {

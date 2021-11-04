@@ -301,3 +301,24 @@ struct C.VkPresentInfoKHR {
 	pImageIndices      &u32
 	pResults           &VkResult
 }
+
+[heap; typedef]
+struct C.VkPipelineDynamicStateCreateInfo {
+	sType StructureType
+	pNext voidptr
+	flags u32
+	dynamicStateCount u32
+	pDynamicStates &DynamicState
+}
+
+[typedef]
+struct C.VkBufferCreateInfo {
+	sType StructureType
+	pNext voidptr
+	flags u32
+	size u32
+	usage BufferUsageFlagBits
+	sharingMode u32
+	queueFamilyIndexCount u32
+	pQueueFamilyIndices &u32
+}

@@ -59,6 +59,77 @@ pub enum PipelineStageFlagBits {
 	vk_pipeline_stage_none_khr = 0
 }
 
+pub enum VertexInputRate {
+    vk_vertex_input_rate_vertex = 0
+    vk_vertex_input_rate_instance = 1
+    vk_vertex_input_rate_max_enum = 0x7fffffff
+}
+
+pub enum BufferUsageFlagBits {
+    vk_buffer_usage_transfer_src_bit = 0x00000001
+    vk_buffer_usage_transfer_dst_bit = 0x00000002
+    vk_buffer_usage_uniform_texel_buffer_bit = 0x00000004
+    vk_buffer_usage_storage_texel_buffer_bit = 0x00000008
+    vk_buffer_usage_uniform_buffer_bit = 0x00000010
+    vk_buffer_usage_storage_buffer_bit = 0x00000020
+    vk_buffer_usage_index_buffer_bit = 0x00000040
+    vk_buffer_usage_vertex_buffer_bit = 0x00000080
+    vk_buffer_usage_indirect_buffer_bit = 0x00000100
+    vk_buffer_usage_shader_device_address_bit = 0x00020000
+    vk_buffer_usage_video_decode_src_bit_khr = 0x00002000
+    vk_buffer_usage_video_decode_dst_bit_khr = 0x00004000
+    vk_buffer_usage_transform_feedback_buffer_bit_ext = 0x00000800
+    vk_buffer_usage_transform_feedback_counter_buffer_bit_ext = 0x00001000
+    vk_buffer_usage_conditional_rendering_bit_ext = 0x00000200
+    vk_buffer_usage_acceleration_structure_build_input_read_only_bit_khr = 0x00080000
+    vk_buffer_usage_acceleration_structure_storage_bit_khr = 0x00100000
+    vk_buffer_usage_shader_binding_table_bit_khr = 0x00000400
+    vk_buffer_usage_video_encode_dst_bit_khr = 0x00008000
+    vk_buffer_usage_video_encode_src_bit_khr = 0x00010000
+    vk_buffer_usage_flag_bits_max_enum = 0x7fffffff
+}
+
+pub enum DynamicState {
+	vk_dynamic_state_viewport = 0
+	vk_dynamic_state_scissor = 1
+	vk_dynamic_state_line_width = 2
+	vk_dynamic_state_depth_bias = 3
+	vk_dynamic_state_blend_constants = 4
+	vk_dynamic_state_depth_bounds = 5
+	vk_dynamic_state_stencil_compare_mask = 6
+	vk_dynamic_state_stencil_write_mask = 7
+	vk_dynamic_state_stencil_reference = 8
+	vk_dynamic_state_viewport_w_scaling_nv = 1000087000
+	vk_dynamic_state_discard_rectangle_ext = 1000099000
+	vk_dynamic_state_sample_locations_ext = 1000143000
+	vk_dynamic_state_ray_tracing_pipeline_stack_size_khr = 1000347000
+	vk_dynamic_state_viewport_shading_rate_palette_nv = 1000164004
+	vk_dynamic_state_viewport_coarse_sample_order_nv = 1000164006
+	vk_dynamic_state_exclusive_scissor_nv = 1000205001
+	vk_dynamic_state_fragment_shading_rate_khr = 1000226000
+	vk_dynamic_state_line_stipple_ext = 1000259000
+	vk_dynamic_state_cull_mode_ext = 1000267000
+	vk_dynamic_state_front_face_ext = 1000267001
+	vk_dynamic_state_primitive_topology_ext = 1000267002
+	vk_dynamic_state_viewport_with_count_ext = 1000267003
+	vk_dynamic_state_scissor_with_count_ext = 1000267004
+	vk_dynamic_state_vertex_input_binding_stride_ext = 1000267005
+	vk_dynamic_state_depth_test_enable_ext = 1000267006
+	vk_dynamic_state_depth_write_enable_ext = 1000267007
+	vk_dynamic_state_depth_compare_op_ext = 1000267008
+	vk_dynamic_state_depth_bounds_test_enable_ext = 1000267009
+	vk_dynamic_state_stencil_test_enable_ext = 1000267010
+	vk_dynamic_state_stencil_op_ext = 1000267011
+	vk_dynamic_state_vertex_input_ext = 1000352000
+	vk_dynamic_state_patch_control_points_ext = 1000377000
+	vk_dynamic_state_rasterizer_discard_enable_ext = 1000377001
+	vk_dynamic_state_depth_bias_enable_ext = 1000377002
+	vk_dynamic_state_logic_op_ext = 1000377003
+	vk_dynamic_state_primitive_restart_enable_ext = 1000377004
+	vk_dynamic_state_color_write_enable_ext = 1000381000
+	vk_dynamic_state_max_enum = 0x7fffffff
+}
+
 pub enum ImageLayout {
 	vk_image_layout_undefined = 0
 	vk_image_layout_general = 1

@@ -60,15 +60,15 @@ struct C.VkSemaphore {}
 [typedef]
 struct C.VkFence {}
 
+[typedef]
+struct C.VkBuffer {}
+
 // TODO complete
 [heap; typedef]
 struct C.VkPipelineTessellationStateCreateInfo {}
 
 [heap; typedef]
 struct C.VkPipelineDepthStencilStateCreateInfo {}
-
-[heap; typedef]
-struct C.VkPipelineDynamicStateCreateInfo {}
 
 [heap; typedef]
 struct C.VkCommandBufferInheritanceInfo {}

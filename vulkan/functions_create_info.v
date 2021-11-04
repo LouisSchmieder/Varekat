@@ -341,3 +341,25 @@ pub fn create_vk_present_info(p_next voidptr, wait_semaphores []C.VkSemaphore, s
 		pResults: results.data
 	}
 }
+
+pub fn create_vk_pipeline_dynamic_state_create_info(p_next voidptr, flags u32, dynamic_states []DynamicState) C.VkPipelineDynamicStateCreateInfo {
+	return C.VkPipelineDynamicStateCreateInfo{
+		sType: .vk_structure_type_pipeline_dynamic_state_create_info
+		pNext: p_next
+		dynamicStateCount: u32(dynamic_states.len)
+		pDynamicStates: dynamic_states.data
+	}
+}
+
+pub fn create_vk_buffer_create_info(p_next voidptr, flags u32, size u32, usage BufferUsageFlagBits, sharing_mode u32, queue_family_indicies []u32) C.VkBufferCreateInfo{
+	return C.VkBufferCreateInfo{
+		sType: .vk_structure_type_buffer_create_info
+		pNext: p_next
+		flags: flags
+		size: size
+		usage: usage
+		sharingMode: sharing_mode
+		queueFamilyIndexCount: u32(queue_family_indicies.len)
+		pQueueFamilyIndices: queue_family_indicies.data
+	}
+}

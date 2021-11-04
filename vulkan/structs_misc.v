@@ -277,3 +277,18 @@ union C.VkClearValue {
 	color        C.VkClearColorValue
 	depthStencil C.VkClearDepthStencilValue
 }
+
+[typedef]
+struct C.VkVertexInputBindingDescription {
+	binding u32
+	stride u32
+	inputRate VertexInputRate
+}
+
+[typedef]
+struct C.VkVertexInputAttributeDescription {
+	location u32
+	binding u32
+	format u32
+	offset u32
+}
