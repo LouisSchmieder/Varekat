@@ -22,6 +22,7 @@ fn C.vkCreateCommandPool(C.VkDevice, &C.VkCommandPoolCreateInfo, voidptr, &C.VkC
 fn C.vkCreateSemaphore(C.VkDevice, &C.VkSemaphoreCreateInfo, voidptr, &C.VkSemaphore) VkResult
 fn C.vkCreateBuffer(C.VkDevice, &C.VkBufferCreateInfo, voidptr, &C.VkBuffer) VkResult
 
+fn C.vkAllocateMemory(C.VkDevice, &C.VkMemoryAllocateInfo, voidptr, &C.VkDeviceMemory) VkResult
 fn C.vkAllocateCommandBuffers(C.VkDevice, &C.VkCommandBufferAllocateInfo, &C.VkCommandBuffer) VkResult
 fn C.vkBeginCommandBuffer(C.VkCommandBuffer, &C.VkCommandBufferBeginInfo) VkResult
 fn C.vkAcquireNextImageKHR(C.VkDevice, C.VkSwapchainKHR, u64, C.VkSemaphore, C.VkFence, &u32) VkResult
@@ -35,6 +36,7 @@ fn C.vkCmdBindPipeline(C.VkCommandBuffer, PipelineBindPoint, C.VkPipeline)
 fn C.vkCmdSetViewport(C.VkCommandBuffer, u32, u32, &C.VkViewport)
 fn C.vkCmdSetScissor(C.VkCommandBuffer, u32, u32, &C.VkRect2D)
 fn C.vkCmdDraw(C.VkCommandBuffer, u32, u32, u32, u32)
+fn C.vkCmdBindVertexBuffers(C.VkCommandBuffer, u32, u32, C.VkBuffer, &u32)
 
 fn C.glfwCreateWindowSurface(C.VkInstance, &C.GLFWwindow, voidptr, &C.VkSurfaceKHR) VkResult
 
@@ -47,8 +49,11 @@ fn C.vkGetPhysicalDeviceSurfaceFormatsKHR(C.VkPhysicalDevice, C.VkSurfaceKHR, &u
 fn C.vkGetPhysicalDeviceSurfacePresentModesKHR(C.VkPhysicalDevice, C.VkSurfaceKHR, &u32, &VkPresentModeKHR) VkResult
 fn C.vkGetSwapchainImagesKHR(C.VkDevice, C.VkSwapchainKHR, &u32, &C.VkImage) VkResult
 fn C.vkGetDeviceQueue(C.VkDevice, u32, u32, &C.VkQueue)
+fn C.vkGetBufferMemoryRequirements(C.VkDevice, C.VkBuffer, &C.VkMemoryRequirements)
 
 fn C.vkGetPhysicalDeviceSurfaceSupportKHR(C.VkPhysicalDevice, u32, C.VkSurfaceKHR, &C.VkBool32) VkResult
+fn C.vkBindBufferMemory(C.VkDevice, C.VkBuffer, C.VkDeviceMemory, u32) VkResult
+fn C.vkMapMemory(C.VkDevice, C.VkDeviceMemory, u32, u32, u32, &voidptr) VkResult
 
 fn C.vkDeviceWaitIdle(C.VkDevice)
 fn C.vkDestroyInstance(C.VkInstance, voidptr)
@@ -64,10 +69,12 @@ fn C.vkDestroyFramebuffer(C.VkDevice, C.VkFramebuffer, voidptr)
 fn C.vkDestroyPipelineLayout(C.VkDevice, C.VkPipelineLayout, voidptr)
 fn C.vkDestroySurfaceKHR(C.VkInstance, C.VkSurfaceKHR, voidptr)
 fn C.vkDestroyBuffer(C.VkDevice, C.VkBuffer, voidptr)
+fn C.vkFreeMemory(C.VkDevice, C.VkDeviceMemory, voidptr)
+fn C.vkUnmapMemory(C.VkDevice, C.VkDeviceMemory)
 fn C.vkFreeCommandBuffers(C.VkDevice, C.VkCommandPool, u32, &C.VkCommandBuffer)
 
 fn handle_error(res VkResult, loc string) ? {
-	if res !in passable_error_codes  {
+	if res !in vulkan.passable_error_codes {
 		return error('Something went wrong with Vulkan in $loc ($res)')
 	}
 }
@@ -81,6 +88,22 @@ pub fn vk_physical_device_surface_support(device C.VkPhysicalDevice, queue_famil
 
 pub fn vk_device_wait_idle(device C.VkDevice) {
 	C.vkDeviceWaitIdle(device)
+}
+
+pub fn vk_map_memory(device C.VkDevice, mem C.VkDeviceMemory, offset u32, size u32, flags u32) ?voidptr {
+	data := unsafe { voidptr(0) }
+	res := C.vkMapMemory(device, mem, offset, size, flags, &data)
+	handle_error(res, 'vk_map_memory') ?
+	return data
+}
+
+pub fn vk_unmap_memory(device C.VkDevice, mem C.VkDeviceMemory) {
+	C.vkUnmapMemory(device, mem)
+}
+
+pub fn vk_bind_buffer_memory(device C.VkDevice, buffer C.VkBuffer, mem C.VkDeviceMemory, offset u32) ? {
+	res := C.vkBindBufferMemory(device, buffer, mem, offset)
+	handle_error(res, 'vk_bind_buffer_memory') ?
 }
 
 pub fn vk_queue_submit(queue C.VkQueue, submits []C.VkSubmitInfo, fence C.VkFence) ? {
@@ -109,6 +132,10 @@ pub fn vk_cmd_draw(buffer C.VkCommandBuffer, vertex_count u32, instance_count u3
 	C.vkCmdDraw(buffer, vertex_count, instance_count, first_vertex, first_instance)
 }
 
+pub fn vk_cmd_bind_vertex_buffers(buffer C.VkCommandBuffer, first_binding u32, buffers []C.VkBuffer, offsets []u32) {
+	C.vkCmdBindVertexBuffers(buffer, first_binding, u32(buffers.len), buffers.data, offsets.data)
+}
+
 pub fn vk_cmd_set_viewport(buffer C.VkCommandBuffer, first_viewport u32, viewports []C.VkViewport) {
 	C.vkCmdSetViewport(buffer, first_viewport, u32(viewports.len), viewports.data)
 }
@@ -125,6 +152,10 @@ pub fn vk_begin_command_buffer(buffer C.VkCommandBuffer, info &C.VkCommandBuffer
 pub fn vk_end_command_buffer(buffer C.VkCommandBuffer) ? {
 	res := C.vkEndCommandBuffer(buffer)
 	handle_error(res, 'vk_end_command_buffer') ?
+}
+
+pub fn vk_free_memory(device C.VkDevice, mem C.VkDeviceMemory, callbacks voidptr) {
+	C.vkFreeMemory(device, mem, callbacks)
 }
 
 pub fn vk_free_command_buffers(device C.VkDevice, command_pool C.VkCommandPool, buffers []C.VkCommandBuffer) {
@@ -190,7 +221,8 @@ pub fn get_binding_description(size u32) C.VkVertexInputBindingDescription {
 pub fn get_attribute_descriptions(offsets []u32, binding []u32, format []u32) []C.VkVertexInputAttributeDescription {
 	mut desc := []C.VkVertexInputAttributeDescription{}
 	for i, offset in offsets {
-		desc << create_vk_vertex_input_attribute_description(u32(i), binding[i], format[i], offset)
+		desc << create_vk_vertex_input_attribute_description(u32(i), binding[i], format[i],
+			offset)
 	}
 	return desc
 }
@@ -203,6 +235,39 @@ pub fn create_shader(p_next voidptr, flags u32, code []byte, device C.VkDevice, 
 		u32(shader_type), shader_module, entry_point, voidptr(0))
 
 	return shader_module, pipeline_stage_info
+}
+
+pub fn find_memory_type_idx(filter u32, flags_array []MemoryPropertyFlagBits, device C.VkPhysicalDevice) ?u32 {
+	physical_device_props := get_vk_physical_device_memory_properties(device)
+	mut flags := u32(flags_array[0])
+	for i in 1 .. flags_array.len {
+		flags |= u32(flags_array[i])
+	}
+
+	for i in 0 .. physical_device_props.memoryTypeCount {
+		prop_flag := unsafe { physical_device_props.memoryTypes[i].propertyFlags }
+
+		mut found := true
+
+		for s in 0 .. sizeof(u32) {
+			shift := u32(1 << s)
+			s_flags := flags & shift == shift
+			s_filter := filter & shift == shift
+			s_prop_flag := prop_flag & shift == shift
+			if !s_flags {
+				continue
+			}
+			if s_flags && !(s_flags == s_prop_flag && s_filter) {
+				found = false
+				break
+			}
+		}
+		if found {
+			return u32(i)
+		}
+	}
+
+	return error('Found no correct memory type')
 }
 
 pub fn print_layer_properties(layer C.VkLayerProperties) string {

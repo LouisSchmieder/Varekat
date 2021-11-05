@@ -11,6 +11,7 @@ const (
 
 struct Game {
 mut:
+	running                      bool
 	instance                     C.VkInstance
 	device                       C.VkDevice
 	queue                        C.VkQueue
@@ -41,6 +42,7 @@ mut:
 	binding_desc                 C.VkVertexInputBindingDescription
 	attrs_descs                  []C.VkVertexInputAttributeDescription
 	vertex_buffer                C.VkBuffer
+	vertex_memory                C.VkDeviceMemory
 }
 
 fn main() {
@@ -48,11 +50,12 @@ fn main() {
 		window: 0
 		width: 400
 		height: 300
+		running: true
 	}
 	game.verticies = [
 		misc.create_vertex(0, -0.5, 1, 0, 0),
-		misc.create_vertex(0.5, 0.5, 1, 0, 0),
-		misc.create_vertex(0.5, -0.5, 1, 0, 0)
+		misc.create_vertex(0.5, 0.5, 0, 1, 0),
+		misc.create_vertex(-0.5, 0.5, 0, 0, 1)
 	]
 	game.start_glfw()
 	game.binding_desc = vulkan.get_binding_description(sizeof(misc.Vertex))
@@ -93,7 +96,7 @@ fn (mut game Game) start_vulkan() ? {
 		0, 1), 'Test Engine', misc.make_version(0, 0, 1), misc.make_version(1, 0, 0))
 	instance_create_info := vulkan.create_vk_instance_create_info(nullptr, 0, &app_info,
 		[
-		'VK_LAYER_KHRONOS_validation',
+	//	'VK_LAYER_KHRONOS_validation',
 	], game.required_instance_extensions)
 	game.instance = vulkan.create_vk_instance(instance_create_info) ?
 
@@ -192,6 +195,20 @@ fn (mut game Game) create_swapchain(new bool) ? {
 
 	game.vertex_buffer = vulkan.create_vk_buffer(game.device, &vertex_buffer_create_info, nullptr) ?
 
+	memory_reqs := vulkan.get_vk_memory_requirements(game.device, game.vertex_buffer)
+
+	memory_allocate_info := vulkan.create_vk_memory_allocate_info(nullptr, memory_reqs.size, vulkan.find_memory_type_idx(memory_reqs.memoryTypeBits, [.vk_memory_property_host_visible_bit, .vk_memory_property_host_coherent_bit], game.physical_device)?)
+
+	game.vertex_memory = vulkan.allocate_vk_memory(game.device, &memory_allocate_info, nullptr) ?
+
+	vulkan.vk_bind_buffer_memory(game.device, game.vertex_buffer, game.vertex_memory, 0) ?
+
+	ptr := vulkan.vk_map_memory(game.device, game.vertex_memory, 0, vertex_buffer_create_info.size, 0) ?
+
+	unsafe { vmemcpy(ptr, game.verticies.data, int(vertex_buffer_create_info.size)) }
+
+	vulkan.vk_unmap_memory(game.device, game.vertex_memory)
+
 	for i, buffer in game.command_buffers {
 		vulkan.vk_begin_command_buffer(buffer, &command_buffer_begin_info) ?
 
@@ -206,6 +223,8 @@ fn (mut game Game) create_swapchain(new bool) ? {
 		viewport := vulkan.create_vk_viewport(0, 0, game.width, game.height, 0, 1)
 
 		vulkan.vk_cmd_set_viewport(buffer, 0, [viewport])
+
+		vulkan.vk_cmd_bind_vertex_buffers(buffer, 0, [game.vertex_buffer], [u32(0)])
 
 		vulkan.vk_cmd_draw(buffer, 3, 1, 0, 0)
 
@@ -292,7 +311,7 @@ fn (mut game Game) setup_pipeline() ? {
 		pipeline_color_blend_attachment_state,
 	], []f32{len: 4, init: 0.0})
 
-	dynamic_states := [vulkan.DynamicState.vk_dynamic_state_viewport, .vk_dynamic_state_scissor]
+	dynamic_states := [vulkan.DynamicState.vk_dynamic_state_viewport]
 
 	dynamic_state_create_info := vulkan.create_vk_pipeline_dynamic_state_create_info(nullptr, 0, dynamic_states)
 
@@ -339,6 +358,7 @@ fn (mut game Game) game_loop() ? {
 		glfw.poll_events()
 		game.draw_frame() ?
 	}
+	game.running = false
 }
 
 fn (mut game Game) draw_frame() ? {
@@ -354,6 +374,7 @@ fn (mut game Game) draw_frame() ? {
 
 fn (mut game Game) shutdown_vulkan() {
 	vulkan.vk_device_wait_idle(game.device)
+	vulkan.vk_free_memory(game.device, game.vertex_memory, nullptr)
 	vulkan.vk_destroy_buffer(game.device, game.vertex_buffer, nullptr)
 	vulkan.vk_destroy_semaphore(game.device, game.image_available, nullptr)
 	vulkan.vk_destroy_semaphore(game.device, game.rendering_done, nullptr)

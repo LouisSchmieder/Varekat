@@ -204,3 +204,10 @@ pub fn create_vk_buffer(device C.VkDevice, create_info &C.VkBufferCreateInfo, al
 	handle_error(res, 'create_vk_buffer') ?
 	return *buffer
 }
+
+pub fn allocate_vk_memory(device C.VkDevice, create_info &C.VkMemoryAllocateInfo, callback voidptr) ?C.VkDeviceMemory {
+	mut mem := unsafe { &C.VkDeviceMemory(malloc(int(sizeof(C.VkDeviceMemory)))) }
+	res := C.vkAllocateMemory(device, create_info, callback, mem)
+	handle_error(res, 'allocate_vk_memory') ?
+	return *mem
+}

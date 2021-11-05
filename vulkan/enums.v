@@ -60,33 +60,46 @@ pub enum PipelineStageFlagBits {
 }
 
 pub enum VertexInputRate {
-    vk_vertex_input_rate_vertex = 0
-    vk_vertex_input_rate_instance = 1
-    vk_vertex_input_rate_max_enum = 0x7fffffff
+	vk_vertex_input_rate_vertex = 0
+	vk_vertex_input_rate_instance = 1
+	vk_vertex_input_rate_max_enum = 0x7fffffff
 }
 
 pub enum BufferUsageFlagBits {
-    vk_buffer_usage_transfer_src_bit = 0x00000001
-    vk_buffer_usage_transfer_dst_bit = 0x00000002
-    vk_buffer_usage_uniform_texel_buffer_bit = 0x00000004
-    vk_buffer_usage_storage_texel_buffer_bit = 0x00000008
-    vk_buffer_usage_uniform_buffer_bit = 0x00000010
-    vk_buffer_usage_storage_buffer_bit = 0x00000020
-    vk_buffer_usage_index_buffer_bit = 0x00000040
-    vk_buffer_usage_vertex_buffer_bit = 0x00000080
-    vk_buffer_usage_indirect_buffer_bit = 0x00000100
-    vk_buffer_usage_shader_device_address_bit = 0x00020000
-    vk_buffer_usage_video_decode_src_bit_khr = 0x00002000
-    vk_buffer_usage_video_decode_dst_bit_khr = 0x00004000
-    vk_buffer_usage_transform_feedback_buffer_bit_ext = 0x00000800
-    vk_buffer_usage_transform_feedback_counter_buffer_bit_ext = 0x00001000
-    vk_buffer_usage_conditional_rendering_bit_ext = 0x00000200
-    vk_buffer_usage_acceleration_structure_build_input_read_only_bit_khr = 0x00080000
-    vk_buffer_usage_acceleration_structure_storage_bit_khr = 0x00100000
-    vk_buffer_usage_shader_binding_table_bit_khr = 0x00000400
-    vk_buffer_usage_video_encode_dst_bit_khr = 0x00008000
-    vk_buffer_usage_video_encode_src_bit_khr = 0x00010000
-    vk_buffer_usage_flag_bits_max_enum = 0x7fffffff
+	vk_buffer_usage_transfer_src_bit = 0x00000001
+	vk_buffer_usage_transfer_dst_bit = 0x00000002
+	vk_buffer_usage_uniform_texel_buffer_bit = 0x00000004
+	vk_buffer_usage_storage_texel_buffer_bit = 0x00000008
+	vk_buffer_usage_uniform_buffer_bit = 0x00000010
+	vk_buffer_usage_storage_buffer_bit = 0x00000020
+	vk_buffer_usage_index_buffer_bit = 0x00000040
+	vk_buffer_usage_vertex_buffer_bit = 0x00000080
+	vk_buffer_usage_indirect_buffer_bit = 0x00000100
+	vk_buffer_usage_shader_device_address_bit = 0x00020000
+	vk_buffer_usage_video_decode_src_bit_khr = 0x00002000
+	vk_buffer_usage_video_decode_dst_bit_khr = 0x00004000
+	vk_buffer_usage_transform_feedback_buffer_bit_ext = 0x00000800
+	vk_buffer_usage_transform_feedback_counter_buffer_bit_ext = 0x00001000
+	vk_buffer_usage_conditional_rendering_bit_ext = 0x00000200
+	vk_buffer_usage_acceleration_structure_build_input_read_only_bit_khr = 0x00080000
+	vk_buffer_usage_acceleration_structure_storage_bit_khr = 0x00100000
+	vk_buffer_usage_shader_binding_table_bit_khr = 0x00000400
+	vk_buffer_usage_video_encode_dst_bit_khr = 0x00008000
+	vk_buffer_usage_video_encode_src_bit_khr = 0x00010000
+	vk_buffer_usage_flag_bits_max_enum = 0x7fffffff
+}
+
+pub enum MemoryPropertyFlagBits {
+	vk_memory_property_device_local_bit = 0x00000001
+	vk_memory_property_host_visible_bit = 0x00000002
+	vk_memory_property_host_coherent_bit = 0x00000004
+	vk_memory_property_host_cached_bit = 0x00000008
+	vk_memory_property_lazily_allocated_bit = 0x00000010
+	vk_memory_property_protected_bit = 0x00000020
+	vk_memory_property_device_coherent_bit_amd = 0x00000040
+	vk_memory_property_device_uncached_bit_amd = 0x00000080
+	vk_memory_property_rdma_capable_bit_nv = 0x00000100
+	vk_memory_property_flag_bits_max_enum = 0x7fffffff
 }
 
 pub enum DynamicState {

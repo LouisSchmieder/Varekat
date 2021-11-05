@@ -63,6 +63,9 @@ struct C.VkFence {}
 [typedef]
 struct C.VkBuffer {}
 
+[typedef]
+struct C.VkDeviceMemory {}
+
 // TODO complete
 [heap; typedef]
 struct C.VkPipelineTessellationStateCreateInfo {}

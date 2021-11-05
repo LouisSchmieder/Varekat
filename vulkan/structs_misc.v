@@ -280,15 +280,22 @@ union C.VkClearValue {
 
 [typedef]
 struct C.VkVertexInputBindingDescription {
-	binding u32
-	stride u32
+	binding   u32
+	stride    u32
 	inputRate VertexInputRate
 }
 
 [typedef]
 struct C.VkVertexInputAttributeDescription {
 	location u32
-	binding u32
-	format u32
-	offset u32
+	binding  u32
+	format   u32
+	offset   u32
+}
+
+[typedef]
+struct C.VkMemoryRequirements {
+	size           u32
+	alignment      u32
+	memoryTypeBits u32
 }

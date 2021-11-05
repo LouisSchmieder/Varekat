@@ -37,3 +37,9 @@ pub fn acquire_vk_next_image(device C.VkDevice, swapchain C.VkSwapchainKHR, time
 	handle_error(res, 'acquire_vk_next_image') ?
 	return idx
 }
+
+pub fn get_vk_memory_requirements(device C.VkDevice, buffer C.VkBuffer) C.VkMemoryRequirements {
+	req := unsafe { &C.VkMemoryRequirements(malloc(int(sizeof(C.VkMemoryRequirements)))) }
+	C.vkGetBufferMemoryRequirements(device, buffer, req)
+	return *req
+}

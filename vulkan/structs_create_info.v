@@ -304,21 +304,29 @@ struct C.VkPresentInfoKHR {
 
 [heap; typedef]
 struct C.VkPipelineDynamicStateCreateInfo {
-	sType StructureType
-	pNext voidptr
-	flags u32
+	sType             StructureType
+	pNext             voidptr
+	flags             u32
 	dynamicStateCount u32
-	pDynamicStates &DynamicState
+	pDynamicStates    &DynamicState
 }
 
 [typedef]
 struct C.VkBufferCreateInfo {
-	sType StructureType
-	pNext voidptr
-	flags u32
-	size u32
-	usage BufferUsageFlagBits
-	sharingMode u32
+	sType                 StructureType
+	pNext                 voidptr
+	flags                 u32
+	size                  u32
+	usage                 BufferUsageFlagBits
+	sharingMode           u32
 	queueFamilyIndexCount u32
-	pQueueFamilyIndices &u32
+	pQueueFamilyIndices   &u32
+}
+
+[typedef]
+struct C.VkMemoryAllocateInfo {
+	sType           StructureType
+	pNext           voidptr
+	allocationSize  u32
+	memoryTypeIndex u32
 }

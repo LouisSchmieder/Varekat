@@ -351,7 +351,7 @@ pub fn create_vk_pipeline_dynamic_state_create_info(p_next voidptr, flags u32, d
 	}
 }
 
-pub fn create_vk_buffer_create_info(p_next voidptr, flags u32, size u32, usage BufferUsageFlagBits, sharing_mode u32, queue_family_indicies []u32) C.VkBufferCreateInfo{
+pub fn create_vk_buffer_create_info(p_next voidptr, flags u32, size u32, usage BufferUsageFlagBits, sharing_mode u32, queue_family_indicies []u32) C.VkBufferCreateInfo {
 	return C.VkBufferCreateInfo{
 		sType: .vk_structure_type_buffer_create_info
 		pNext: p_next
@@ -361,5 +361,14 @@ pub fn create_vk_buffer_create_info(p_next voidptr, flags u32, size u32, usage B
 		sharingMode: sharing_mode
 		queueFamilyIndexCount: u32(queue_family_indicies.len)
 		pQueueFamilyIndices: queue_family_indicies.data
+	}
+}
+
+pub fn create_vk_memory_allocate_info(p_next voidptr, allocation_size u32, memory_type_index u32) C.VkMemoryAllocateInfo {
+	return C.VkMemoryAllocateInfo{
+		sType: .vk_structure_type_memory_allocate_info
+		pNext: p_next
+		allocationSize: allocation_size
+		memoryTypeIndex: memory_type_index
 	}
 }

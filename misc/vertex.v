@@ -1,7 +1,8 @@
 module misc
 
 pub struct Vertex {
-	pos [2]f32
+pub mut:
+	pos   [2]f32
 	color [3]f32
 }
 
