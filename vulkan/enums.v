@@ -29,6 +29,120 @@ pub enum AttachmentStoreOp {
 	vk_attachment_store_op_none_ext = 1000301000
 }
 
+pub enum PipelineStageFlagBits {
+	vk_pipeline_stage_top_of_pipe_bit = 0x00000001
+	vk_pipeline_stage_draw_indirect_bit = 0x00000002
+	vk_pipeline_stage_vertex_input_bit = 0x00000004
+	vk_pipeline_stage_vertex_shader_bit = 0x00000008
+	vk_pipeline_stage_tessellation_control_shader_bit = 0x00000010
+	vk_pipeline_stage_tessellation_evaluation_shader_bit = 0x00000020
+	vk_pipeline_stage_geometry_shader_bit = 0x00000040
+	vk_pipeline_stage_fragment_shader_bit = 0x00000080
+	vk_pipeline_stage_early_fragment_tests_bit = 0x00000100
+	vk_pipeline_stage_late_fragment_tests_bit = 0x00000200
+	vk_pipeline_stage_color_attachment_output_bit = 0x00000400
+	vk_pipeline_stage_compute_shader_bit = 0x00000800
+	vk_pipeline_stage_transfer_bit = 0x00001000
+	vk_pipeline_stage_bottom_of_pipe_bit = 0x00002000
+	vk_pipeline_stage_host_bit = 0x00004000
+	vk_pipeline_stage_all_graphics_bit = 0x00008000
+	vk_pipeline_stage_all_commands_bit = 0x00010000
+	vk_pipeline_stage_transform_feedback_bit_ext = 0x01000000
+	vk_pipeline_stage_conditional_rendering_bit_ext = 0x00040000
+	vk_pipeline_stage_acceleration_structure_build_bit_khr = 0x02000000
+	vk_pipeline_stage_ray_tracing_shader_bit_khr = 0x00200000
+	vk_pipeline_stage_task_shader_bit_nv = 0x00080000
+	vk_pipeline_stage_mesh_shader_bit_nv = 0x00100000
+	vk_pipeline_stage_fragment_density_process_bit_ext = 0x00800000
+	vk_pipeline_stage_fragment_shading_rate_attachment_bit_khr = 0x00400000
+	vk_pipeline_stage_command_preprocess_bit_nv = 0x00020000
+	vk_pipeline_stage_none_khr = 0
+}
+
+pub enum VertexInputRate {
+	vk_vertex_input_rate_vertex = 0
+	vk_vertex_input_rate_instance = 1
+	vk_vertex_input_rate_max_enum = 0x7fffffff
+}
+
+pub enum BufferUsageFlagBits {
+	vk_buffer_usage_transfer_src_bit = 0x00000001
+	vk_buffer_usage_transfer_dst_bit = 0x00000002
+	vk_buffer_usage_uniform_texel_buffer_bit = 0x00000004
+	vk_buffer_usage_storage_texel_buffer_bit = 0x00000008
+	vk_buffer_usage_uniform_buffer_bit = 0x00000010
+	vk_buffer_usage_storage_buffer_bit = 0x00000020
+	vk_buffer_usage_index_buffer_bit = 0x00000040
+	vk_buffer_usage_vertex_buffer_bit = 0x00000080
+	vk_buffer_usage_indirect_buffer_bit = 0x00000100
+	vk_buffer_usage_shader_device_address_bit = 0x00020000
+	vk_buffer_usage_video_decode_src_bit_khr = 0x00002000
+	vk_buffer_usage_video_decode_dst_bit_khr = 0x00004000
+	vk_buffer_usage_transform_feedback_buffer_bit_ext = 0x00000800
+	vk_buffer_usage_transform_feedback_counter_buffer_bit_ext = 0x00001000
+	vk_buffer_usage_conditional_rendering_bit_ext = 0x00000200
+	vk_buffer_usage_acceleration_structure_build_input_read_only_bit_khr = 0x00080000
+	vk_buffer_usage_acceleration_structure_storage_bit_khr = 0x00100000
+	vk_buffer_usage_shader_binding_table_bit_khr = 0x00000400
+	vk_buffer_usage_video_encode_dst_bit_khr = 0x00008000
+	vk_buffer_usage_video_encode_src_bit_khr = 0x00010000
+	vk_buffer_usage_flag_bits_max_enum = 0x7fffffff
+}
+
+pub enum MemoryPropertyFlagBits {
+	vk_memory_property_device_local_bit = 0x00000001
+	vk_memory_property_host_visible_bit = 0x00000002
+	vk_memory_property_host_coherent_bit = 0x00000004
+	vk_memory_property_host_cached_bit = 0x00000008
+	vk_memory_property_lazily_allocated_bit = 0x00000010
+	vk_memory_property_protected_bit = 0x00000020
+	vk_memory_property_device_coherent_bit_amd = 0x00000040
+	vk_memory_property_device_uncached_bit_amd = 0x00000080
+	vk_memory_property_rdma_capable_bit_nv = 0x00000100
+	vk_memory_property_flag_bits_max_enum = 0x7fffffff
+}
+
+pub enum DynamicState {
+	vk_dynamic_state_viewport = 0
+	vk_dynamic_state_scissor = 1
+	vk_dynamic_state_line_width = 2
+	vk_dynamic_state_depth_bias = 3
+	vk_dynamic_state_blend_constants = 4
+	vk_dynamic_state_depth_bounds = 5
+	vk_dynamic_state_stencil_compare_mask = 6
+	vk_dynamic_state_stencil_write_mask = 7
+	vk_dynamic_state_stencil_reference = 8
+	vk_dynamic_state_viewport_w_scaling_nv = 1000087000
+	vk_dynamic_state_discard_rectangle_ext = 1000099000
+	vk_dynamic_state_sample_locations_ext = 1000143000
+	vk_dynamic_state_ray_tracing_pipeline_stack_size_khr = 1000347000
+	vk_dynamic_state_viewport_shading_rate_palette_nv = 1000164004
+	vk_dynamic_state_viewport_coarse_sample_order_nv = 1000164006
+	vk_dynamic_state_exclusive_scissor_nv = 1000205001
+	vk_dynamic_state_fragment_shading_rate_khr = 1000226000
+	vk_dynamic_state_line_stipple_ext = 1000259000
+	vk_dynamic_state_cull_mode_ext = 1000267000
+	vk_dynamic_state_front_face_ext = 1000267001
+	vk_dynamic_state_primitive_topology_ext = 1000267002
+	vk_dynamic_state_viewport_with_count_ext = 1000267003
+	vk_dynamic_state_scissor_with_count_ext = 1000267004
+	vk_dynamic_state_vertex_input_binding_stride_ext = 1000267005
+	vk_dynamic_state_depth_test_enable_ext = 1000267006
+	vk_dynamic_state_depth_write_enable_ext = 1000267007
+	vk_dynamic_state_depth_compare_op_ext = 1000267008
+	vk_dynamic_state_depth_bounds_test_enable_ext = 1000267009
+	vk_dynamic_state_stencil_test_enable_ext = 1000267010
+	vk_dynamic_state_stencil_op_ext = 1000267011
+	vk_dynamic_state_vertex_input_ext = 1000352000
+	vk_dynamic_state_patch_control_points_ext = 1000377000
+	vk_dynamic_state_rasterizer_discard_enable_ext = 1000377001
+	vk_dynamic_state_depth_bias_enable_ext = 1000377002
+	vk_dynamic_state_logic_op_ext = 1000377003
+	vk_dynamic_state_primitive_restart_enable_ext = 1000377004
+	vk_dynamic_state_color_write_enable_ext = 1000381000
+	vk_dynamic_state_max_enum = 0x7fffffff
+}
+
 pub enum ImageLayout {
 	vk_image_layout_undefined = 0
 	vk_image_layout_general = 1

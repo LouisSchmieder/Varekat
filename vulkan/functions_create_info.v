@@ -306,3 +306,69 @@ pub fn create_vk_render_pass_begin_info(p_next voidptr, render_pass C.VkRenderPa
 		pClearValues: clear_values.data
 	}
 }
+
+pub fn create_vk_semaphore_create_info(p_next voidptr, flags u32) C.VkSemaphoreCreateInfo {
+	return C.VkSemaphoreCreateInfo{
+		sType: .vk_structure_type_semaphore_create_info
+		pNext: p_next
+		flags: flags
+	}
+}
+
+pub fn create_vk_submit_info(p_next voidptr, wait_semaphores []C.VkSemaphore, p_wait_dst_stage_mask []PipelineStageFlagBits, command_buffers []C.VkCommandBuffer, signal_semaphores []C.VkSemaphore) C.VkSubmitInfo {
+	return C.VkSubmitInfo{
+		sType: .vk_structure_type_submit_info
+		pNext: p_next
+		waitSemaphoreCount: u32(wait_semaphores.len)
+		pWaitSemaphores: wait_semaphores.data
+		pWaitDstStageMask: p_wait_dst_stage_mask.data
+		commandBufferCount: u32(command_buffers.len)
+		pCommandBuffers: command_buffers.data
+		signalSemaphoreCount: u32(signal_semaphores.len)
+		pSignalSemaphores: signal_semaphores.data
+	}
+}
+
+pub fn create_vk_present_info(p_next voidptr, wait_semaphores []C.VkSemaphore, swapchains []C.VkSwapchainKHR, image_indicies []u32, results []VkResult) C.VkPresentInfoKHR {
+	return C.VkPresentInfoKHR{
+		sType: .vk_structure_type_present_info_khr
+		pNext: p_next
+		waitSemaphoreCount: u32(wait_semaphores.len)
+		pWaitSemaphores: wait_semaphores.data
+		swapchainCount: u32(swapchains.len)
+		pSwapchains: swapchains.data
+		pImageIndices: image_indicies.data
+		pResults: results.data
+	}
+}
+
+pub fn create_vk_pipeline_dynamic_state_create_info(p_next voidptr, flags u32, dynamic_states []DynamicState) C.VkPipelineDynamicStateCreateInfo {
+	return C.VkPipelineDynamicStateCreateInfo{
+		sType: .vk_structure_type_pipeline_dynamic_state_create_info
+		pNext: p_next
+		dynamicStateCount: u32(dynamic_states.len)
+		pDynamicStates: dynamic_states.data
+	}
+}
+
+pub fn create_vk_buffer_create_info(p_next voidptr, flags u32, size u32, usage BufferUsageFlagBits, sharing_mode u32, queue_family_indicies []u32) C.VkBufferCreateInfo {
+	return C.VkBufferCreateInfo{
+		sType: .vk_structure_type_buffer_create_info
+		pNext: p_next
+		flags: flags
+		size: size
+		usage: usage
+		sharingMode: sharing_mode
+		queueFamilyIndexCount: u32(queue_family_indicies.len)
+		pQueueFamilyIndices: queue_family_indicies.data
+	}
+}
+
+pub fn create_vk_memory_allocate_info(p_next voidptr, allocation_size u32, memory_type_index u32) C.VkMemoryAllocateInfo {
+	return C.VkMemoryAllocateInfo{
+		sType: .vk_structure_type_memory_allocate_info
+		pNext: p_next
+		allocationSize: allocation_size
+		memoryTypeIndex: memory_type_index
+	}
+}

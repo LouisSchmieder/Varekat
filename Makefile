@@ -5,3 +5,8 @@ files = $(filter-out $(ignore), $(all))
 
 run: $(files)
 	v fmt -w $(files)
+
+shaders:
+	cd assets/shader
+	make
+	cd ../..
