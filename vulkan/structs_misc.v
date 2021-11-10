@@ -299,3 +299,10 @@ struct C.VkMemoryRequirements {
 	alignment      u32
 	memoryTypeBits u32
 }
+
+[typedef]
+struct C.VkBufferCopy {
+	srcOffset u32
+	dstOffset u32
+	size      u32
+}

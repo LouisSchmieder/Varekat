@@ -18,8 +18,8 @@ const (
 )
 
 pub fn noise2(seed int, x int, y int) int {
-	tmp := hash[(y + seed) % 256]
-	return hash[(tmp + x) % 256]
+	tmp := mathf.hash[(y + seed) % 256]
+	return mathf.hash[(tmp + x) % 256]
 }
 
 pub fn lin_interpol(x f32, y f32, s f32) f32 {
@@ -51,7 +51,7 @@ pub fn perlin2d(seed int, x f32, y f32, freq f32, depth f32) f32 {
 	mut fin := f32(1.0)
 	mut div := f32(1.0)
 
-	for _ in 0..int(depth) {
+	for _ in 0 .. int(depth) {
 		div += 256 * amp
 		fin += noise2d(seed, xa, ya) * amp
 		amp /= 2
@@ -59,5 +59,5 @@ pub fn perlin2d(seed int, x f32, y f32, freq f32, depth f32) f32 {
 		ya *= 2
 	}
 
-	return fin/div
+	return fin / div
 }

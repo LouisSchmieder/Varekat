@@ -317,7 +317,7 @@ struct C.VkBufferCreateInfo {
 	pNext                 voidptr
 	flags                 u32
 	size                  u32
-	usage                 BufferUsageFlagBits
+	usage                 u32
 	sharingMode           u32
 	queueFamilyIndexCount u32
 	pQueueFamilyIndices   &u32

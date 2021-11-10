@@ -2,10 +2,10 @@ module terrain
 
 import mathf
 
-pub type MapGen = fn(int, int, int, f32, f32) []f64
+pub type MapGen = fn (int, int, int, f32, f32) []f64
 
 pub struct Heightmap {
-	width int
+	width  int
 	height int
 mut:
 	pixels []f64
@@ -32,7 +32,7 @@ pub fn (a Heightmap) * (b Heightmap) Heightmap {
 		return a
 	}
 	mut data := []f64{len: a.width * b.height}
-	for i in 0..data.len {
+	for i in 0 .. data.len {
 		data[i] = a.pixels[i] * b.pixels[i]
 	}
 	return Heightmap{

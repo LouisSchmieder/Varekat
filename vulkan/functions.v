@@ -36,7 +36,10 @@ fn C.vkCmdBindPipeline(C.VkCommandBuffer, PipelineBindPoint, C.VkPipeline)
 fn C.vkCmdSetViewport(C.VkCommandBuffer, u32, u32, &C.VkViewport)
 fn C.vkCmdSetScissor(C.VkCommandBuffer, u32, u32, &C.VkRect2D)
 fn C.vkCmdDraw(C.VkCommandBuffer, u32, u32, u32, u32)
+fn C.vkCmdDrawIndexed(C.VkCommandBuffer, u32, u32, u32, int, u32)
 fn C.vkCmdBindVertexBuffers(C.VkCommandBuffer, u32, u32, C.VkBuffer, &u32)
+fn C.vkCmdBindIndexBuffer(C.VkCommandBuffer, C.VkBuffer, u32, u32)
+fn C.vkCmdCopyBuffer(C.VkCommandBuffer, C.VkBuffer, C.VkBuffer, u32, &C.VkBufferCopy)
 
 fn C.glfwCreateWindowSurface(C.VkInstance, &C.GLFWwindow, voidptr, &C.VkSurfaceKHR) VkResult
 
@@ -56,6 +59,7 @@ fn C.vkBindBufferMemory(C.VkDevice, C.VkBuffer, C.VkDeviceMemory, u32) VkResult
 fn C.vkMapMemory(C.VkDevice, C.VkDeviceMemory, u32, u32, u32, &voidptr) VkResult
 
 fn C.vkDeviceWaitIdle(C.VkDevice)
+fn C.vkQueueWaitIdle(C.VkQueue)
 fn C.vkDestroyInstance(C.VkInstance, voidptr)
 fn C.vkDestroyDevice(C.VkDevice, voidptr)
 fn C.vkDestroyImageView(C.VkDevice, C.VkImageView, voidptr)
@@ -90,6 +94,10 @@ pub fn vk_device_wait_idle(device C.VkDevice) {
 	C.vkDeviceWaitIdle(device)
 }
 
+pub fn vk_queue_wait_idle(queue C.VkQueue) {
+	C.vkQueueWaitIdle(queue)
+}
+
 pub fn vk_map_memory(device C.VkDevice, mem C.VkDeviceMemory, offset u32, size u32, flags u32) ?voidptr {
 	data := unsafe { voidptr(0) }
 	res := C.vkMapMemory(device, mem, offset, size, flags, &data)
@@ -120,8 +128,20 @@ pub fn vk_cmd_begin_render_pass(buffer C.VkCommandBuffer, info &C.VkRenderPassBe
 	C.vkCmdBeginRenderPass(buffer, info, typ)
 }
 
+pub fn vk_cmd_bind_index_buffer(buffer C.VkCommandBuffer, idx_buffer C.VkBuffer, offset u32, index_type u32) {
+	C.vkCmdBindIndexBuffer(buffer, idx_buffer, offset, index_type)
+}
+
+pub fn vk_cmd_draw_indexed(buffer C.VkCommandBuffer, index_count u32, instance_count u32, first_index u32, offset int, first_instance u32) {
+	C.vkCmdDrawIndexed(buffer, index_count, instance_count, first_index, offset, first_instance)
+}
+
 pub fn vk_cmd_end_render_pass(buffer C.VkCommandBuffer) {
 	C.vkCmdEndRenderPass(buffer)
+}
+
+pub fn vk_cmd_copy_buffer(buffer C.VkCommandBuffer, src C.VkBuffer, dst C.VkBuffer, copies []C.VkBufferCopy) {
+	C.vkCmdCopyBuffer(buffer, src, dst, u32(copies.len), copies.data)
 }
 
 pub fn vk_cmd_bind_pipeline(buffer C.VkCommandBuffer, bind_point PipelineBindPoint, pipeline C.VkPipeline) {
@@ -225,6 +245,50 @@ pub fn get_attribute_descriptions(offsets []u32, binding []u32, format []u32) []
 			offset)
 	}
 	return desc
+}
+
+pub fn create_buffer(device C.VkDevice, p_device C.VkPhysicalDevice, buffer_size u32, usage []BufferUsageFlagBits, sharing_mode u32, queue_families []u32, required_mem_types []MemoryPropertyFlagBits) ?(C.VkBuffer, C.VkDeviceMemory) {
+	mut usage_bit := u32(usage[0])
+	for i in 1 .. usage.len {
+		usage_bit |= u32(usage[i])
+	}
+
+	buffer_create_info := create_vk_buffer_create_info(voidptr(0), 0, buffer_size, usage_bit,
+		sharing_mode, queue_families)
+	buffer := create_vk_buffer(device, &buffer_create_info, voidptr(0)) ?
+	mem_req := get_vk_memory_requirements(device, buffer)
+	memory_allocate_info := create_vk_memory_allocate_info(voidptr(0), mem_req.size, find_memory_type_idx(mem_req.memoryTypeBits,
+		required_mem_types, p_device) ?)
+	buffer_memory := allocate_vk_memory(device, &memory_allocate_info, voidptr(0)) ?
+	vk_bind_buffer_memory(device, buffer, buffer_memory, 0) ?
+	return buffer, buffer_memory
+}
+
+pub fn copy_buffer(src C.VkBuffer, dst C.VkBuffer, size u32, command_pool C.VkCommandPool, device C.VkDevice, queue C.VkQueue) ? {
+	create_info := create_vk_command_buffer_allocate_info(voidptr(0), command_pool, .vk_command_buffer_level_primary,
+		u32(1))
+	buffers := allocate_vk_command_buffers(device, &create_info) ?
+
+	command_buffer := buffers[0]
+
+	begin_info := create_vk_command_buffer_begin_info(voidptr(0), u32(C.VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT),
+		voidptr(0))
+	vk_begin_command_buffer(command_buffer, &begin_info) ?
+
+	buffer_copy := C.VkBufferCopy{
+		srcOffset: 0
+		dstOffset: 0
+		size: size
+	}
+
+	vk_cmd_copy_buffer(command_buffer, src, dst, [buffer_copy])
+	vk_end_command_buffer(command_buffer) ?
+
+	submit_info := create_vk_submit_info(voidptr(0), [], [], [command_buffer], [])
+
+	vk_queue_submit(queue, [submit_info], null<VkFence>()) ?
+	vk_queue_wait_idle(queue)
+	vk_free_command_buffers(device, command_pool, buffers)
 }
 
 pub fn create_shader(p_next voidptr, flags u32, code []byte, device C.VkDevice, shader_type ShaderType, entry_point string) ?(C.VkShaderModule, C.VkPipelineShaderStageCreateInfo) {

@@ -351,7 +351,7 @@ pub fn create_vk_pipeline_dynamic_state_create_info(p_next voidptr, flags u32, d
 	}
 }
 
-pub fn create_vk_buffer_create_info(p_next voidptr, flags u32, size u32, usage BufferUsageFlagBits, sharing_mode u32, queue_family_indicies []u32) C.VkBufferCreateInfo {
+pub fn create_vk_buffer_create_info(p_next voidptr, flags u32, size u32, usage u32, sharing_mode u32, queue_family_indicies []u32) C.VkBufferCreateInfo {
 	return C.VkBufferCreateInfo{
 		sType: .vk_structure_type_buffer_create_info
 		pNext: p_next
