@@ -69,6 +69,16 @@ pub fn create_vk_rect_2d(offset_x int, offset_y int, width u32, height u32) C.Vk
 	}
 }
 
+pub fn create_vk_descriptor_set_layout_binding(binding u32, desc_type u32, desc_count u32, stage_flags u32, immutable_samplers []C.VkSampler) C.VkDescriptorSetLayoutBinding {
+	return C.VkDescriptorSetLayoutBinding{
+		binding: binding
+		descriptorType: desc_type
+		descriptorCount: desc_count
+		stageFlags: stage_flags
+		pImmutableSamplers: immutable_samplers.data
+	}
+}
+
 pub fn create_vk_vertex_input_binding_description(binding u32, stride u32, input_rate VertexInputRate) C.VkVertexInputBindingDescription {
 	return C.VkVertexInputBindingDescription{
 		binding: binding
@@ -96,6 +106,14 @@ pub fn create_vk_image_subresource_range(aspect_mask u32, base_mip_level u32, le
 	}
 }
 
+pub fn create_vk_descriptor_buffer_info(buffer C.VkBuffer, offset u32, range u32) C.VkDescriptorBufferInfo {
+	return C.VkDescriptorBufferInfo{
+		buffer: buffer
+		offset: offset
+		range: range
+	}
+}
+
 pub fn create_vk_clear_value(r f32, g f32, b f32, a f32) C.VkClearValue {
 	mut vals := [4]f32{}
 	vals[0] = r
@@ -106,6 +124,13 @@ pub fn create_vk_clear_value(r f32, g f32, b f32, a f32) C.VkClearValue {
 		color: C.VkClearColorValue{
 			float32: vals
 		}
+	}
+}
+
+pub fn create_vk_descriptor_pool_size(typ u32, desc_count u32) C.VkDescriptorPoolSize {
+	return C.VkDescriptorPoolSize{
+		@type: typ
+		descriptorCount: desc_count
 	}
 }
 
@@ -210,4 +235,25 @@ pub fn allocate_vk_memory(device C.VkDevice, create_info &C.VkMemoryAllocateInfo
 	res := C.vkAllocateMemory(device, create_info, callback, mem)
 	handle_error(res, 'allocate_vk_memory') ?
 	return *mem
+}
+
+pub fn create_vk_descriptor_set_layout(device C.VkDevice, create_info &C.VkDescriptorSetLayoutCreateInfo, alloc voidptr) ?C.VkDescriptorSetLayout {
+	mut set := unsafe { &C.VkDescriptorSetLayout(malloc(int(sizeof(C.VkDescriptorSetLayout)))) }
+	res := C.vkCreateDescriptorSetLayout(device, create_info, alloc, set)
+	handle_error(res, 'create_vk_descriptor_set_layout') ?
+	return *set
+}
+
+pub fn create_vk_descriptor_pool(device C.VkDevice, create_info &C.VkDescriptorPoolCreateInfo, alloc voidptr) ?C.VkDescriptorPool {
+	mut pool := unsafe { &C.VkDescriptorPool(malloc(int(sizeof(C.VkDescriptorPool)))) }
+	res := C.vkCreateDescriptorPool(device, create_info, alloc, pool)
+	handle_error(res, 'create_vk_descriptor_pool') ?
+	return *pool
+}
+
+pub fn allocate_vk_descriptor_sets(device C.VkDevice, create_info &C.VkDescriptorSetAllocateInfo) ?C.VkDescriptorSet {
+	mut set := unsafe { &C.VkDescriptorSet(malloc(int(sizeof(C.VkDescriptorSet)))) }
+	res := C.vkAllocateDescriptorSets(device, create_info, set)
+	handle_error(res, 'allocate_vk_descriptor_sets') ?
+	return *set
 }

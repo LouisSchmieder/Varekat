@@ -306,3 +306,25 @@ struct C.VkBufferCopy {
 	dstOffset u32
 	size      u32
 }
+
+[typedef]
+struct C.VkDescriptorSetLayoutBinding {
+	binding            u32
+	descriptorType     u32
+	descriptorCount    u32
+	stageFlags         u32
+	pImmutableSamplers &C.VkSampler
+}
+
+[typedef]
+struct C.VkDescriptorPoolSize {
+	@type           u32
+	descriptorCount u32
+}
+
+[typedef]
+struct C.VkDescriptorBufferInfo {
+	buffer C.VkBuffer
+	offset u32
+	range  u32
+}

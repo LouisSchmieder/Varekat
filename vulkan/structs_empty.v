@@ -66,6 +66,15 @@ struct C.VkBuffer {}
 [typedef]
 struct C.VkDeviceMemory {}
 
+[typedef]
+struct C.VkDescriptorSetLayout {}
+
+[typedef]
+struct C.VkDescriptorPool {}
+
+[typedef]
+struct C.VkDescriptorSet {}
+
 // TODO complete
 [heap; typedef]
 struct C.VkPipelineTessellationStateCreateInfo {}
@@ -78,3 +87,6 @@ struct C.VkCommandBufferInheritanceInfo {}
 
 [typedef]
 struct C.VkPipelineCache {}
+
+[typedef]
+struct C.VkSampler {}

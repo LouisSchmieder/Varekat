@@ -330,3 +330,45 @@ struct C.VkMemoryAllocateInfo {
 	allocationSize  u32
 	memoryTypeIndex u32
 }
+
+[typedef]
+struct C.VkDescriptorSetLayoutCreateInfo {
+	sType        StructureType
+	pNext        voidptr
+	flags        u32
+	bindingCount u32
+	pBindings    &C.VkDescriptorSetLayoutBinding
+}
+
+[typedef]
+struct C.VkDescriptorPoolCreateInfo {
+	sType         StructureType
+	pNext         voidptr
+	flags         u32
+	maxSets       u32
+	poolSizeCount u32
+	pPoolSizes    &C.VkDescriptorPoolSize
+}
+
+[typedef]
+struct C.VkDescriptorSetAllocateInfo {
+	sType              StructureType
+	pNext              voidptr
+	descriptorPool     C.VkDescriptorPool
+	descriptorSetCount u32
+	pSetLayouts        &C.VkDescriptorSetLayout
+}
+
+[typedef]
+struct C.VkWriteDescriptorSet {
+	sType             StructureType
+	pNext             voidptr
+	dstSet            C.VkDescriptorSet
+	dstBinding        u32
+	dstArrayElement u32
+	descriptorCount   u32
+	descriptorType    u32
+	pImageInfo        voidptr // TODO add
+	pBufferInfo       &C.VkDescriptorBufferInfo
+	pTexelBufferView  voidptr // TODO add
+}

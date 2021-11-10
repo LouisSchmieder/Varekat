@@ -21,6 +21,9 @@ fn C.vkCreateFramebuffer(C.VkDevice, &C.VkFramebufferCreateInfo, voidptr, &C.VkF
 fn C.vkCreateCommandPool(C.VkDevice, &C.VkCommandPoolCreateInfo, voidptr, &C.VkCommandPool) VkResult
 fn C.vkCreateSemaphore(C.VkDevice, &C.VkSemaphoreCreateInfo, voidptr, &C.VkSemaphore) VkResult
 fn C.vkCreateBuffer(C.VkDevice, &C.VkBufferCreateInfo, voidptr, &C.VkBuffer) VkResult
+fn C.vkCreateDescriptorSetLayout(C.VkDevice, &C.VkDescriptorSetLayoutCreateInfo, voidptr, &C.VkDescriptorSetLayout) VkResult
+fn C.vkCreateDescriptorPool(C.VkDevice, &C.VkDescriptorPoolCreateInfo, voidptr, &C.VkDescriptorPool) VkResult
+fn C.vkAllocateDescriptorSets(C.VkDevice, &C.VkDescriptorSetAllocateInfo, &C.VkDescriptorSet) VkResult
 
 fn C.vkAllocateMemory(C.VkDevice, &C.VkMemoryAllocateInfo, voidptr, &C.VkDeviceMemory) VkResult
 fn C.vkAllocateCommandBuffers(C.VkDevice, &C.VkCommandBufferAllocateInfo, &C.VkCommandBuffer) VkResult
@@ -39,6 +42,7 @@ fn C.vkCmdDraw(C.VkCommandBuffer, u32, u32, u32, u32)
 fn C.vkCmdDrawIndexed(C.VkCommandBuffer, u32, u32, u32, int, u32)
 fn C.vkCmdBindVertexBuffers(C.VkCommandBuffer, u32, u32, C.VkBuffer, &u32)
 fn C.vkCmdBindIndexBuffer(C.VkCommandBuffer, C.VkBuffer, u32, u32)
+fn C.vkCmdBindDescriptorSets(C.VkCommandBuffer, u32, C.VkPipelineLayout, u32, u32, &C.VkDescriptorSet, u32, voidptr)
 fn C.vkCmdCopyBuffer(C.VkCommandBuffer, C.VkBuffer, C.VkBuffer, u32, &C.VkBufferCopy)
 
 fn C.glfwCreateWindowSurface(C.VkInstance, &C.GLFWwindow, voidptr, &C.VkSurfaceKHR) VkResult
@@ -57,6 +61,7 @@ fn C.vkGetBufferMemoryRequirements(C.VkDevice, C.VkBuffer, &C.VkMemoryRequiremen
 fn C.vkGetPhysicalDeviceSurfaceSupportKHR(C.VkPhysicalDevice, u32, C.VkSurfaceKHR, &C.VkBool32) VkResult
 fn C.vkBindBufferMemory(C.VkDevice, C.VkBuffer, C.VkDeviceMemory, u32) VkResult
 fn C.vkMapMemory(C.VkDevice, C.VkDeviceMemory, u32, u32, u32, &voidptr) VkResult
+fn C.vkUpdateDescriptorSets(C.VkDevice, u32, &C.VkWriteDescriptorSet, u32, voidptr)
 
 fn C.vkDeviceWaitIdle(C.VkDevice)
 fn C.vkQueueWaitIdle(C.VkQueue)
@@ -76,6 +81,8 @@ fn C.vkDestroyBuffer(C.VkDevice, C.VkBuffer, voidptr)
 fn C.vkFreeMemory(C.VkDevice, C.VkDeviceMemory, voidptr)
 fn C.vkUnmapMemory(C.VkDevice, C.VkDeviceMemory)
 fn C.vkFreeCommandBuffers(C.VkDevice, C.VkCommandPool, u32, &C.VkCommandBuffer)
+fn C.vkDestroyDescriptorSetLayout(C.VkDevice, C.VkDescriptorSetLayout, voidptr)
+fn C.vkDestroyDescriptorPool(C.VkDevice, C.VkDescriptorPool, voidptr)
 
 fn handle_error(res VkResult, loc string) ? {
 	if res !in vulkan.passable_error_codes {
@@ -88,6 +95,10 @@ pub fn vk_physical_device_surface_support(device C.VkPhysicalDevice, queue_famil
 	res := C.vkGetPhysicalDeviceSurfaceSupportKHR(device, queue_family_idx, surface, support)
 	handle_error(res, 'vk_physical_device_surface_support') ?
 	return support == vk_true
+}
+
+pub fn vk_update_descriptor_sets(device C.VkDevice, writers []C.VkWriteDescriptorSet, copies []voidptr) {
+	C.vkUpdateDescriptorSets(device, u32(writers.len), writers.data, u32(copies.len), copies.data)
 }
 
 pub fn vk_device_wait_idle(device C.VkDevice) {
@@ -126,6 +137,10 @@ pub fn vk_queue_present(queue C.VkQueue, create_info &C.VkPresentInfoKHR) ? {
 
 pub fn vk_cmd_begin_render_pass(buffer C.VkCommandBuffer, info &C.VkRenderPassBeginInfo, typ u32) {
 	C.vkCmdBeginRenderPass(buffer, info, typ)
+}
+
+pub fn vk_cmd_bind_descriptor_sets(buffer C.VkCommandBuffer, pipeline_bind PipelineBindPoint, layout C.VkPipelineLayout, first_idx u32, sets []C.VkDescriptorSet, offsets []u32) {
+	C.vkCmdBindDescriptorSets(buffer, u32(pipeline_bind), layout, first_idx, u32(sets.len), sets.data, u32(offsets.len), offsets.data)
 }
 
 pub fn vk_cmd_bind_index_buffer(buffer C.VkCommandBuffer, idx_buffer C.VkBuffer, offset u32, index_type u32) {
@@ -204,6 +219,14 @@ pub fn vk_destroy_pipeline_layout(device C.VkDevice, pipeline_layout C.VkPipelin
 
 pub fn vk_destroy_render_pass(device C.VkDevice, render_pass C.VkRenderPass, allocator voidptr) {
 	C.vkDestroyRenderPass(device, render_pass, allocator)
+}
+
+pub fn vk_destroy_descriptor_set_layout(device C.VkDevice, desc_set_layout C.VkDescriptorSetLayout, alloc voidptr) {
+	C.vkDestroyDescriptorSetLayout(device, desc_set_layout, alloc)
+}
+
+pub fn vk_destroy_descriptor_pool(device C.VkDevice, desc_pool C.VkDescriptorPool, alloc voidptr) {
+	C.vkDestroyDescriptorPool(device, desc_pool, alloc)
 }
 
 pub fn vk_destroy_buffer(device C.VkDevice, buffer C.VkBuffer, allocator voidptr) {
@@ -286,7 +309,7 @@ pub fn copy_buffer(src C.VkBuffer, dst C.VkBuffer, size u32, command_pool C.VkCo
 
 	submit_info := create_vk_submit_info(voidptr(0), [], [], [command_buffer], [])
 
-	vk_queue_submit(queue, [submit_info], null<VkFence>()) ?
+	vk_queue_submit(queue, [submit_info], null<C.VkFence>()) ?
 	vk_queue_wait_idle(queue)
 	vk_free_command_buffers(device, command_pool, buffers)
 }

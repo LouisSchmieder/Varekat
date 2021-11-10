@@ -372,3 +372,49 @@ pub fn create_vk_memory_allocate_info(p_next voidptr, allocation_size u32, memor
 		memoryTypeIndex: memory_type_index
 	}
 }
+
+pub fn create_vk_descriptor_set_layout_create_info(p_next voidptr, flags u32, bindings []C.VkDescriptorSetLayoutBinding) C.VkDescriptorSetLayoutCreateInfo {
+	return C.VkDescriptorSetLayoutCreateInfo{
+		sType: .vk_structure_type_descriptor_set_layout_create_info
+		pNext: p_next
+		flags: flags
+		bindingCount: u32(bindings.len)
+		pBindings: bindings.data
+	}
+}
+
+pub fn create_vk_descriptor_pool_create_info(p_next voidptr, flags u32, max_sets u32, pool_sizes []C.VkDescriptorPoolSize) C.VkDescriptorPoolCreateInfo {
+	return C.VkDescriptorPoolCreateInfo{
+		sType: .vk_structure_type_descriptor_pool_create_info
+		pNext: p_next
+		flags: flags
+		maxSets: max_sets
+		poolSizeCount: u32(pool_sizes.len)
+		pPoolSizes: pool_sizes.data
+	}
+}
+
+pub fn create_vk_descriptor_set_allocate_info(p_next voidptr, desc_pool C.VkDescriptorPool, set_layouts []C.VkDescriptorSetLayout) C.VkDescriptorSetAllocateInfo {
+	return C.VkDescriptorSetAllocateInfo{
+		sType: .vk_structure_type_descriptor_set_allocate_info
+		pNext: p_next
+		descriptorPool: desc_pool
+		descriptorSetCount: u32(set_layouts.len)
+		pSetLayouts: set_layouts.data
+	}
+}
+
+pub fn create_vk_write_descriptor_set(p_next voidptr, dst_set C.VkDescriptorSet, dst_binding u32, dst_array_element u32, descriptor_count u32, descriptor_type u32, image_infos []voidptr, buffer_infos []C.VkDescriptorBufferInfo, texel_buffer_views []voidptr) C.VkWriteDescriptorSet {
+	return C.VkWriteDescriptorSet{
+		sType: .vk_structure_type_write_descriptor_set
+		pNext: p_next
+		dstSet: dst_set
+		dstBinding: dst_binding
+		dstArrayElement: dst_array_element
+		descriptorCount: descriptor_count
+		descriptorType: descriptor_type
+		pImageInfo: image_infos.data
+		pBufferInfo: buffer_infos.data
+		pTexelBufferView: texel_buffer_views.data
+	}
+}

@@ -3,6 +3,10 @@ module main
 import glfw
 import vulkan
 import misc
+import gg.m4
+import time
+
+pub type GameLoopFn = fn (time.Duration, voidptr) ?
 
 const (
 	shader_path = './assets/shader/bin'
@@ -27,6 +31,19 @@ mut:
 	pipelines                    []C.VkPipeline
 	image_views                  []C.VkImageView
 	framebuffers                 []C.VkFramebuffer
+	binding_desc                 C.VkVertexInputBindingDescription
+	attrs_descs                  []C.VkVertexInputAttributeDescription
+	vertex_buffer                C.VkBuffer
+	vertex_memory                C.VkDeviceMemory
+	index_buffer                 C.VkBuffer
+	index_memory                 C.VkDeviceMemory
+	uniform_buffer               C.VkBuffer
+	uniform_memory               C.VkDeviceMemory
+
+	desc_set_layout              C.VkDescriptorSetLayout
+	desc_pool                    C.VkDescriptorPool
+	desc_set                     C.VkDescriptorSet
+
 	window                       &C.GLFWwindow
 	required_instance_extensions []string
 	shaders                      map[string]C.VkShaderModule
@@ -40,12 +57,15 @@ mut:
 	vertex_shader_code           []byte
 	verticies                    []misc.Vertex
 	indicies                     []u32
-	binding_desc                 C.VkVertexInputBindingDescription
-	attrs_descs                  []C.VkVertexInputAttributeDescription
-	vertex_buffer                C.VkBuffer
-	vertex_memory                C.VkDeviceMemory
-	index_buffer                 C.VkBuffer
-	index_memory                 C.VkDeviceMemory
+	mvp                          m4.Mat4
+	last                         time.Time
+	user_ptr                     voidptr
+	game_loop_fn                 GameLoopFn
+
+	fov                          f32
+	aspec_ratio                  f32
+	near_plane                   f32
+	far_plane                    f32
 }
 
 fn main() {
@@ -54,7 +74,13 @@ fn main() {
 		width: 400
 		height: 300
 		running: true
+		last: time.now()
+		game_loop_fn: loop_fn
+		fov: 80.0
+		near_plane: 0.01
+		far_plane: 10.0
 	}
+	game.user_ptr = &game
 	game.verticies = [
 		misc.create_vertex(-0.5, -0.5, 1, 0, 0),
 		misc.create_vertex(0.5, 0.5, 0, 1, 0),
@@ -104,7 +130,7 @@ fn (mut game Game) start_vulkan() ? {
 		0, 1), 'Test Engine', misc.make_version(0, 0, 1), misc.make_version(1, 0, 0))
 	instance_create_info := vulkan.create_vk_instance_create_info(nullptr, 0, &app_info,
 		[
-	//	'VK_LAYER_KHRONOS_validation',
+		'VK_LAYER_KHRONOS_validation',
 	], game.required_instance_extensions)
 	game.instance = vulkan.create_vk_instance(instance_create_info) ?
 
@@ -184,6 +210,11 @@ fn (mut game Game) create_swapchain(new bool) ? {
 	} 
 	
 	game.setup_swapchain(new) ?
+
+	if new {
+		game.create_descriptor_set_layout() ?
+	}
+
 	game.setup_pipeline() ?
 
 	for view in game.image_views {
@@ -201,6 +232,9 @@ fn (mut game Game) create_swapchain(new bool) ? {
 	// Buffer
 	game.vertex_buffer, game.vertex_memory = game.create_buffer(game.verticies, .vk_buffer_usage_vertex_buffer_bit) ?
 	game.index_buffer, game.index_memory = game.create_buffer(game.indicies, .vk_buffer_usage_index_buffer_bit) ?
+	game.create_uniform_buffer() ?
+	game.create_descriptor_pool() ?
+	game.create_descriptor_set() ?
 
 	for i, buffer in game.command_buffers {
 		vulkan.vk_begin_command_buffer(buffer, &command_buffer_begin_info) ?
@@ -220,6 +254,8 @@ fn (mut game Game) create_swapchain(new bool) ? {
 		vulkan.vk_cmd_bind_vertex_buffers(buffer, 0, [game.vertex_buffer], [u32(0)])
 
 		vulkan.vk_cmd_bind_index_buffer(buffer, game.index_buffer, 0, u32(C.VK_INDEX_TYPE_UINT32))
+
+		vulkan.vk_cmd_bind_descriptor_sets(buffer, .vk_pipeline_bind_point_graphics, game.pipeline_layout, 0, [game.desc_set], [])
 
 	//	vulkan.vk_cmd_draw(buffer, u32(game.verticies.len), 1, 0, 0)
 
@@ -316,7 +352,7 @@ fn (mut game Game) setup_pipeline() ? {
 		0, [viewport], [scissor])
 	pipeline_rasterization_state_info := vulkan.create_vk_pipeline_rasterization_state_create_info(nullptr,
 		0, vulkan.vk_false, vulkan.vk_false, u32(C.VK_POLYGON_MODE_FILL), u32(C.VK_CULL_MODE_BACK_BIT),
-		u32(C.VK_FRONT_FACE_CLOCKWISE), vulkan.vk_false, 0, 0, 0, 1)
+		u32(C.VK_FRONT_FACE_COUNTER_CLOCKWISE), vulkan.vk_false, 0, 0, 0, 1)
 	pipeline_multisample_state_info := vulkan.create_vk_pipeline_multisample_state_create_info(nullptr,
 		0, u32(C.VK_SAMPLE_COUNT_1_BIT), vulkan.vk_false, 1.0, nullptr, vulkan.vk_false,
 		vulkan.vk_false)
@@ -333,7 +369,7 @@ fn (mut game Game) setup_pipeline() ? {
 	dynamic_state_create_info := vulkan.create_vk_pipeline_dynamic_state_create_info(nullptr, 0, dynamic_states)
 
 	pipeline_layout_create_info := vulkan.create_vk_pipeline_layout_create_info(nullptr,
-		0, [], [])
+		0, [game.desc_set_layout], [])
 
 	game.pipeline_layout = vulkan.create_vk_pipeline_layout(game.device, pipeline_layout_create_info,
 		nullptr) ?
@@ -373,6 +409,14 @@ fn (mut game Game) setup_pipeline() ? {
 fn (mut game Game) game_loop() ? {
 	for !glfw.should_close(game.window) {
 		glfw.poll_events()
+
+		now := time.now()
+
+		delta := now - game.last
+		game.last = now
+
+		game.game_loop_fn(delta, game.user_ptr) ?
+
 		game.draw_frame() ?
 	}
 	game.running = false
@@ -391,6 +435,10 @@ fn (mut game Game) draw_frame() ? {
 
 fn (mut game Game) shutdown_vulkan() {
 	vulkan.vk_device_wait_idle(game.device)
+	vulkan.vk_destroy_descriptor_set_layout(game.device, game.desc_set_layout, nullptr)
+	vulkan.vk_destroy_descriptor_pool(game.device, game.desc_pool, nullptr)
+	vulkan.vk_free_memory(game.device, game.uniform_memory, nullptr)
+	vulkan.vk_destroy_buffer(game.device, game.uniform_buffer, nullptr)
 	vulkan.vk_free_memory(game.device, game.index_memory, nullptr)
 	vulkan.vk_destroy_buffer(game.device, game.index_buffer, nullptr)
 	vulkan.vk_free_memory(game.device, game.vertex_memory, nullptr)
