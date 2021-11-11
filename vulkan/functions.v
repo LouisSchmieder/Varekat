@@ -98,7 +98,8 @@ pub fn vk_physical_device_surface_support(device C.VkPhysicalDevice, queue_famil
 }
 
 pub fn vk_update_descriptor_sets(device C.VkDevice, writers []C.VkWriteDescriptorSet, copies []voidptr) {
-	C.vkUpdateDescriptorSets(device, u32(writers.len), writers.data, u32(copies.len), copies.data)
+	C.vkUpdateDescriptorSets(device, u32(writers.len), writers.data, u32(copies.len),
+		copies.data)
 }
 
 pub fn vk_device_wait_idle(device C.VkDevice) {
@@ -140,7 +141,8 @@ pub fn vk_cmd_begin_render_pass(buffer C.VkCommandBuffer, info &C.VkRenderPassBe
 }
 
 pub fn vk_cmd_bind_descriptor_sets(buffer C.VkCommandBuffer, pipeline_bind PipelineBindPoint, layout C.VkPipelineLayout, first_idx u32, sets []C.VkDescriptorSet, offsets []u32) {
-	C.vkCmdBindDescriptorSets(buffer, u32(pipeline_bind), layout, first_idx, u32(sets.len), sets.data, u32(offsets.len), offsets.data)
+	C.vkCmdBindDescriptorSets(buffer, u32(pipeline_bind), layout, first_idx, u32(sets.len),
+		sets.data, u32(offsets.len), offsets.data)
 }
 
 pub fn vk_cmd_bind_index_buffer(buffer C.VkCommandBuffer, idx_buffer C.VkBuffer, offset u32, index_type u32) {

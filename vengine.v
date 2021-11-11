@@ -66,6 +66,8 @@ mut:
 	aspec_ratio                  f32
 	near_plane                   f32
 	far_plane                    f32
+
+	rotation                     f32
 }
 
 fn main() {
@@ -85,11 +87,11 @@ fn main() {
 		misc.create_vertex(-0.5, -0.5, 1, 0, 0),
 		misc.create_vertex(0.5, 0.5, 0, 1, 0),
 		misc.create_vertex(-0.5, 0.5, 0, 0, 1),
-		misc.create_vertex(0.5, -0.5, 1, 1, 1)
+		//misc.create_vertex(0.5, -0.5, 1, 1, 1)
 	]
 	game.indicies = [
 		u32(0), 1, 2,
-		0, 3, 1
+		//0, 3, 1
 	]
 	game.start_glfw()
 	game.binding_desc = vulkan.get_binding_description(sizeof(misc.Vertex))
@@ -130,7 +132,7 @@ fn (mut game Game) start_vulkan() ? {
 		0, 1), 'Test Engine', misc.make_version(0, 0, 1), misc.make_version(1, 0, 0))
 	instance_create_info := vulkan.create_vk_instance_create_info(nullptr, 0, &app_info,
 		[
-		'VK_LAYER_KHRONOS_validation',
+	//	'VK_LAYER_KHRONOS_validation',
 	], game.required_instance_extensions)
 	game.instance = vulkan.create_vk_instance(instance_create_info) ?
 
@@ -207,6 +209,7 @@ fn (mut game Game) create_swapchain(new bool) ? {
 		defer {
 			vulkan.vk_destroy_swapchain(game.device, sc, nullptr)
 		}
+		vulkan.vk_destroy_descriptor_pool(game.device, game.desc_pool, nullptr)
 	} 
 	
 	game.setup_swapchain(new) ?
@@ -352,7 +355,7 @@ fn (mut game Game) setup_pipeline() ? {
 		0, [viewport], [scissor])
 	pipeline_rasterization_state_info := vulkan.create_vk_pipeline_rasterization_state_create_info(nullptr,
 		0, vulkan.vk_false, vulkan.vk_false, u32(C.VK_POLYGON_MODE_FILL), u32(C.VK_CULL_MODE_BACK_BIT),
-		u32(C.VK_FRONT_FACE_COUNTER_CLOCKWISE), vulkan.vk_false, 0, 0, 0, 1)
+		u32(C.VK_FRONT_FACE_CLOCKWISE), vulkan.vk_false, 0, 0, 0, 1)
 	pipeline_multisample_state_info := vulkan.create_vk_pipeline_multisample_state_create_info(nullptr,
 		0, u32(C.VK_SAMPLE_COUNT_1_BIT), vulkan.vk_false, 1.0, nullptr, vulkan.vk_false,
 		vulkan.vk_false)

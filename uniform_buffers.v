@@ -36,7 +36,7 @@ fn (mut game Game) create_descriptor_set() ? {
 	desc_buffer_info := vulkan.create_vk_descriptor_buffer_info(game.uniform_buffer, 0,
 		sizeof(m4.Mat4))
 
-	desc_write := vulkan.create_vk_write_descriptor_set(nullptr, game.desc_set, 0, 0, 1, u32(C.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER),
-		[], [desc_buffer_info], [])
+	desc_write := vulkan.create_vk_write_descriptor_set(nullptr, game.desc_set, 0, 0,
+		1, u32(C.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER), [], [desc_buffer_info], [])
 	vulkan.vk_update_descriptor_sets(game.device, [desc_write], [])
 }

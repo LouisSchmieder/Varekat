@@ -361,14 +361,14 @@ struct C.VkDescriptorSetAllocateInfo {
 
 [typedef]
 struct C.VkWriteDescriptorSet {
-	sType             StructureType
-	pNext             voidptr
-	dstSet            C.VkDescriptorSet
-	dstBinding        u32
-	dstArrayElement u32
-	descriptorCount   u32
-	descriptorType    u32
-	pImageInfo        voidptr // TODO add
-	pBufferInfo       &C.VkDescriptorBufferInfo
-	pTexelBufferView  voidptr // TODO add
+	sType            StructureType
+	pNext            voidptr
+	dstSet           C.VkDescriptorSet
+	dstBinding       u32
+	dstArrayElement  u32
+	descriptorCount  u32
+	descriptorType   u32
+	pImageInfo       voidptr // TODO add
+	pBufferInfo      &C.VkDescriptorBufferInfo
+	pTexelBufferView voidptr // TODO add
 }
