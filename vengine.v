@@ -84,18 +84,18 @@ fn main() {
 	}
 	game.user_ptr = &game
 	game.verticies = [
-		misc.create_vertex(-0.5, -0.5, 1, 0, 0),
-		misc.create_vertex(0.5, 0.5, 0, 1, 0),
-		misc.create_vertex(-0.5, 0.5, 0, 0, 1),
-		//misc.create_vertex(0.5, -0.5, 1, 1, 1)
+		misc.create_vertex(0.5, 0.5, 1, 1, 0, 0)
+		misc.create_vertex(-0.5, -0.5, 1, 0, 1, 0),
+		misc.create_vertex(0.5, -0.5, 1, 0, 0, 1),
 	]
 	game.indicies = [
 		u32(0), 1, 2,
 		//0, 3, 1
 	]
+	eprintln(game.verticies)
 	game.start_glfw()
 	game.binding_desc = vulkan.get_binding_description(sizeof(misc.Vertex))
-	game.attrs_descs = vulkan.get_attribute_descriptions(misc.vertex_offsets(), [u32(0), 0], [u32(C.VK_FORMAT_R32G32_SFLOAT), u32(C.VK_FORMAT_R32G32B32_SFLOAT)])
+	game.attrs_descs = vulkan.get_attribute_descriptions(misc.vertex_offsets(), [u32(0), 0], [u32(C.VK_FORMAT_R32G32B32_SFLOAT), u32(C.VK_FORMAT_R32G32B32_SFLOAT)])
 	game.start_vulkan() or { panic(err) }
 	game.game_loop() or { panic(err) }
 	game.shutdown_vulkan()
