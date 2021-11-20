@@ -54,26 +54,65 @@ pub fn (vec Vec3) mod() f32 {
 	return f32(math.sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z))
 }
 
-pub fn perspective(fov f32, ar f32, n f32, f f32) m4.Mat4 {
-	focal_len := f32(1 / math.tan(fov / 2))
+pub fn perspective(fov f32, a f32, n f32, far f32) m4.Mat4 {
+	f := f32(1 / math.tan(fov * 0.5 / 180 * f32(math.pi)))
+	q := f / (far - n)
 	return m4.Mat4{e: [
-		focal_len / ar, 0, 0, 0,
-		0, -focal_len, 0, 0,
-		0, 0, n / (f - n), n * f / (f - n),
-		0, 0, -1, 0
+		f * a, 0, 0     , 0,
+		0    , f, 0     , 0,
+		0    , 0, q     , 1,
+		0    , 0, -n * q, 0
 	]!}
 }
 
-pub fn look_at(eye Vec3, at Vec3, up Vec3) m4.Mat4 {
-	z_axis := normalize(eye - at)
-	x_axis := normalize(cross(up, z_axis))
-	y_axis := cross(z_axis, x_axis)
-
+pub fn translate(x f32, y f32, z f32) m4.Mat4 {
 	return m4.Mat4{e: [
-		x_axis.x, x_axis.y, x_axis.z, dot(eye, x_axis)
-		y_axis.x, y_axis.y, y_axis.z, dot(eye, y_axis)
-		z_axis.x, z_axis.y, z_axis.z, dot(eye, z_axis)
-		0       , 0       ,        0,                 1
+		f32(1), 0, 0, 0,
+		0, 1, 0, 0,
+		0, 0, 1, 0,
+		x, y, z, 0
+	]!}
+}
+
+pub fn scale(x f32, y f32, z f32) m4.Mat4 {
+	return m4.Mat4{e: [
+		x, 0, 0, 0,
+		0, y, 0, 0,
+		0, 0, z, 0,
+		0, 0, 0, 0
+	]!}
+}
+
+pub fn transform(ox f32, oy f32, oz f32, sx f32, sy f32, sz f32) m4.Mat4 {
+	return m4.Mat4{e: [
+		sx, 0, 0, 0,
+		0, sy, 0, 0,
+		0, 0, sz, 0,
+		ox, oy, oz, 0
+	]!}
+}
+
+pub fn rot_z(angle f32) m4.Mat4 {
+	rad := f32(math.pi * angle)
+	c := f32(math.cos(rad))
+	s := f32(math.sin(rad))
+	return m4.Mat4{e: [
+		c, s, 0, 0,
+		-s, c, 0, 0,
+		0, 0, 1, 0,
+		0, 0, 0, 1
+	]!}
+}
+
+pub fn rot_x(angle f32) m4.Mat4 {
+	rad := f32(math.pi * angle / 2)
+	c := f32(math.cos(rad))
+	s := f32(math.sin(rad))
+	return m4.Mat4{e: [
+		f32(1), 0, 0, 0,
+		0, c, -s, 0,
+		0, s, c, 0,
+		0, 0, 0, 1
 	]!}
 }
 

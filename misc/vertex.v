@@ -8,9 +8,9 @@ pub mut:
 
 pub fn create_vertex(x f32, y f32, z f32, r f32, g f32, b f32) Vertex {
 	mut pos := [3]f32{}
-	pos[0] = x
-	pos[1] = y
-	pos[2] = z
+	pos[0] = 2 * x - 1
+	pos[1] = 2 * y - 1
+	pos[2] = 2 * z - 1
 	mut color := [3]f32{}
 	color[0] = r
 	color[1] = g

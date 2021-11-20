@@ -57,7 +57,7 @@ mut:
 	vertex_shader_code           []byte
 	verticies                    []misc.Vertex
 	indicies                     []u32
-	mvp                          m4.Mat4
+	ubo                          UBO
 	last                         time.Time
 	user_ptr                     voidptr
 	game_loop_fn                 GameLoopFn
@@ -68,6 +68,12 @@ mut:
 	far_plane                    f32
 
 	rotation                     f32
+}
+
+struct UBO {
+mut:
+	model m4.Mat4
+	projection m4.Mat4
 }
 
 fn main() {
@@ -84,15 +90,30 @@ fn main() {
 	}
 	game.user_ptr = &game
 	game.verticies = [
-		misc.create_vertex(0.5, 0.5, 1, 1, 0, 0)
-		misc.create_vertex(-0.5, -0.5, 1, 0, 1, 0),
-		misc.create_vertex(0.5, -0.5, 1, 0, 0, 1),
+		misc.create_vertex(0, 1, 0, 1, 1, 1)
+		misc.create_vertex(1, 1, 0, 1, 1, 1),
+		misc.create_vertex(0, 0, 0, 1, 1, 1),
+		misc.create_vertex(1, 0, 0, 1, 1, 1),
+
+		misc.create_vertex(0, 1, 1, 1, 1, 1),
+		misc.create_vertex(1, 1, 1, 1, 1, 1),
+		misc.create_vertex(0, 0, 1, 1, 1, 1),
+		misc.create_vertex(1, 0, 1, 1, 1, 1)
 	]
 	game.indicies = [
-		u32(0), 1, 2,
-		//0, 3, 1
+		u32(2), 0, 1,
+		2, 1, 3,
+		3, 1, 5,
+		3, 5, 7,
+		7, 5, 4,
+		7, 4, 6,
+		6, 4, 0,
+		6, 0, 2,
+		1, 0, 4,
+		1, 4, 5,
+		3, 7, 6,
+		3, 6, 2
 	]
-	eprintln(game.verticies)
 	game.start_glfw()
 	game.binding_desc = vulkan.get_binding_description(sizeof(misc.Vertex))
 	game.attrs_descs = vulkan.get_attribute_descriptions(misc.vertex_offsets(), [u32(0), 0], [u32(C.VK_FORMAT_R32G32B32_SFLOAT), u32(C.VK_FORMAT_R32G32B32_SFLOAT)])
@@ -354,8 +375,8 @@ fn (mut game Game) setup_pipeline() ? {
 	pipeline_viewport_state_info := vulkan.create_vk_pipeline_viewport_state_create_info(nullptr,
 		0, [viewport], [scissor])
 	pipeline_rasterization_state_info := vulkan.create_vk_pipeline_rasterization_state_create_info(nullptr,
-		0, vulkan.vk_false, vulkan.vk_false, u32(C.VK_POLYGON_MODE_FILL), u32(C.VK_CULL_MODE_BACK_BIT),
-		u32(C.VK_FRONT_FACE_CLOCKWISE), vulkan.vk_false, 0, 0, 0, 1)
+		0, vulkan.vk_false, vulkan.vk_false, u32(C.VK_POLYGON_MODE_LINE), u32(C.VK_CULL_MODE_BACK_BIT),
+		u32(C.VK_FRONT_FACE_COUNTER_CLOCKWISE), vulkan.vk_false, 0, 0, 0, 1)
 	pipeline_multisample_state_info := vulkan.create_vk_pipeline_multisample_state_create_info(nullptr,
 		0, u32(C.VK_SAMPLE_COUNT_1_BIT), vulkan.vk_false, 1.0, nullptr, vulkan.vk_false,
 		vulkan.vk_false)

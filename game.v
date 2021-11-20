@@ -1,9 +1,7 @@
 module main
 
 import time
-import gg.m4
 import vulkan
-import math
 import mathf
 
 fn loop_fn(delta time.Duration, game_ptr voidptr) ? {
@@ -11,15 +9,19 @@ fn loop_fn(delta time.Duration, game_ptr voidptr) ? {
 
 	delta_seconds := f32(delta.seconds())
 
-	game.rotation += delta_seconds * 0.05
+	game.rotation += delta_seconds * 1
 
-	//mut model := m4.rotate(m4.rad(0), m4.vec3(0, 0, 1)) 
-	//view := mathf.look_at(mathf.vec3(0, game.rotation, 1), mathf.vec3(0, 0, 0), mathf.vec3(0, 1, 0))
-	mut projection := mathf.perspective((60 * f32(math.pi) / 360), f32(game.width / game.height), 0.001, 100)
-	game.mvp = mathf.make_vulkan_mat(projection)
+	translate := mathf.translate(0, 0, 3)
+	scale := mathf.scale(1, 1, 1)
+	rot_x := mathf.rot_x(game.rotation)
+	rot_z := mathf.rot_z(game.rotation)
 
-	ptr := vulkan.vk_map_memory(game.device, game.uniform_memory, 0, sizeof(m4.Mat4),
+	projection := mathf.perspective(90, f32(game.height) / f32(game.width), 0.001, 100)
+	game.ubo.projection = mathf.make_vulkan_mat(projection)
+	game.ubo.model = mathf.make_vulkan_mat(rot_z * rot_x * translate * scale)
+
+	ptr := vulkan.vk_map_memory(game.device, game.uniform_memory, 0, sizeof(UBO),
 		0) ?
-	unsafe { vmemcpy(ptr, &game.mvp, int(sizeof(m4.Mat4))) }
+	unsafe { vmemcpy(ptr, &game.ubo, int(sizeof(UBO))) }
 	vulkan.vk_unmap_memory(game.device, game.uniform_memory)
 }
