@@ -1,28 +1,25 @@
 module misc
 
+import mathf
+
 pub struct Vertex {
 pub mut:
-	pos   [3]f32
-	color [3]f32
+	pos    mathf.Vec3
+	color  mathf.Vec3
+	normal mathf.Vec3
 }
 
-pub fn create_vertex(x f32, y f32, z f32, r f32, g f32, b f32) Vertex {
-	mut pos := [3]f32{}
-	pos[0] = 2 * x - 1
-	pos[1] = 2 * y - 1
-	pos[2] = 2 * z - 1
-	mut color := [3]f32{}
-	color[0] = r
-	color[1] = g
-	color[2] = b
+pub fn create_vertex(pos mathf.Vec3, color mathf.Vec3, normal mathf.Vec3) Vertex {
 	return Vertex{
 		pos: pos
 		color: color
+		normal: normal
 	}
 }
 
 pub fn vertex_offsets() []u32 {
 	pos_offset := __offsetof(Vertex, pos)
 	color_offset := __offsetof(Vertex, color)
-	return [pos_offset, color_offset]
+	normal_offset := __offsetof(Vertex, normal)
+	return [pos_offset, color_offset, normal_offset]
 }

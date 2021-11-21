@@ -2,8 +2,7 @@ module main
 
 import vulkan
 
-fn (mut game Game) create_uniform_buffer() ? {
-	buffer_size := sizeof(UBO)
+fn (mut game Game) create_uniform_buffer(buffer_size u32) ? {
 	game.uniform_buffer, game.uniform_memory = vulkan.create_buffer(game.device, game.physical_device,
 		buffer_size, [.vk_buffer_usage_uniform_buffer_bit], u32(C.VK_SHARING_MODE_EXCLUSIVE),
 		[], [.vk_memory_property_host_visible_bit, .vk_memory_property_host_coherent_bit]) ?
@@ -27,13 +26,13 @@ fn (mut game Game) create_descriptor_set_layout() ? {
 		nullptr) ?
 }
 
-fn (mut game Game) create_descriptor_set() ? {
+fn (mut game Game) create_descriptor_set(buffer_size u32) ? {
 	desc_set_allocate_info := vulkan.create_vk_descriptor_set_allocate_info(nullptr, game.desc_pool,
 		[game.desc_set_layout])
 	game.desc_set = vulkan.allocate_vk_descriptor_sets(game.device, &desc_set_allocate_info) ?
 
 	desc_buffer_info := vulkan.create_vk_descriptor_buffer_info(game.uniform_buffer, 0,
-		sizeof(UBO))
+		buffer_size)
 
 	desc_write := vulkan.create_vk_write_descriptor_set(nullptr, game.desc_set, 0, 0,
 		1, u32(C.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER), [], [desc_buffer_info], [])

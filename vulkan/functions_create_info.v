@@ -190,7 +190,7 @@ pub fn create_vk_pipeline_color_blend_attachment_state(blend_enable C.VkBool32, 
 	}
 }
 
-pub fn create_vk_pipeline_color_blend_state_create_info(p_next voidptr, flags u32, logic_op_enable C.VkBool32, logic_op LogicOp, attachments []C.VkPipelineColorBlendAttachmentState, blend_constants []f32) C.VkPipelineColorBlendStateCreateInfo {
+pub fn create_vk_pipeline_color_blend_state_create_info(p_next voidptr, flags u32, logic_op_enable C.VkBool32, logic_op LogicOp, attachments []C.VkPipelineColorBlendAttachmentState, blend_constants [4]f32) C.VkPipelineColorBlendStateCreateInfo {
 	return C.VkPipelineColorBlendStateCreateInfo{
 		sType: .vk_structure_type_pipeline_color_blend_state_create_info
 		pNext: p_next

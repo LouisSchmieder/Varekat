@@ -5,6 +5,8 @@ import vulkan
 import misc
 import gg.m4
 import time
+import game as g
+import mathf
 
 pub type GameLoopFn = fn (time.Duration, voidptr) ?
 
@@ -55,8 +57,6 @@ mut:
 	settings                     vulkan.AnalysedGPUSettings
 	fragment_shader_code         []byte
 	vertex_shader_code           []byte
-	verticies                    []misc.Vertex
-	indicies                     []u32
 	ubo                          UBO
 	last                         time.Time
 	user_ptr                     voidptr
@@ -68,12 +68,17 @@ mut:
 	far_plane                    f32
 
 	rotation                     f32
+
+	world                        g.World
 }
 
 struct UBO {
 mut:
 	model m4.Mat4
+	view m4.Mat4
 	projection m4.Mat4
+	light_direction mathf.Vec3
+	light_color mathf.Vec4
 }
 
 fn main() {
@@ -88,35 +93,15 @@ fn main() {
 		near_plane: 0.01
 		far_plane: 10.0
 	}
-	game.user_ptr = &game
-	game.verticies = [
-		misc.create_vertex(0, 1, 0, 1, 1, 1)
-		misc.create_vertex(1, 1, 0, 1, 1, 1),
-		misc.create_vertex(0, 0, 0, 1, 1, 1),
-		misc.create_vertex(1, 0, 0, 1, 1, 1),
 
-		misc.create_vertex(0, 1, 1, 1, 1, 1),
-		misc.create_vertex(1, 1, 1, 1, 1, 1),
-		misc.create_vertex(0, 0, 1, 1, 1, 1),
-		misc.create_vertex(1, 0, 1, 1, 1, 1)
-	]
-	game.indicies = [
-		u32(2), 0, 1,
-		2, 1, 3,
-		3, 1, 5,
-		3, 5, 7,
-		7, 5, 4,
-		7, 4, 6,
-		6, 4, 0,
-		6, 0, 2,
-		1, 0, 4,
-		1, 4, 5,
-		3, 7, 6,
-		3, 6, 2
-	]
+	game.world = g.create_world(name: 'test', ambient_strenght: 0.1, light_color: mathf.vec3(1, 1, 1))
+
+	game.world.load('assets/objects/cube.obj', mathf.vec3(0, 0, 10), mathf.vec3(0, 0, 0), mathf.vec3(1, 1, 1)) or { panic(err) }
+
+	game.user_ptr = &game
 	game.start_glfw()
 	game.binding_desc = vulkan.get_binding_description(sizeof(misc.Vertex))
-	game.attrs_descs = vulkan.get_attribute_descriptions(misc.vertex_offsets(), [u32(0), 0], [u32(C.VK_FORMAT_R32G32B32_SFLOAT), u32(C.VK_FORMAT_R32G32B32_SFLOAT)])
+	game.attrs_descs = vulkan.get_attribute_descriptions(misc.vertex_offsets(), [u32(0), 0, 0], [u32(C.VK_FORMAT_R32G32B32_SFLOAT), u32(C.VK_FORMAT_R32G32B32_SFLOAT), u32(C.VK_FORMAT_R32G32B32_SFLOAT)])
 	game.start_vulkan() or { panic(err) }
 	game.game_loop() or { panic(err) }
 	game.shutdown_vulkan()
@@ -254,11 +239,11 @@ fn (mut game Game) create_swapchain(new bool) ? {
 	command_buffer_begin_info := vulkan.create_vk_command_buffer_begin_info(nullptr, u32(C.VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT), nullptr)
 
 	// Buffer
-	game.vertex_buffer, game.vertex_memory = game.create_buffer(game.verticies, .vk_buffer_usage_vertex_buffer_bit) ?
-	game.index_buffer, game.index_memory = game.create_buffer(game.indicies, .vk_buffer_usage_index_buffer_bit) ?
-	game.create_uniform_buffer() ?
+	game.vertex_buffer, game.vertex_memory = game.create_buffer(game.world.get_world_verticies(), .vk_buffer_usage_vertex_buffer_bit) ?
+	game.index_buffer, game.index_memory = game.create_buffer(game.world.get_world_indicies(), .vk_buffer_usage_index_buffer_bit) ?
+	game.create_uniform_buffer(sizeof(UBO)) ?
 	game.create_descriptor_pool() ?
-	game.create_descriptor_set() ?
+	game.create_descriptor_set(sizeof(UBO)) ?
 
 	for i, buffer in game.command_buffers {
 		vulkan.vk_begin_command_buffer(buffer, &command_buffer_begin_info) ?
@@ -279,11 +264,17 @@ fn (mut game Game) create_swapchain(new bool) ? {
 
 		vulkan.vk_cmd_bind_index_buffer(buffer, game.index_buffer, 0, u32(C.VK_INDEX_TYPE_UINT32))
 
-		vulkan.vk_cmd_bind_descriptor_sets(buffer, .vk_pipeline_bind_point_graphics, game.pipeline_layout, 0, [game.desc_set], [])
+		mut idx_offset := 0
 
-	//	vulkan.vk_cmd_draw(buffer, u32(game.verticies.len), 1, 0, 0)
+		for mesh in game.world.meshes {
+			_, idx := mesh.mesh_data()
 
-		vulkan.vk_cmd_draw_indexed(buffer, u32(game.indicies.len), 1, 0, 0, 0)
+			vulkan.vk_cmd_bind_descriptor_sets(buffer, .vk_pipeline_bind_point_graphics, game.pipeline_layout, 0, [game.desc_set], [])
+
+			vulkan.vk_cmd_draw_indexed(buffer, u32(idx.len), 1, 0, idx_offset, 0)
+		
+			idx_offset += idx.len
+		}
 
 		vulkan.vk_cmd_end_render_pass(buffer)
 		vulkan.vk_end_command_buffer(buffer) ?
@@ -375,7 +366,7 @@ fn (mut game Game) setup_pipeline() ? {
 	pipeline_viewport_state_info := vulkan.create_vk_pipeline_viewport_state_create_info(nullptr,
 		0, [viewport], [scissor])
 	pipeline_rasterization_state_info := vulkan.create_vk_pipeline_rasterization_state_create_info(nullptr,
-		0, vulkan.vk_false, vulkan.vk_false, u32(C.VK_POLYGON_MODE_LINE), u32(C.VK_CULL_MODE_BACK_BIT),
+		0, vulkan.vk_false, vulkan.vk_false, u32(C.VK_POLYGON_MODE_FILL), u32(C.VK_CULL_MODE_BACK_BIT),
 		u32(C.VK_FRONT_FACE_COUNTER_CLOCKWISE), vulkan.vk_false, 0, 0, 0, 1)
 	pipeline_multisample_state_info := vulkan.create_vk_pipeline_multisample_state_create_info(nullptr,
 		0, u32(C.VK_SAMPLE_COUNT_1_BIT), vulkan.vk_false, 1.0, nullptr, vulkan.vk_false,
@@ -383,10 +374,12 @@ fn (mut game Game) setup_pipeline() ? {
 	pipeline_color_blend_attachment_state := vulkan.create_vk_pipeline_color_blend_attachment_state(vulkan.vk_true,
 		.vk_blend_factor_src_alpha, .vk_blend_factor_one_minus_src_alpha, .vk_blend_op_add,
 		.vk_blend_factor_one, .vk_blend_factor_zero, .vk_blend_op_add, vulkan.vk_color_component_all)
+
+	blend := [4]f32{init: 0.0}
 	pipeline_blend_create_info := vulkan.create_vk_pipeline_color_blend_state_create_info(nullptr,
 		0, vulkan.vk_false, .vk_logic_op_no_op, [
 		pipeline_color_blend_attachment_state,
-	], []f32{len: 4, init: 0.0})
+	], blend)
 
 	dynamic_states := [vulkan.DynamicState.vk_dynamic_state_viewport]
 

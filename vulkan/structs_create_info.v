@@ -171,7 +171,7 @@ struct C.VkPipelineColorBlendStateCreateInfo {
 	logicOp         LogicOp
 	attachmentCount u32
 	pAttachments    &C.VkPipelineColorBlendAttachmentState
-	blendConstants  []f32
+	blendConstants  [4]f32
 }
 
 [heap; typedef]
