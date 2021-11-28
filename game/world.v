@@ -50,8 +50,8 @@ pub fn (world World) get_world_indicies() []u32 {
 }
 
 pub fn (mut world World) load(path string, loc mathf.Vec3, rot mathf.Vec3, scale mathf.Vec3) ? {
-	verticies, textures, normals, indicies := misc.load_obj(path) ?
-	mut mesh := graphics.create_mesh(verticies, textures, normals, indicies)
+	verticies, indicies := misc.load_obj(path, world.meshes.len) ?
+	mut mesh := graphics.create_mesh(verticies, indicies)
 	mesh.update(loc, rot, scale)
 	world.meshes << mesh
 }

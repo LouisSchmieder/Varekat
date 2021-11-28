@@ -3,10 +3,16 @@ module mathf
 import math
 
 struct Vec3 {
-mut:
+pub mut:
 	x f32
 	y f32
 	z f32
+}
+
+struct Vec2 {
+mut:
+	x f32
+	y f32
 }
 
 struct Vec4 {
@@ -23,6 +29,13 @@ pub fn vec4(vec Vec3, w f32) Vec4 {
 		y: vec.y
 		z: vec.z
 		w: w
+	}
+}
+
+pub fn vec2(x f32, y f32) Vec2 {
+	return Vec2{
+		x: x
+		y: y
 	}
 }
 

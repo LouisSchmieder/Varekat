@@ -3,51 +3,67 @@ module misc
 import mathf
 import os
 
-pub fn load_obj(path string) ?([]mathf.Vec3, [][2]f32, []mathf.Vec3, []u32) {
+enum FaceType {
+	vertex
+	vertex_texture
+	vertex_normal
+	vertex_texture_normal
+}
+
+pub fn load_obj(path string, model_idx int) ?([]Vertex, []u32) {
 	data := os.read_file(path) ?
-	mut verticies := []mathf.Vec3{}
-	mut textures := [][2]f32{}
-	mut normals := []mathf.Vec3{}
+
+	mut raw_verticies := []mathf.Vec3{}
+	mut raw_textures := []mathf.Vec2{}
+	mut raw_normals := []mathf.Vec3{}
+
+	mut verticies := []Vertex{}
 	mut indicies := []u32{}
 
-	mut aligned_normals := []mathf.Vec3{}
-	mut aligned_textures := [][2]f32{}
-	mut face := false
 
-	for line in data.split('\n') {
+	for idx, line in data.split('\n') {
 		fields := line.fields()
 
 		if fields.len > 0 {
 			match fields[0] {
 				'v' {
 					// Vertex
-					verticies << mathf.vec3(fields[1].f32(), fields[2].f32(), fields[3].f32())
+					raw_verticies << mathf.vec3(fields[1].f32(), fields[2].f32(), fields[3].f32())
 				}
 				'vt' {
 					// Texture
-					textures << [fields[1].f32(), fields[2].f32()]!
+					raw_textures << mathf.vec2(fields[1].f32(), fields[2].f32())
 				}
 				'vn' {
 					// Normal
-					normals << mathf.vec3(fields[1].f32(), fields[2].f32(), fields[3].f32())
+					raw_normals << mathf.vec3(fields[1].f32(), fields[2].f32(), fields[3].f32())
 				}
 				'f' {
-					if !face {
-						aligned_normals = []mathf.Vec3{len: verticies.len}
-						aligned_textures = [][2]f32{len: verticies.len}
-						face = true
+					mut spliter := ''
+					mut face_type := FaceType.vertex
+					if fields[1].contains('//') {
+						// Format: Vertex // Normal
+						spliter = '//'
+						face_type = .vertex_normal
+					} else if fields[1].contains('/') {
+						spliter = '/'
+						if fields[1].split('/').len == 3 {
+							// Format: Vertex / Texture / Normal
+							face_type = .vertex_texture_normal
+						} else if fields[1].split('/').len == 2 {
+							// Format: Vertex / Texture
+							face_type = .vertex_texture
+						}
+					} else {
+						// Format: Vertex
+						spliter = ' '
 					}
 
-					vertex_1 := fields[1].split('/')
-					vertex_2 := fields[2].split('/')
-					vertex_3 := fields[3].split('/')
+					for i in 1..fields.len {
+						mut v := fields[i].split(spliter)
 
-					process_vertex(vertex_1, mut indicies, verticies, normals, textures, mut
-						aligned_normals, mut aligned_textures)
-					process_vertex(vertex_2, mut indicies, verticies, normals, textures, mut
-						aligned_normals, mut aligned_textures)
-					process_vertex(vertex_3, mut indicies, verticies, normals, textures, mut
-						aligned_normals, mut aligned_textures)
+						validate_face_vertex(v, face_type, mut verticies, mut indicies, raw_verticies, raw_textures, raw_normals, model_idx)
+					}
 				}
 				else {
 					continue
@@ -56,13 +72,35 @@ pub fn load_obj(path string) ?([]mathf.Vec3, [][2]f32, []mathf.Vec3, []u32) {
 		}
 	}
 
-	return verticies, aligned_textures, aligned_normals, indicies
+	return verticies, indicies
 }
 
-fn process_vertex(vertex_args []string, mut indicies []u32, verticies []mathf.Vec3, normals []mathf.Vec3, textures [][2]f32, mut aligned_normals []mathf.Vec3, mut aligned_textures [][2]f32) {
-	current_vertex := vertex_args[0].u32() - 1
-	indicies << current_vertex
+fn validate_face_vertex(data []string, face_type FaceType, mut verticies []Vertex, mut indicies []u32, raw_verticies []mathf.Vec3, raw_textures []mathf.Vec2, raw_normals []mathf.Vec3, model_idx int) {
+	mut vertex := match face_type {
+		.vertex {
+			Vertex{
+			}
+		}
+		.vertex_normal {
+			Vertex{
+				normal: raw_normals[data[1].int() - 1]
+			}
+		}
+		.vertex_texture {
+			Vertex{
+				texture: raw_textures[data[1].int() - 1]
+			}
+		}
+		.vertex_texture_normal {
+			Vertex{
+				texture: raw_textures[data[1].int() - 1]
+				normal: raw_normals[data[2].int() - 1]
+			}
+		}
+	}
+	vertex.pos = raw_verticies[data[0].int() - 1]
+	vertex.model = model_idx
 
-	aligned_textures[current_vertex] = textures[vertex_args[1].int() - 1]
-	aligned_normals[current_vertex] = normals[vertex_args[2].int() - 1]
+	verticies << vertex
+	indicies << u32(verticies.len - 1)
 }

@@ -10,12 +10,12 @@ fn loop_fn(delta time.Duration, game_ptr voidptr) ? {
 
 	delta_seconds := f32(delta.seconds())
 
-	game.rotation += delta_seconds * 1
+	game.rotation += delta_seconds * 0.5
 
-	translate := mathf.translate(0, 0, 3)
-	scale := mathf.scale(1, 1, 1)
-	rot_x := mathf.rot_x(game.rotation)
-	rot_z := mathf.rot_z(game.rotation)
+	translate := mathf.translate(0, 0, 10)
+	scale := mathf.scale(1, -1, 1)
+	rot_x := mathf.rot_x(0)
+	rot_z := mathf.rot_z(0)
 
 	projection := mathf.perspective(90, f32(game.height) / f32(game.width), 0.001, 100)
 	game.ubo.projection = mathf.make_vulkan_mat(projection)
