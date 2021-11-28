@@ -11,11 +11,13 @@ pub mut:
 	model int
 }
 
-pub fn create_vertex(pos mathf.Vec3, color mathf.Vec3, normal mathf.Vec3) Vertex {
+pub fn create_vertex(pos mathf.Vec3, color mathf.Vec3, normal mathf.Vec3, texture mathf.Vec2, model int) Vertex {
 	return Vertex{
 		pos: pos
 		color: color
 		normal: normal
+		texture: texture
+		model: model
 	}
 }
 

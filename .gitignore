@@ -7,3 +7,4 @@ vengine
 *.dylib
 *.dll
 *.spv
+*.vbin

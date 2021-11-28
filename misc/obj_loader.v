@@ -10,7 +10,7 @@ enum FaceType {
 	vertex_texture_normal
 }
 
-pub fn load_obj(path string, model_idx int) ?([]Vertex, []u32) {
+pub fn load_obj(path string, model_idx int, mut progress &Progress) ?([]Vertex, []u32) {
 	data := os.read_file(path) ?
 
 	mut raw_verticies := []mathf.Vec3{}
@@ -20,9 +20,13 @@ pub fn load_obj(path string, model_idx int) ?([]Vertex, []u32) {
 	mut verticies := []Vertex{}
 	mut indicies := []u32{}
 
+	mut lines := data.split('\n')
 
-	for idx, line in data.split('\n') {
+	progress.init(lines.len)
+
+	for line in lines {
 		fields := line.fields()
+		progress.update()
 
 		if fields.len > 0 {
 			match fields[0] {

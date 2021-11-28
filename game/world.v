@@ -3,6 +3,7 @@ module game
 import graphics
 import mathf
 import misc
+import game.loader
 
 pub struct WorldSettings {
 pub:
@@ -49,9 +50,27 @@ pub fn (world World) get_world_indicies() []u32 {
 	return indicies
 }
 
-pub fn (mut world World) load(path string, loc mathf.Vec3, rot mathf.Vec3, scale mathf.Vec3) ? {
-	verticies, indicies := misc.load_obj(path, world.meshes.len) ?
+pub fn (mut world World) load(path string, loc mathf.Vec3, rot mathf.Vec3, scale mathf.Vec3, mut progress &misc.Progress) ? {
+	if loader.exists(path.split('/').last()) {
+		world.meshes << load_mesh(path.split('/').last(), mut progress)
+		return
+	}
+	
+	verticies, indicies := misc.load_obj(path, world.meshes.len, mut progress) ?
 	mut mesh := graphics.create_mesh(verticies, indicies)
 	mesh.update(loc, rot, scale)
 	world.meshes << mesh
+
+	go save_mesh(mesh, path.split('/').last())
+}
+
+fn save_mesh(mesh graphics.Mesh, name string) {
+	loader := loader.create_loader(name, mesh)
+	loader.store() or { panic(err) }
+}
+
+fn load_mesh(name string, mut progress &misc.Progress) graphics.Mesh {
+	mut loader := loader.create_loader(name, graphics.Mesh{})
+	loader.load(mut progress) or { panic(err) }
+	return loader.data
 }

@@ -96,7 +96,9 @@ fn main() {
 
 	game.world = g.create_world(name: 'test', ambient_strenght: 0.1, light_color: mathf.vec3(1, 1, 1))
 
-	game.world.load('assets/objects/dragon.obj', mathf.vec3(0, 0, 10), mathf.vec3(0, 0, 0), mathf.vec3(1, 1, 1)) or { panic(err) }
+	mut progress := misc.create_progress()
+
+	game.world.load('assets/objects/dragon.obj', mathf.vec3(0, 0, 10), mathf.vec3(0, 0, 0), mathf.vec3(1, 1, 1), mut progress) or { panic(err) }
 	
 	game.user_ptr = &game
 	game.start_glfw()

@@ -10,7 +10,7 @@ pub mut:
 }
 
 struct Vec2 {
-mut:
+pub mut:
 	x f32
 	y f32
 }
