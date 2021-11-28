@@ -19,4 +19,5 @@ Just create a fork, create a branch and write the code. Then just push the code 
 and create a pull request.
 
 # Pictures
-![Cube example](https://github.com/LouisSchmieder/engine/blob/master/cube_example.gif)
+![Cube example](./cube_example.gif)
+![Dragon Demo](./dragon_demo.png)

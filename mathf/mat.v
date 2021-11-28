@@ -149,6 +149,20 @@ pub fn rot_x(angle f32) m4.Mat4 {
 	}
 }
 
+pub fn rot_y(angle f32) m4.Mat4 {
+	rad := f32(math.pi * angle / 2)
+	c := f32(math.cos(rad))
+	s := f32(math.sin(rad))
+	return m4.Mat4{
+		e: [
+			c, 0, s, 0,
+			0, 1, 0, 0,
+			-s, 0, c, 0
+			0, 0, 0, 1
+		]!
+	}
+}
+
 pub fn make_vulkan_mat(mat m4.Mat4) m4.Mat4 {
 	mut new := m4.Mat4{}
 	for x in 0 .. 4 {

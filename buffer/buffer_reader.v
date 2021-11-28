@@ -13,7 +13,7 @@ pub mut:
 }
 
 pub fn new_binary_input_stream(buffer []byte, mut progress &misc.Progress) &BinaryInputStream {
-	progress.init(buffer.len)
+	progress.init(buffer.len - 1)
 	return &BinaryInputStream{
 		buffer: buffer
 		progress: progress

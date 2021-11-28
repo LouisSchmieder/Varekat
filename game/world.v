@@ -2,6 +2,7 @@ module game
 
 import graphics
 import mathf
+import time
 import misc
 import game.loader
 
@@ -56,17 +57,24 @@ pub fn (mut world World) load(path string, loc mathf.Vec3, rot mathf.Vec3, scale
 		return
 	}
 	
-	verticies, indicies := misc.load_obj(path, world.meshes.len, mut progress) ?
+	go save_mesh(world.meshes.len, mut progress, path, path.split('/').last())
+	mut stopwatch := time.new_stopwatch(time.StopWatchOptions{})
+	verticies, indicies := misc.load_obj(path, world.meshes.len, mut progress, false) ?
+	stopwatch.stop()
 	mut mesh := graphics.create_mesh(verticies, indicies)
 	mesh.update(loc, rot, scale)
 	world.meshes << mesh
 
-	go save_mesh(mesh, path.split('/').last())
 }
 
-fn save_mesh(mesh graphics.Mesh, name string) {
+fn save_mesh(len int, mut progress &misc.Progress, path string, name string) {
+	eprintln('Optimize mesh...')
+	verticies, indicies := misc.load_obj(path, len, mut progress, false) or { panic(err) }
+	eprintln('Loaded mesh...')
+	mesh := graphics.create_mesh(verticies, indicies)
 	loader := loader.create_loader(name, mesh)
 	loader.store() or { panic(err) }
+	eprintln('Stored mesh...')
 }
 
 fn load_mesh(name string, mut progress &misc.Progress) graphics.Mesh {
