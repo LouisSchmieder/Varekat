@@ -366,7 +366,7 @@ fn (mut game Game) setup_pipeline() ? {
 	pipeline_viewport_state_info := vulkan.create_vk_pipeline_viewport_state_create_info(nullptr,
 		0, [viewport], [scissor])
 	pipeline_rasterization_state_info := vulkan.create_vk_pipeline_rasterization_state_create_info(nullptr,
-		0, vulkan.vk_false, vulkan.vk_false, u32(C.VK_POLYGON_MODE_FILL), u32(C.VK_CULL_MODE_BACK_BIT),
+		0, vulkan.vk_false, vulkan.vk_false, u32(C.VK_POLYGON_MODE_LINE), u32(C.VK_CULL_MODE_BACK_BIT),
 		u32(C.VK_FRONT_FACE_COUNTER_CLOCKWISE), vulkan.vk_false, 0, 0, 0, 1)
 	pipeline_multisample_state_info := vulkan.create_vk_pipeline_multisample_state_create_info(nullptr,
 		0, u32(C.VK_SAMPLE_COUNT_1_BIT), vulkan.vk_false, 1.0, nullptr, vulkan.vk_false,
