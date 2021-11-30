@@ -69,11 +69,11 @@ pub fn create_vk_rect_2d(offset_x int, offset_y int, width u32, height u32) C.Vk
 	}
 }
 
-pub fn create_vk_descriptor_set_layout_binding(binding u32, desc_type u32, desc_count u32, stage_flags u32, immutable_samplers []C.VkSampler) C.VkDescriptorSetLayoutBinding {
+pub fn create_vk_descriptor_set_layout_binding(binding u32, desc_type []DescriptorType, stage_flags ShaderStageFlagBits, immutable_samplers []C.VkSampler) C.VkDescriptorSetLayoutBinding {
 	return C.VkDescriptorSetLayoutBinding{
 		binding: binding
-		descriptorType: desc_type
-		descriptorCount: desc_count
+		descriptorType: desc_type.data
+		descriptorCount: u32(desc_type.len)
 		stageFlags: stage_flags
 		pImmutableSamplers: immutable_samplers.data
 	}
@@ -127,7 +127,7 @@ pub fn create_vk_clear_value(r f32, g f32, b f32, a f32) C.VkClearValue {
 	}
 }
 
-pub fn create_vk_descriptor_pool_size(typ u32, desc_count u32) C.VkDescriptorPoolSize {
+pub fn create_vk_descriptor_pool_size(typ DescriptorType, desc_count u32) C.VkDescriptorPoolSize {
 	return C.VkDescriptorPoolSize{
 		@type: typ
 		descriptorCount: desc_count

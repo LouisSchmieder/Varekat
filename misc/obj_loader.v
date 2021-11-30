@@ -10,7 +10,7 @@ enum FaceType {
 	vertex_texture_normal
 }
 
-pub fn load_obj(path string, model_idx int, mut progress &Progress, optimize bool) ?([]Vertex, []u32) {
+pub fn load_obj(path string, model_idx int, mut progress Progress, optimize bool) ?([]Vertex, []u32) {
 	data := os.read_file(path) ?
 
 	mut raw_verticies := []mathf.Vec3{}
@@ -20,7 +20,7 @@ pub fn load_obj(path string, model_idx int, mut progress &Progress, optimize boo
 	mut verticies := []Vertex{}
 	mut indicies := []u32{}
 
-	mut indexes := map[string]u32
+	mut indexes := map[string]u32{}
 
 	mut lines := data.split('\n')
 
@@ -69,8 +69,10 @@ pub fn load_obj(path string, model_idx int, mut progress &Progress, optimize boo
 						spliter = ' '
 					}
 
-					for i in 1..fields.len {
-						validate_face_vertex(fields[i], spliter, face_type, mut verticies, mut indicies, raw_verticies, raw_textures, raw_normals, model_idx, optimize, mut indexes)
+					for i in 1 .. fields.len {
+						validate_face_vertex(fields[i], spliter, face_type, mut verticies, mut
+							indicies, raw_verticies, raw_textures, raw_normals, model_idx,
+							optimize, mut indexes)
 					}
 				}
 				else {
@@ -91,8 +93,7 @@ fn validate_face_vertex(field string, spliter string, face_type FaceType, mut ve
 	data := field.split(spliter)
 	mut vertex := match face_type {
 		.vertex {
-			Vertex{
-			}
+			Vertex{}
 		}
 		.vertex_normal {
 			Vertex{

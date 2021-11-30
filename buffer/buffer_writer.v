@@ -67,7 +67,7 @@ pub fn (mut bos BinaryOutputStream) write_i64s(d []i64) {
 		mut tmp := []byte{len: int(sizeof(i64))}
 		binary.big_endian_put_u64(mut tmp, u64(u))
 		bos.bytes << tmp
-	}	
+	}
 }
 
 pub fn (mut bos BinaryOutputStream) write_byte(d byte) {
@@ -90,7 +90,6 @@ pub fn (mut bos BinaryOutputStream) write_u16s(d []u16) {
 		binary.big_endian_put_u16(mut tmp, u)
 		bos.bytes << tmp
 	}
-	
 }
 
 pub fn (mut bos BinaryOutputStream) write_u32(d u32) {
@@ -100,13 +99,11 @@ pub fn (mut bos BinaryOutputStream) write_u32(d u32) {
 }
 
 pub fn (mut bos BinaryOutputStream) write_u32s(d []u32) {
-	
 	for u in d {
 		mut tmp := []byte{len: int(sizeof(u32))}
 		binary.big_endian_put_u32(mut tmp, u)
 		bos.bytes << tmp
 	}
-	
 }
 
 pub fn (mut bos BinaryOutputStream) write_u64(d u64) {
@@ -116,20 +113,18 @@ pub fn (mut bos BinaryOutputStream) write_u64(d u64) {
 }
 
 pub fn (mut bos BinaryOutputStream) write_u64s(d []u64) {
-	
 	for u in d {
 		mut tmp := []byte{len: int(sizeof(u64))}
 		binary.big_endian_put_u64(mut tmp, u)
 		bos.bytes << tmp
 	}
-	
 }
 
 pub fn (mut bos BinaryOutputStream) write_f32(d f32) {
 	pb := unsafe { &byte(&d) }
 	mut bytes := []byte{len: int(sizeof(f32))}
 	unsafe {
-		for i in 0..bytes.len {
+		for i in 0 .. bytes.len {
 			bytes[i] = pb[i]
 		}
 	}
@@ -137,41 +132,36 @@ pub fn (mut bos BinaryOutputStream) write_f32(d f32) {
 }
 
 pub fn (mut bos BinaryOutputStream) write_f32s(d []f32) {
-	
 	for f in d {
 		pb := unsafe { &byte(&f) }
 		unsafe {
-			for i in 0..int(sizeof(f32)) {
+			for i in 0 .. int(sizeof(f32)) {
 				bos.bytes << pb[i]
 			}
 		}
 	}
-	
 }
 
 pub fn (mut bos BinaryOutputStream) write_f64(d f64) {
 	pb := unsafe { &byte(&d) }
 	mut bytes := []byte{len: int(sizeof(f64))}
 	unsafe {
-		for i in 0..bytes.len {
+		for i in 0 .. bytes.len {
 			bytes[i] = pb[i]
 		}
 	}
 	bos.bytes << bytes
-	
 }
 
 pub fn (mut bos BinaryOutputStream) write_f64s(d []f64) {
-	
 	for f in d {
 		pb := unsafe { &byte(&f) }
 		unsafe {
-			for i in 0..int(sizeof(f64)) {
+			for i in 0 .. int(sizeof(f64)) {
 				bos.bytes << pb[i]
 			}
 		}
 	}
-	
 }
 
 pub fn (mut bos BinaryOutputStream) write_string(d string) {

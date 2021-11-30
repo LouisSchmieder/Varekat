@@ -4,12 +4,11 @@ module misc
 struct Progress {
 pub mut:
 	progress int
-	max int
+	max      int
 }
 
 pub fn create_progress() &Progress {
-	return &Progress{
-	}
+	return &Progress{}
 }
 
 pub fn (mut progress Progress) clear() {

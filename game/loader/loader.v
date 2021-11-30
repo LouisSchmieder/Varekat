@@ -25,7 +25,7 @@ pub fn (loader Loader<T>) store() ? {
 	loader.data.store('$path/${loader.name}.vbin')
 }
 
-pub fn (mut loader Loader<T>) load(mut progress &misc.Progress) ? {
+pub fn (mut loader Loader<T>) load(mut progress misc.Progress) ? {
 	loader.data.load('$path/${loader.name}.vbin', mut progress)
 }
 

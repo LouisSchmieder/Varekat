@@ -6,13 +6,13 @@ import misc
 
 struct BinaryInputStream {
 mut:
-	buffer []byte
+	buffer   []byte
 	progress &misc.Progress
 pub mut:
 	idx int
 }
 
-pub fn new_binary_input_stream(buffer []byte, mut progress &misc.Progress) &BinaryInputStream {
+pub fn new_binary_input_stream(buffer []byte, mut progress misc.Progress) &BinaryInputStream {
 	progress.init(buffer.len - 1)
 	return &BinaryInputStream{
 		buffer: buffer
@@ -66,7 +66,6 @@ pub fn (mut bis BinaryInputStream) read_i16s(l u32) []i16 {
 
 pub fn (mut bis BinaryInputStream) read_i64() i64 {
 	return i64(binary.big_endian_u64(bis.read_bytes(sizeof(i64))))
-
 }
 
 pub fn (mut bis BinaryInputStream) read_i64s(l u32) []i64 {
@@ -92,7 +91,7 @@ pub fn (mut bis BinaryInputStream) read_byte() byte {
 
 pub fn (mut bis BinaryInputStream) read_bytes(l u32) []byte {
 	mut bytes := []byte{len: int(l), cap: int(l)}
-	for i in 0..l {
+	for i in 0 .. l {
 		bytes[i] = bis.read_byte()
 	}
 	return bytes
@@ -109,7 +108,6 @@ pub fn (mut bis BinaryInputStream) read_u16s(l u32) []u16 {
 		offs := int(u32(i) * sizeof(u16))
 		b := bytes[offs..int(u32(offs) + sizeof(u16))]
 		u16s << binary.big_endian_u16(b)
-
 	}
 	return u16s
 }
@@ -124,7 +122,7 @@ pub fn (mut bis BinaryInputStream) read_u32s(l u32) []u32 {
 	for i in 0 .. l {
 		offs := int(u32(i) * sizeof(u32))
 		b := bytes[offs..int(u32(offs) + sizeof(u32))]
-		u32s <<  binary.big_endian_u32(b)
+		u32s << binary.big_endian_u32(b)
 	}
 	return u32s
 }
@@ -139,10 +137,11 @@ pub fn (mut bis BinaryInputStream) read_u64s(l u32) []u64 {
 	for i in 0 .. l {
 		offs := int(u32(i) * sizeof(u64))
 		b := bytes[offs..int(u32(offs) + sizeof(u64))]
-		u64s <<  binary.big_endian_u64(b)
+		u64s << binary.big_endian_u64(b)
 	}
 	return u64s
 }
+
 pub fn (mut bis BinaryInputStream) read_f32() f32 {
 	bytes := bis.read_bytes(sizeof(f32))
 	f := &f32(bytes.data)

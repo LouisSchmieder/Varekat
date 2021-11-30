@@ -958,3 +958,54 @@ pub enum StructureType {
 	*/
 	vk_structure_type_max_enum = 0x7fffffff
 }
+
+pub enum ShaderStageFlagBits {
+	vk_shader_stage_vertex_bit = 0x00000001
+	vk_shader_stage_tessellation_control_bit = 0x00000002
+	vk_shader_stage_tessellation_evaluation_bit = 0x00000004
+	vk_shader_stage_geometry_bit = 0x00000008
+	vk_shader_stage_fragment_bit = 0x00000010
+	vk_shader_stage_compute_bit = 0x00000020
+	vk_shader_stage_all_graphics = 0x0000001f
+	vk_shader_stage_all = 0x7fffffff
+	// provided by vk_khr_ray_tracing_pipeline
+	vk_shader_stage_raygen_bit_khr = 0x00000100
+	// provided by vk_khr_ray_tracing_pipeline
+	vk_shader_stage_any_hit_bit_khr = 0x00000200
+	// provided by vk_khr_ray_tracing_pipeline
+	vk_shader_stage_closest_hit_bit_khr = 0x00000400
+	// provided by vk_khr_ray_tracing_pipeline
+	vk_shader_stage_miss_bit_khr = 0x00000800
+	// provided by vk_khr_ray_tracing_pipeline
+	vk_shader_stage_intersection_bit_khr = 0x00001000
+	// provided by vk_khr_ray_tracing_pipeline
+	vk_shader_stage_callable_bit_khr = 0x00002000
+	// provided by vk_nv_mesh_shader
+	vk_shader_stage_task_bit_nv = 0x00000040
+	// provided by vk_nv_mesh_shader
+	vk_shader_stage_mesh_bit_nv = 0x00000080
+	// provided by vk_huawei_subpass_shading
+	vk_shader_stage_subpass_shading_bit_huawei = 0x00004000
+}
+
+pub enum DescriptorType {
+	vk_descriptor_type_sampler = 0
+	vk_descriptor_type_combined_image_sampler = 1
+	vk_descriptor_type_sampled_image = 2
+	vk_descriptor_type_storage_image = 3
+	vk_descriptor_type_uniform_texel_buffer = 4
+	vk_descriptor_type_storage_texel_buffer = 5
+	vk_descriptor_type_uniform_buffer = 6
+	vk_descriptor_type_storage_buffer = 7
+	vk_descriptor_type_uniform_buffer_dynamic = 8
+	vk_descriptor_type_storage_buffer_dynamic = 9
+	vk_descriptor_type_input_attachment = 10
+	// provided by vk_ext_inline_uniform_block
+	vk_descriptor_type_inline_uniform_block_ext = 1000138000
+	// provided by vk_khr_acceleration_structure
+	vk_descriptor_type_acceleration_structure_khr = 1000150000
+	// provided by vk_nv_ray_tracing
+	vk_descriptor_type_acceleration_structure_nv = 1000165000
+	// provided by vk_valve_mutable_descriptor_type
+	vk_descriptor_type_mutable_valve = 1000351000
+}

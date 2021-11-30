@@ -53,7 +53,7 @@ pub fn (mesh Mesh) store(path string) {
 	os.write_file(path, bos.bytes.bytestr()) or { panic(err) }
 }
 
-pub fn (mut mesh Mesh) load(path string, mut progress &misc.Progress) {
+pub fn (mut mesh Mesh) load(path string, mut progress misc.Progress) {
 	bytes := os.read_bytes(path) or { panic(err) }
 	mut bis := buffer.new_binary_input_stream(bytes, mut progress)
 
@@ -64,8 +64,9 @@ pub fn (mut mesh Mesh) load(path string, mut progress &misc.Progress) {
 	mesh.scale = bis.read_vec3()
 	vertex_len := bis.read_int()
 
-	for _ in 0..vertex_len {
-		mesh.verticies << misc.create_vertex(bis.read_vec3(), bis.read_vec3(), bis.read_vec3(), bis.read_vec2(), bis.read_int())
+	for _ in 0 .. vertex_len {
+		mesh.verticies << misc.create_vertex(bis.read_vec3(), bis.read_vec3(), bis.read_vec3(),
+			bis.read_vec2(), bis.read_int())
 	}
 
 	index_len := bis.read_int()

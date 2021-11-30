@@ -404,15 +404,15 @@ pub fn create_vk_descriptor_set_allocate_info(p_next voidptr, desc_pool C.VkDesc
 	}
 }
 
-pub fn create_vk_write_descriptor_set(p_next voidptr, dst_set C.VkDescriptorSet, dst_binding u32, dst_array_element u32, descriptor_count u32, descriptor_type u32, image_infos []voidptr, buffer_infos []C.VkDescriptorBufferInfo, texel_buffer_views []voidptr) C.VkWriteDescriptorSet {
+pub fn create_vk_write_descriptor_set(p_next voidptr, dst_set C.VkDescriptorSet, dst_binding u32, dst_array_element u32, descriptor_types []DescriptorType, image_infos []voidptr, buffer_infos []C.VkDescriptorBufferInfo, texel_buffer_views []voidptr) C.VkWriteDescriptorSet {
 	return C.VkWriteDescriptorSet{
 		sType: .vk_structure_type_write_descriptor_set
 		pNext: p_next
 		dstSet: dst_set
 		dstBinding: dst_binding
 		dstArrayElement: dst_array_element
-		descriptorCount: descriptor_count
-		descriptorType: descriptor_type
+		descriptorCount: u32(descriptor_types.len)
+		descriptorType: descriptor_types.data
 		pImageInfo: image_infos.data
 		pBufferInfo: buffer_infos.data
 		pTexelBufferView: texel_buffer_views.data

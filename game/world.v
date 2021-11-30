@@ -8,14 +8,14 @@ import game.loader
 
 pub struct WorldSettings {
 pub:
-	name string
+	name             string
 	ambient_strenght f32
-	light_color mathf.Vec3
+	light_color      mathf.Vec3
 }
 
 pub struct World {
 pub:
-	name             string
+	name string
 pub mut:
 	meshes           []graphics.Mesh
 	ambient_strenght f32
@@ -51,12 +51,12 @@ pub fn (world World) get_world_indicies() []u32 {
 	return indicies
 }
 
-pub fn (mut world World) load(path string, loc mathf.Vec3, rot mathf.Vec3, scale mathf.Vec3, mut progress &misc.Progress) ? {
+pub fn (mut world World) load(path string, loc mathf.Vec3, rot mathf.Vec3, scale mathf.Vec3, mut progress misc.Progress) ? {
 	if loader.exists(path.split('/').last()) {
 		world.meshes << load_mesh(path.split('/').last(), mut progress)
 		return
 	}
-	
+
 	go save_mesh(world.meshes.len, mut progress, path, path.split('/').last())
 	mut stopwatch := time.new_stopwatch(time.StopWatchOptions{})
 	verticies, indicies := misc.load_obj(path, world.meshes.len, mut progress, false) ?
@@ -64,10 +64,9 @@ pub fn (mut world World) load(path string, loc mathf.Vec3, rot mathf.Vec3, scale
 	mut mesh := graphics.create_mesh(verticies, indicies)
 	mesh.update(loc, rot, scale)
 	world.meshes << mesh
-
 }
 
-fn save_mesh(len int, mut progress &misc.Progress, path string, name string) {
+fn save_mesh(len int, mut progress misc.Progress, path string, name string) {
 	eprintln('Optimize mesh...')
 	verticies, indicies := misc.load_obj(path, len, mut progress, false) or { panic(err) }
 	eprintln('Loaded mesh...')
@@ -77,7 +76,7 @@ fn save_mesh(len int, mut progress &misc.Progress, path string, name string) {
 	eprintln('Stored mesh...')
 }
 
-fn load_mesh(name string, mut progress &misc.Progress) graphics.Mesh {
+fn load_mesh(name string, mut progress misc.Progress) graphics.Mesh {
 	mut loader := loader.create_loader(name, graphics.Mesh{})
 	loader.load(mut progress) or { panic(err) }
 	return loader.data

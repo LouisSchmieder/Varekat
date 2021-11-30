@@ -39,7 +39,6 @@ pub fn vec2(x f32, y f32) Vec2 {
 	}
 }
 
-
 pub fn (a Vec3) - (b Vec3) Vec3 {
 	return Vec3{
 		x: a.x - b.x

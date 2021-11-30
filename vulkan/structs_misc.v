@@ -312,13 +312,13 @@ struct C.VkDescriptorSetLayoutBinding {
 	binding            u32
 	descriptorType     u32
 	descriptorCount    u32
-	stageFlags         u32
+	stageFlags         ShaderStageFlagBits
 	pImmutableSamplers &C.VkSampler
 }
 
 [typedef]
 struct C.VkDescriptorPoolSize {
-	@type           u32
+	@type           DescriptorType
 	descriptorCount u32
 }
 

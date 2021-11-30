@@ -7,6 +7,7 @@ import gg.m4
 import time
 import game as g
 import mathf
+import vulkan.simple
 
 pub type GameLoopFn = fn (time.Duration, voidptr) ?
 
@@ -39,12 +40,8 @@ mut:
 	vertex_memory                C.VkDeviceMemory
 	index_buffer                 C.VkBuffer
 	index_memory                 C.VkDeviceMemory
-	uniform_buffer               C.VkBuffer
-	uniform_memory               C.VkDeviceMemory
 
-	desc_set_layout              C.VkDescriptorSetLayout
-	desc_pool                    C.VkDescriptorPool
-	desc_set                     C.VkDescriptorSet
+	uniform_buffer               simple.UniformBuffer<UBO>
 
 	window                       &C.GLFWwindow
 	required_instance_extensions []string
@@ -153,6 +150,8 @@ fn (mut game Game) start_vulkan() ? {
 	game.settings = all_settings[idx]
 	game.physical_device = physical_devices[idx]
 
+	game.uniform_buffer = simple.create_uniform_buffer<UBO>(game.device, game.physical_device, stage: .vk_shader_stage_vertex_bit, descriptor_type: .vk_descriptor_type_uniform_buffer) ?
+
 	device_queue_create_info := vulkan.create_vk_device_queue_create_info(nullptr, 0,
 		game.settings.queue_family_idx, 1, []f32{len: 1, init: 1.0})
 	enabled_features := C.VkPhysicalDeviceFeatures{}
@@ -217,13 +216,13 @@ fn (mut game Game) create_swapchain(new bool) ? {
 		defer {
 			vulkan.vk_destroy_swapchain(game.device, sc, nullptr)
 		}
-		vulkan.vk_destroy_descriptor_pool(game.device, game.desc_pool, nullptr)
+		game.uniform_buffer.free_pool()
 	} 
 	
 	game.setup_swapchain(new) ?
 
 	if new {
-		game.create_descriptor_set_layout() ?
+		game.uniform_buffer.create_descriptor_set_layout() ?
 	}
 
 	game.setup_pipeline() ?
@@ -243,9 +242,9 @@ fn (mut game Game) create_swapchain(new bool) ? {
 	// Buffer
 	game.vertex_buffer, game.vertex_memory = game.create_buffer(game.world.get_world_verticies(), .vk_buffer_usage_vertex_buffer_bit) ?
 	game.index_buffer, game.index_memory = game.create_buffer(game.world.get_world_indicies(), .vk_buffer_usage_index_buffer_bit) ?
-	game.create_uniform_buffer(sizeof(UBO)) ?
-	game.create_descriptor_pool() ?
-	game.create_descriptor_set(sizeof(UBO)) ?
+	game.uniform_buffer.create_buffer() ?
+	game.uniform_buffer.create_descriptor_pool() ?
+	game.uniform_buffer.create_descriptor_set() ?
 
 	for i, buffer in game.command_buffers {
 		vulkan.vk_begin_command_buffer(buffer, &command_buffer_begin_info) ?
@@ -271,7 +270,7 @@ fn (mut game Game) create_swapchain(new bool) ? {
 		for mesh in game.world.meshes {
 			_, idx := mesh.mesh_data()
 
-			vulkan.vk_cmd_bind_descriptor_sets(buffer, .vk_pipeline_bind_point_graphics, game.pipeline_layout, 0, [game.desc_set], [])
+			vulkan.vk_cmd_bind_descriptor_sets(buffer, .vk_pipeline_bind_point_graphics, game.pipeline_layout, 0, [game.uniform_buffer.set()], [])
 
 			vulkan.vk_cmd_draw_indexed(buffer, u32(idx.len), 1, 0, idx_offset, 0)
 		
@@ -388,7 +387,7 @@ fn (mut game Game) setup_pipeline() ? {
 	dynamic_state_create_info := vulkan.create_vk_pipeline_dynamic_state_create_info(nullptr, 0, dynamic_states)
 
 	pipeline_layout_create_info := vulkan.create_vk_pipeline_layout_create_info(nullptr,
-		0, [game.desc_set_layout], [])
+		0, [game.uniform_buffer.layout()], [])
 
 	game.pipeline_layout = vulkan.create_vk_pipeline_layout(game.device, pipeline_layout_create_info,
 		nullptr) ?
@@ -454,10 +453,7 @@ fn (mut game Game) draw_frame() ? {
 
 fn (mut game Game) shutdown_vulkan() {
 	vulkan.vk_device_wait_idle(game.device)
-	vulkan.vk_destroy_descriptor_set_layout(game.device, game.desc_set_layout, nullptr)
-	vulkan.vk_destroy_descriptor_pool(game.device, game.desc_pool, nullptr)
-	vulkan.vk_free_memory(game.device, game.uniform_memory, nullptr)
-	vulkan.vk_destroy_buffer(game.device, game.uniform_buffer, nullptr)
+	game.uniform_buffer.free()
 	vulkan.vk_free_memory(game.device, game.index_memory, nullptr)
 	vulkan.vk_destroy_buffer(game.device, game.index_buffer, nullptr)
 	vulkan.vk_free_memory(game.device, game.vertex_memory, nullptr)
