@@ -17,7 +17,7 @@ pub struct World {
 pub:
 	name string
 pub mut:
-	meshes           []graphics.Mesh
+	meshes           []&graphics.Mesh
 	ambient_strenght f32
 	light_color      mathf.Vec3
 }
@@ -63,7 +63,7 @@ pub fn (mut world World) load(path string, loc mathf.Vec3, rot mathf.Vec3, scale
 	stopwatch.stop()
 	mut mesh := graphics.create_mesh(verticies, indicies)
 	mesh.update(loc, rot, scale)
-	world.meshes << mesh
+	world.meshes << &mesh
 }
 
 fn save_mesh(len int, mut progress misc.Progress, path string, name string) {
@@ -76,8 +76,8 @@ fn save_mesh(len int, mut progress misc.Progress, path string, name string) {
 	eprintln('Stored mesh...')
 }
 
-fn load_mesh(name string, mut progress misc.Progress) graphics.Mesh {
+fn load_mesh(name string, mut progress misc.Progress) &graphics.Mesh {
 	mut loader := loader.create_loader(name, graphics.Mesh{})
 	loader.load(mut progress) or { panic(err) }
-	return loader.data
+	return &loader.data
 }
