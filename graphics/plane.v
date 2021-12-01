@@ -13,10 +13,7 @@ pub struct PlaneSettings {
 }
 
 pub struct Plane {
-	quad_length f32
-	width       int
-	height      int
-	y_mult      f32
+	PlaneSettings
 mut:
 	mesh Mesh
 }
@@ -47,11 +44,8 @@ pub fn create_plane(settings PlaneSettings) &Plane {
 	}
 
 	return &Plane{
-		quad_length: settings.quad_length
-		width: settings.width
-		height: settings.height
-		y_mult: settings.y_mult
-		mesh: create_mesh(verticies, indicies)
+		PlaneSettings: settings
+		mesh: create_mesh(verticies, indicies, '')
 	}
 }
 

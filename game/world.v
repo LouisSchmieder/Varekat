@@ -51,7 +51,7 @@ pub fn (world World) get_world_indicies() []u32 {
 	return indicies
 }
 
-pub fn (mut world World) load(path string, loc mathf.Vec3<f32>, rot mathf.Vec3<f32>, scale mathf.Vec3<f32>, mut progress misc.Progress) ? {
+pub fn (mut world World) load_mesh(path string, loc mathf.Vec3<f32>, rot mathf.Vec3<f32>, scale mathf.Vec3<f32>, mut progress misc.Progress) ? {
 	if loader.exists(path.split('/').last()) {
 		world.meshes << load_mesh(path.split('/').last(), mut progress)
 		return
@@ -61,7 +61,7 @@ pub fn (mut world World) load(path string, loc mathf.Vec3<f32>, rot mathf.Vec3<f
 	mut stopwatch := time.new_stopwatch(time.StopWatchOptions{})
 	verticies, indicies := misc.load_obj(path, world.meshes.len, mut progress, false) ?
 	stopwatch.stop()
-	mut mesh := graphics.create_mesh(verticies, indicies)
+	mut mesh := graphics.create_mesh(verticies, indicies, path)
 	mesh.update_abs(loc, rot, scale)
 	world.meshes << &mesh
 }
@@ -76,7 +76,7 @@ fn save_mesh(len int, mut progress misc.Progress, path string, name string) {
 	eprintln('Optimize mesh...')
 	verticies, indicies := misc.load_obj(path, len, mut progress, false) or { panic(err) }
 	eprintln('Loaded mesh...')
-	mesh := graphics.create_mesh(verticies, indicies)
+	mesh := graphics.create_mesh(verticies, indicies, path)
 	loader := loader.create_loader(name, mesh)
 	loader.store() or { panic(err) }
 	eprintln('Stored mesh...')

@@ -7,6 +7,8 @@ import buffer
 
 [heap]
 pub struct Mesh {
+pub:
+	path string
 pub mut:
 	position mathf.Vec3<f32>
 	rotation mathf.Vec3<f32>
@@ -17,10 +19,11 @@ mut:
 }
 
 // Create a mesh based on a vertex and index array
-pub fn create_mesh(verticies []misc.Vertex, indicies []u32) Mesh {
+pub fn create_mesh(verticies []misc.Vertex, indicies []u32, path string) Mesh {
 	mut mesh := Mesh{
 		indicies: indicies
 		verticies: verticies
+		path: path
 	}
 
 	return mesh

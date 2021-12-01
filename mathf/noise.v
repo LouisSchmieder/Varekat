@@ -44,20 +44,18 @@ pub fn noise2d(seed int, x f32, y f32) f32 {
 	return smooth_interpol(low, high, y_frac)
 }
 
-pub fn perlin2d(seed int, x f32, y f32, freq f32, depth f32) f32 {
+pub fn perlin2d(seed int, x f32, y f32, freq f32, octaves f32) f32 {
 	mut xa := x * freq
 	mut ya := y * freq
-	mut amp := f32(1.0)
-	mut fin := f32(1.0)
-	mut div := f32(1.0)
+	mut amplifier := f32(1.0)
+	mut final := f32(1.0)
+	mut divisor := f32(1.0)
 
-	for _ in 0 .. int(depth) {
-		div += 256 * amp
-		fin += noise2d(seed, xa, ya) * amp
-		amp /= 2
-		xa *= 2
-		ya *= 2
+	for _ in 0 .. int(octaves) {
+		final += 1 / amplifier * noise2d(seed, amplifier * xa, amplifier * ya)
+		divisor += 1 / amplifier
+		amplifier *= 2
 	}
 
-	return fin / div
+	return final / divisor
 }

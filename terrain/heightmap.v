@@ -42,6 +42,12 @@ pub fn (a Heightmap) * (b Heightmap) Heightmap {
 	}
 }
 
+pub fn (mut h Heightmap) mult_f(b f64) {
+	for i, p in h.pixels {
+		h.pixels[i] = p * b
+	}
+}
+
 pub fn (mut h Heightmap) math(b f64, mf mathf.DFunction) {
 	for i, p in h.pixels {
 		h.pixels[i] = mf(p, b)
