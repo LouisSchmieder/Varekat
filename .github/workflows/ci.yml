@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  
+jobs:
+  code-style:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout V
+      uses: actions/checkout@v2
+      with:
+        repository: vlang/v
+    - name: Build V
+      run: make
+    - name: Checkout engine
+      uses: actions/checkout@v2
+      with:
+        path: engine
+    - name: V Vet
+      run: ./v vet engine
+  
+  ubuntu:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout V
+      uses: actions/checkout@v2
+      with:
+        repository: vlang/v
+    - name: Checkout engine
+      uses: actions/checkout@v2
+      with:
+        path: engine
+    - name: Install dependencies
+      run: |
+        sudo apt get update
+        sudo apt install --quiet -y libglfw3-dev libvulkan-dev
+    - name: Build V
+      run: |
+        make
+        sudo ./v symlink
+    - name: Verify fmt
+      run: v run engine/fmt.vsh
+    - name: Build engine
+      run: v run engine
