@@ -1,3 +1,5 @@
+[![CI](https://github.com/LouisSchmieder/engine/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/LouisSchmieder/engine/actions/workflows/ci.yml)
+
 # Engine
 
 Don't ask about the name I'm not creative, but it will change after the time hopefully
