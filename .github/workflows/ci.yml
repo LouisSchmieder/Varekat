@@ -41,6 +41,10 @@ jobs:
         make
         sudo ./v symlink
     - name: Verify fmt
-      run: v run engine/fmt.vsh
+      run: |
+        cd engine
+        v run fmt.vsh verify
     - name: Build engine
-      run: v run engine
+      run: |
+        cd engine
+        v run .
