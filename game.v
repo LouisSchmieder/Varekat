@@ -8,10 +8,9 @@ import terrain
 
 fn init_fn(game_ptr voidptr) {
 	mut game := &Game(game_ptr)
-	mut progress := misc.create_progress()
-	game.world.load_mesh('assets/objects/dragon.obj', mathf.vec3<f32>(0, 0, 10), mathf.vec3<f32>(0, 0, 0), mathf.vec3<f32>(1, 1, 1), mut progress) or { panic(err) }
+	//game.world.load_mesh('assets/objects/dragon.obj', mathf.vec3<f32>(0, 0, 10), mathf.vec3<f32>(0, 0, 0), mathf.vec3<f32>(1, 1, 1), mut progress) or { panic(err) }
 
-	/*mut plane := graphics.create_plane(quad_length: 1, height: 20, width: 20, y_mult: 0.01)
+	mut plane := graphics.create_plane(quad_length: 1, height: 20, width: 20, y_mult: 0.01)
 	seed := time.now().unix
 
 	heightmap := terrain.create_random_heightmap(int(seed), 20, 20, 1, 1, terrain.perlin_map_gen)
@@ -19,7 +18,7 @@ fn init_fn(game_ptr voidptr) {
 	plane.update_by_heightmap(heightmap) or { panic(err) }
 
 	game.world.add_mesh(plane.mesh(), mathf.vec3<f32>(0, 0, 0), mathf.vec3<f32>(0, 0,
-		0), mathf.vec3<f32>(0, 0, 0))*/
+		0), mathf.vec3<f32>(0, 0, 0))
 }
 
 fn key_fn(game_ptr voidptr, key misc.Key, action misc.Action, mods int) {
@@ -30,9 +29,6 @@ fn key_fn(game_ptr voidptr, key misc.Key, action misc.Action, mods int) {
 		.key_w {
 			if action == .press {
 				game.camera.pos += game.camera.facing.mult_vec(game.camera.camera_speed)
-				eprintln(game.camera.pos)
-				eprintln(game.camera.pos - game.camera.facing)
-				eprintln('--------------')
 			}
 		}
 		.key_s {

@@ -333,8 +333,24 @@ pub fn find_memory_type_idx(filter u32, flags_array []MemoryPropertyFlagBits, de
 		flags |= u32(flags_array[i])
 	}
 
+	$if debug {
+		eprintln('Find memory type idx:')
+		eprintln('\tAmount of physical device properties: $physical_device_props.memoryTypeCount')
+		eprint('\tMemory requirements: ')
+		print_queue_flags(filter)
+		eprint('\tRequired memory types: ')
+		print_queue_flags(flags)
+	}
+
+
 	for i in 0 .. physical_device_props.memoryTypeCount {
 		prop_flag := unsafe { physical_device_props.memoryTypes[i].propertyFlags }
+
+		$if debug {
+			eprintln('\tDevice $i')
+			eprint('\t\tProperty flag: ')
+			print_queue_flags(prop_flag)
+		}
 
 		mut found := true
 

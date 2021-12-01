@@ -39,18 +39,27 @@ fn analyse_family(device C.VkPhysicalDevice, needed_family_flags []u32) ?(u32, u
 	mut idx := u32(0)
 	mut len := u32(0)
 
+	mut flags := u32(0)
+	for flag in needed_family_flags {
+		flags |= flag
+	}
+
+	$if debug {
+		eprintln('Needed family flags')
+		print_queue_flags(flags)
+	}
+
 	for i, prop in family_properties {
 		if len < prop.queueCount {
-			mut has_flags := true
-			for flag in needed_family_flags {
-				if (prop.queueFlags & flag) == 0 {
-					has_flags = false
-					break
-				}
+			$if debug {
+				eprintln('Family properties $i:')
+				print_queue_flags(prop.queueFlags)
 			}
-			if !has_flags {
+			
+			if (prop.queueFlags & flags) == 0 {
 				continue
 			}
+
 			len = prop.queueCount
 			idx = u32(i)
 			unset = false
@@ -60,5 +69,29 @@ fn analyse_family(device C.VkPhysicalDevice, needed_family_flags []u32) ?(u32, u
 		panic('No family was found which has the needed flags!')
 	}
 
+	$if debug {
+		eprintln('Chosen family $idx and got queue length $len')
+	}
+
 	return idx, len
+}
+
+fn print_queue_flags(flags u32) {
+	mut bits := []bool{}
+	for i in 0 .. 32 {
+		a := flags & (0x01 << (31 - i)) != 0
+		bits << a
+	}
+
+	for i in 0 .. 32 {
+		if bits[i] {
+			eprint('1')
+		} else {
+			eprint('0')
+		}
+		if (i + 1) % 4 == 0 {
+			eprint(' ')
+		}
+	}
+	eprintln('')
 }

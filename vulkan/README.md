@@ -26,3 +26,8 @@ An important note if Vulkan doesn't work, it could be that there is no graphical
 supports the needed flags. It could be wrong so there will be a flag, which will debug that and give
 information to fix it. Since there is the problem that the program has to analyse the gpus and find the
 best on, it's very WIP.
+
+### Debugging
+If you get any problems use `-cg`. There is a chance that it's debugged. Until now these problems are debugged:
+- `Found no correct memory type`
+- `No family was found which has the needed flags!`
