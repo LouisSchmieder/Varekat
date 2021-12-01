@@ -10,12 +10,14 @@ enum FaceType {
 	vertex_texture_normal
 }
 
+// Get the verticies and indicies from a `.obj` file at path `path`
+// Optimization is WIP
 pub fn load_obj(path string, model_idx int, mut progress Progress, optimize bool) ?([]Vertex, []u32) {
 	data := os.read_file(path) ?
 
-	mut raw_verticies := []mathf.Vec3{}
-	mut raw_textures := []mathf.Vec2{}
-	mut raw_normals := []mathf.Vec3{}
+	mut raw_verticies := []mathf.Vec3<f32>{}
+	mut raw_textures := []mathf.Vec2<f32>{}
+	mut raw_normals := []mathf.Vec3<f32>{}
 
 	mut verticies := []Vertex{}
 	mut indicies := []u32{}
@@ -89,7 +91,7 @@ pub fn load_obj(path string, model_idx int, mut progress Progress, optimize bool
 	return verticies, indicies
 }
 
-fn validate_face_vertex(field string, spliter string, face_type FaceType, mut verticies []Vertex, mut indicies []u32, raw_verticies []mathf.Vec3, raw_textures []mathf.Vec2, raw_normals []mathf.Vec3, model_idx int, optimize bool, mut indexes map[string]u32) {
+fn validate_face_vertex(field string, spliter string, face_type FaceType, mut verticies []Vertex, mut indicies []u32, raw_verticies []mathf.Vec3<f32>, raw_textures []mathf.Vec2<f32>, raw_normals []mathf.Vec3<f32>, model_idx int, optimize bool, mut indexes map[string]u32) {
 	data := field.split(spliter)
 	mut vertex := match face_type {
 		.vertex {

@@ -7,6 +7,7 @@ pub mut:
 	patch u32
 }
 
+// Creates a version from values
 pub fn make_version(major u32, minor u32, patch u32) Version {
 	return Version{
 		major: major
@@ -15,6 +16,7 @@ pub fn make_version(major u32, minor u32, patch u32) Version {
 	}
 }
 
+// Returns the version string
 pub fn (ver Version) str() string {
 	return '${ver.major}.${ver.minor}.$ver.patch'
 }

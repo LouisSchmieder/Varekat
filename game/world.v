@@ -10,7 +10,7 @@ pub struct WorldSettings {
 pub:
 	name             string
 	ambient_strenght f32
-	light_color      mathf.Vec3
+	light_color      mathf.Vec3<f32>
 }
 
 pub struct World {
@@ -19,7 +19,7 @@ pub:
 pub mut:
 	meshes           []&graphics.Mesh
 	ambient_strenght f32
-	light_color      mathf.Vec3
+	light_color      mathf.Vec3<f32>
 }
 
 pub fn create_world(settings WorldSettings) World {
@@ -51,7 +51,7 @@ pub fn (world World) get_world_indicies() []u32 {
 	return indicies
 }
 
-pub fn (mut world World) load(path string, loc mathf.Vec3, rot mathf.Vec3, scale mathf.Vec3, mut progress misc.Progress) ? {
+pub fn (mut world World) load(path string, loc mathf.Vec3<f32>, rot mathf.Vec3<f32>, scale mathf.Vec3<f32>, mut progress misc.Progress) ? {
 	if loader.exists(path.split('/').last()) {
 		world.meshes << load_mesh(path.split('/').last(), mut progress)
 		return
@@ -62,7 +62,7 @@ pub fn (mut world World) load(path string, loc mathf.Vec3, rot mathf.Vec3, scale
 	verticies, indicies := misc.load_obj(path, world.meshes.len, mut progress, false) ?
 	stopwatch.stop()
 	mut mesh := graphics.create_mesh(verticies, indicies)
-	mesh.update(loc, rot, scale)
+	mesh.update_abs(loc, rot, scale)
 	world.meshes << &mesh
 }
 

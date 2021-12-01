@@ -172,10 +172,10 @@ pub fn (mut bos BinaryOutputStream) write_bool(b bool) {
 	bos.write_byte(byte(if b { 0x01 } else { 0x00 }))
 }
 
-pub fn (mut bos BinaryOutputStream) write_vec3(v mathf.Vec3) {
+pub fn (mut bos BinaryOutputStream) write_vec3(v mathf.Vec3<f32>) {
 	bos.write_f32s([v.x, v.y, v.z])
 }
 
-pub fn (mut bos BinaryOutputStream) write_vec2(v mathf.Vec2) {
+pub fn (mut bos BinaryOutputStream) write_vec2(v mathf.Vec2<f32>) {
 	bos.write_f32s([v.x, v.y])
 }

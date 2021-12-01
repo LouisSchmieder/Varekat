@@ -191,12 +191,12 @@ pub fn (mut bis BinaryInputStream) skip(l u32) {
 	bis.read_bytes(l)
 }
 
-pub fn (mut bis BinaryInputStream) read_vec3() mathf.Vec3 {
+pub fn (mut bis BinaryInputStream) read_vec3() mathf.Vec3<f32> {
 	data := bis.read_f32s(3)
 	return mathf.vec3(data[0], data[1], data[2])
 }
 
-pub fn (mut bis BinaryInputStream) read_vec2() mathf.Vec2 {
+pub fn (mut bis BinaryInputStream) read_vec2() mathf.Vec2<f32> {
 	data := bis.read_f32s(2)
 	return mathf.vec2(data[0], data[1])
 }

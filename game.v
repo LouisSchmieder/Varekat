@@ -21,6 +21,6 @@ fn loop_fn(delta time.Duration, game_ptr voidptr) ? {
 	game.ubo.projection = mathf.make_vulkan_mat(projection)
 	game.ubo.view = m4.unit_m4()
 	game.ubo.model = mathf.make_vulkan_mat(rot_z * rot_y * rot_x * translate * scale)
-	game.ubo.light_color = mathf.vec4(game.world.light_color, game.world.ambient_strenght)
+	game.ubo.light_color = mathf.vec4<f32>(game.world.light_color, game.world.ambient_strenght)
 	game.uniform_buffer.map_buffer(&game.ubo) ?
 }
