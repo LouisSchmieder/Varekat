@@ -15,11 +15,9 @@ pub:
 
 pub struct World {
 pub:
-	name string
+	WorldSettings
 pub mut:
 	meshes           []&graphics.Mesh
-	ambient_strenght f32
-	light_color      mathf.Vec3<f32>
 }
 
 pub fn create_world(settings WorldSettings) World {

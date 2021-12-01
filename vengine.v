@@ -11,6 +11,7 @@ import vulkan.simple
 
 pub type GameInitFn = fn (voidptr)
 pub type GameLoopFn = fn (time.Duration, voidptr) ?
+pub type GameKeyFn  = fn (voidptr, misc.Key, misc.Action, int)
 
 const (
 	shader_path = './assets/shader/bin'
@@ -63,6 +64,9 @@ mut:
 	user_ptr                     voidptr
 	game_loop_fn                 GameLoopFn
 	game_init_fn                 GameInitFn
+	game_key_fn                  GameKeyFn
+
+	camera                       g.Camera
 
 	fov                          f32
 	aspec_ratio                  f32
@@ -86,15 +90,17 @@ mut:
 fn main() {
 	mut game := Game{
 		window: 0
-		width: 400
-		height: 300
+		width: 1280
+		height: 720
 		running: true
 		last: time.now()
 		game_loop_fn: loop_fn
 		game_init_fn: init_fn
+		game_key_fn: key_fn
 		fov: 80.0
 		near_plane: 0.01
 		far_plane: 10.0
+		camera: g.create_camera(mathf.vec3<f32>(0, 0, 0), mathf.vec3<f32>(0, 0, -1), mathf.vec3<f32>(0, 1, 0), 1)
 	}
 	game.user_ptr = &game
 	game.world = g.create_world(name: 'test', ambient_strenght: 0.1, light_color: mathf.vec3<f32>(1, 1, 1))
@@ -108,6 +114,11 @@ fn main() {
 	game.game_loop() or { panic(err) }
 	game.shutdown_vulkan()
 	game.shutdown_glfw()
+}
+
+fn on_key_input(window &C.GLFWwindow, key int, scancode int, action int, mods int) {
+	mut game := &Game(glfw.get_user_ptr(window))
+	game.game_key_fn(game.user_ptr, misc.Key(key), misc.Action(action), mods)
 }
 
 fn on_window_resized(window &C.GLFWwindow, width int, height int) {
@@ -127,6 +138,7 @@ fn (mut game Game) start_glfw() {
 		nullptr)
 	glfw.set_user_ptr(game.window, &game)
 	glfw.set_window_resize_cb(game.window, on_window_resized)
+	glfw.set_key_cb(game.window, on_key_input)
 	game.required_instance_extensions = glfw.get_required_instance_extensions()
 }
 

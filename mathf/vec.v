@@ -47,6 +47,14 @@ pub fn (a Vec3<T>) - (b Vec3<T>) Vec3<T> {
 	}
 }
 
+pub fn (a Vec3<T>) + (b Vec3<T>) Vec3<T> {
+	return Vec3<T>{
+		x: a.x + b.x
+		y: a.y + b.y
+		z: a.z + b.z
+	}
+}
+
 pub fn vec3<T>(x T, y T, z T) Vec3<T> {
 	return Vec3<T>{
 		x: x
@@ -76,6 +84,14 @@ pub fn normalize<T>(vec Vec3<T>) Vec3<T> {
 		x: vec.x * (1 / m)
 		y: vec.y * (1 / m)
 		z: vec.z * (1 / m)
+	}
+}
+
+pub fn (vec Vec3<T>) mult_vec(b T) Vec3<T> {
+	return Vec3<T>{
+		x: vec.x * b
+		y: vec.y * b
+		z: vec.z * b
 	}
 }
 

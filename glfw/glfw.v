@@ -12,6 +12,7 @@ struct C.GLFWwindow {}
 struct C.GLFWmonitor {}
 
 type WindowSizeCb = fn (window voidptr, width int, height int)
+type KeyCb = fn(window &C.GLFWwindow, key int, scancode int, action int, mods int)
 
 fn C.glfwInit()
 fn C.glfwWindowHint(int, int)
@@ -23,6 +24,7 @@ fn C.glfwGetRequiredInstanceExtensions(&u32) &charptr
 fn C.glfwGetWindowUserPointer(&C.GLFWwindow) voidptr
 fn C.glfwSetWindowUserPointer(&C.GLFWwindow, voidptr)
 fn C.glfwSetWindowSizeCallback(&C.GLFWwindow, voidptr)
+fn C.glfwSetKeyCallback(&C.GLFWwindow, voidptr)
 fn C.glfwTerminate()
 
 pub fn glfw_init() {
@@ -55,6 +57,10 @@ pub fn poll_events() {
 
 pub fn set_window_resize_cb(win &C.GLFWwindow, cb WindowSizeCb) {
 	C.glfwSetWindowSizeCallback(win, cb)
+}
+
+pub fn set_key_cb(win &C.GLFWwindow, cb KeyCb) {
+	C.glfwSetKeyCallback(win, cb)
 }
 
 pub fn should_close(window &C.GLFWwindow) bool {
