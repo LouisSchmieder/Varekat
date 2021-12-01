@@ -18,8 +18,8 @@ jobs:
       uses: actions/checkout@v2
       with:
         path: engine
-    - name: V Vet
-      run: ./v vet engine
+#     - name: V Vet
+#      run: ./v vet engine
   
   ubuntu:
     runs-on: ubuntu-latest
@@ -34,7 +34,7 @@ jobs:
         path: engine
     - name: Install dependencies
       run: |
-        sudo apt get update
+        sudo apt update
         sudo apt install --quiet -y libglfw3-dev libvulkan-dev
     - name: Build V
       run: |
