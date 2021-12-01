@@ -9,7 +9,7 @@ mut:
 }
 
 pub struct ObjectSettings {
-	position mathf.Vec3
-	rotation mathf.Vec3
-	scale    mathf.Vec3
+	position mathf.Vec3<f32>
+	rotation mathf.Vec3<f32>
+	scale    mathf.Vec3<f32>
 }

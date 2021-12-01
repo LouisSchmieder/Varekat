@@ -66,6 +66,12 @@ pub fn (mut world World) load(path string, loc mathf.Vec3<f32>, rot mathf.Vec3<f
 	world.meshes << &mesh
 }
 
+pub fn (mut world World) add_mesh(mesh &graphics.Mesh, loc mathf.Vec3<f32>, rot mathf.Vec3<f32>, scale mathf.Vec3<f32>) {
+	mut m := mesh
+	m.update_abs(loc, rot, scale)
+	world.meshes << m
+}
+
 fn save_mesh(len int, mut progress misc.Progress, path string, name string) {
 	eprintln('Optimize mesh...')
 	verticies, indicies := misc.load_obj(path, len, mut progress, false) or { panic(err) }

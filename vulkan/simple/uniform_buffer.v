@@ -14,8 +14,8 @@ pub mut:
 }
 
 struct UniformBuffer<T> {
-	device          C.VkDevice
-	physical_device C.VkPhysicalDevice
+	device          &C.VkDevice
+	physical_device &C.VkPhysicalDevice
 mut:
 	settings       UniformBufferConfig
 	uniform_buffer C.VkBuffer
@@ -26,10 +26,10 @@ mut:
 	desc_set        C.VkDescriptorSet
 }
 
-pub fn create_uniform_buffer<T>(device C.VkDevice, physical_device C.VkPhysicalDevice, settings UniformBufferConfig) ?UniformBuffer<T> {
+pub fn create_uniform_buffer<T>(device &C.VkDevice, physical_device &C.VkPhysicalDevice, settings UniformBufferConfig) ?UniformBuffer<T> {
 	mut buffer := UniformBuffer<T>{
-		device: device
-		physical_device: physical_device
+		device: unsafe { device }
+		physical_device: unsafe { physical_device }
 		settings: settings
 	}
 	buffer.settings.buffer_size = sizeof(T)
@@ -80,9 +80,8 @@ pub fn (mut buffer UniformBuffer<T>) create_descriptor_pool() ? {
 }
 
 pub fn (mut buffer UniformBuffer<T>) create_descriptor_set_layout() ? {
-	desc_set_layout_binding := vulkan.create_vk_descriptor_set_layout_binding(0, [
-		buffer.settings.descriptor_type,
-	], buffer.settings.stage, [])
+	desc_set_layout_binding := vulkan.create_vk_descriptor_set_layout_binding(0, 1, buffer.settings.descriptor_type,
+		buffer.settings.stage, [])
 	desc_set_layout_create_info := vulkan.create_vk_descriptor_set_layout_create_info(simple.nullptr,
 		0, [desc_set_layout_binding])
 	buffer.desc_set_layout = vulkan.create_vk_descriptor_set_layout(buffer.device, &desc_set_layout_create_info,
@@ -98,6 +97,6 @@ pub fn (mut buffer UniformBuffer<T>) create_descriptor_set() ? {
 		0, buffer.settings.buffer_size)
 
 	desc_write := vulkan.create_vk_write_descriptor_set(simple.nullptr, buffer.desc_set,
-		0, 0, [buffer.settings.descriptor_type], [], [desc_buffer_info], [])
+		0, 0, 1, buffer.settings.descriptor_type, [], [desc_buffer_info], [])
 	vulkan.vk_update_descriptor_sets(buffer.device, [desc_write], [])
 }

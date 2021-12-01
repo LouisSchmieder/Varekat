@@ -9,11 +9,15 @@ import game as g
 import mathf
 import vulkan.simple
 
+pub type GameInitFn = fn (voidptr)
 pub type GameLoopFn = fn (time.Duration, voidptr) ?
 
 const (
 	shader_path = './assets/shader/bin'
 	nullptr     = voidptr(0)
+
+	// Workaround
+	a           = []UBO{}
 )
 
 struct Game {
@@ -58,6 +62,7 @@ mut:
 	last                         time.Time
 	user_ptr                     voidptr
 	game_loop_fn                 GameLoopFn
+	game_init_fn                 GameInitFn
 
 	fov                          f32
 	aspec_ratio                  f32
@@ -86,18 +91,16 @@ fn main() {
 		running: true
 		last: time.now()
 		game_loop_fn: loop_fn
+		game_init_fn: init_fn
 		fov: 80.0
 		near_plane: 0.01
 		far_plane: 10.0
 	}
-
+	game.user_ptr = &game
 	game.world = g.create_world(name: 'test', ambient_strenght: 0.1, light_color: mathf.vec3<f32>(1, 1, 1))
 
-	mut progress := misc.create_progress()
+	game.game_init_fn(game.user_ptr)
 
-	game.world.load('assets/objects/dragon.obj', mathf.vec3<f32>(0, 0, 10), mathf.vec3<f32>(0, 0, 0), mathf.vec3<f32>(1, 1, 1), mut progress) or { panic(err) }
-	
-	game.user_ptr = &game
 	game.start_glfw()
 	game.binding_desc = vulkan.get_binding_description(sizeof(misc.Vertex))
 	game.attrs_descs = vulkan.get_attribute_descriptions(misc.vertex_offsets(), [u32(0), 0, 0], [u32(C.VK_FORMAT_R32G32B32_SFLOAT), u32(C.VK_FORMAT_R32G32B32_SFLOAT), u32(C.VK_FORMAT_R32G32B32_SFLOAT)])
@@ -150,7 +153,7 @@ fn (mut game Game) start_vulkan() ? {
 	game.settings = all_settings[idx]
 	game.physical_device = physical_devices[idx]
 
-	game.uniform_buffer = simple.create_uniform_buffer<UBO>(game.device, game.physical_device, stage: .vk_shader_stage_vertex_bit, descriptor_type: .vk_descriptor_type_uniform_buffer) ?
+	game.uniform_buffer = simple.create_uniform_buffer<UBO>(&game.device, &game.physical_device, stage: .vk_shader_stage_vertex_bit, descriptor_type: .vk_descriptor_type_uniform_buffer) ?
 
 	device_queue_create_info := vulkan.create_vk_device_queue_create_info(nullptr, 0,
 		game.settings.queue_family_idx, 1, []f32{len: 1, init: 1.0})

@@ -19,5 +19,6 @@ Just create a fork, create a branch and write the code. Then just push the code 
 and create a pull request.
 
 # Pictures
-![Cube example](./cube_example.gif)
-![Dragon Demo](./dragon_demo.png)
+![Cube example](./assets/images/cube_example.gif)
+![Dragon Demo](./assets/images/dragon_demo.png)
+![Terrain Demo](./assets/images/terrain.png)

@@ -3,6 +3,23 @@ module main
 import time
 import gg.m4
 import mathf
+import graphics
+import terrain
+
+fn init_fn(game_ptr voidptr) {
+	mut game := &Game(game_ptr)
+	// game.world.load('assets/objects/dragon.obj', mathf.vec3<f32>(0, 0, 10), mathf.vec3<f32>(0, 0, 0), mathf.vec3<f32>(1, 1, 1), mut progress) or { panic(err) }
+
+	mut plane := graphics.create_plane(quad_length: 1, height: 20, width: 20, y_mult: 1)
+	seed := time.now().unix
+
+	heightmap := terrain.create_random_heightmap(int(seed), 20, 20, 1, 1, terrain.perlin_map_gen)
+
+	plane.update_by_heightmap(heightmap) or { panic(err) }
+
+	game.world.add_mesh(plane.mesh(), mathf.vec3<f32>(0, 0, 0), mathf.vec3<f32>(0, 0,
+		0), mathf.vec3<f32>(0, 0, 0))
+}
 
 fn loop_fn(delta time.Duration, game_ptr voidptr) ? {
 	mut game := &Game(game_ptr)
@@ -11,11 +28,11 @@ fn loop_fn(delta time.Duration, game_ptr voidptr) ? {
 
 	game.rotation += delta_seconds * 0.5
 
-	translate := mathf.translate(0, -5, 15)
+	translate := mathf.translate(-5, -7, 10)
 	scale := mathf.scale(1, -1, 1)
 	rot_x := mathf.rot_x(0)
 	rot_y := mathf.rot_y(0)
-	rot_z := mathf.rot_z(0)
+	rot_z := mathf.rot_z(90)
 
 	projection := mathf.perspective(90, f32(game.height) / f32(game.width), 0.001, 100)
 	game.ubo.projection = mathf.make_vulkan_mat(projection)

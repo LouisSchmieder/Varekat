@@ -1,4 +1,4 @@
 ./vengine.v
 ./vulkan/functions_array.v
 ./vulkan/functions.v
-./vulkan/world/loader/loader.v
+./game/loader/loader.v

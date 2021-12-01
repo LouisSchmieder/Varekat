@@ -5,6 +5,7 @@ import os
 import misc
 import buffer
 
+[heap]
 pub struct Mesh {
 pub mut:
 	position mathf.Vec3<f32>

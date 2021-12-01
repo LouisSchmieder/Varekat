@@ -69,11 +69,11 @@ pub fn create_vk_rect_2d(offset_x int, offset_y int, width u32, height u32) C.Vk
 	}
 }
 
-pub fn create_vk_descriptor_set_layout_binding(binding u32, desc_type []DescriptorType, stage_flags ShaderStageFlagBits, immutable_samplers []C.VkSampler) C.VkDescriptorSetLayoutBinding {
+pub fn create_vk_descriptor_set_layout_binding(binding u32, desc_count u32, desc_type DescriptorType, stage_flags ShaderStageFlagBits, immutable_samplers []C.VkSampler) C.VkDescriptorSetLayoutBinding {
 	return C.VkDescriptorSetLayoutBinding{
 		binding: binding
-		descriptorType: desc_type.data
-		descriptorCount: u32(desc_type.len)
+		descriptorType: desc_type
+		descriptorCount: desc_count
 		stageFlags: stage_flags
 		pImmutableSamplers: immutable_samplers.data
 	}

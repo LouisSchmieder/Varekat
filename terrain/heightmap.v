@@ -7,7 +7,7 @@ pub type MapGen = fn (int, int, int, f32, f32) []f64
 pub struct Heightmap {
 	width  int
 	height int
-mut:
+pub mut:
 	pixels []f64
 }
 

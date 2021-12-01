@@ -367,7 +367,7 @@ struct C.VkWriteDescriptorSet {
 	dstBinding       u32
 	dstArrayElement  u32
 	descriptorCount  u32
-	descriptorType   u32
+	descriptorType   DescriptorType
 	pImageInfo       voidptr // TODO add
 	pBufferInfo      &C.VkDescriptorBufferInfo
 	pTexelBufferView voidptr // TODO add

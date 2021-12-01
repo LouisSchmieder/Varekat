@@ -22,14 +22,14 @@ pub fn create_loader<T>(name string, data T) Loader<T> {
 }
 
 pub fn (loader Loader<T>) store() ? {
-	loader.data.store('$loader.path/${loader.name}.vbin')
+	loader.data.store('$path/${loader.name}.vbin')
 }
 
 pub fn (mut loader Loader<T>) load(mut progress misc.Progress) ? {
-	loader.data.load('$loader.path/${loader.name}.vbin', mut progress)
+	loader.data.load('$path/${loader.name}.vbin', mut progress)
 }
 
 // TODO add mapping file for unique file names
 pub fn exists(name string) bool {
-	return os.exists('$loader.path/${name}.vbin')
+	return os.exists('$path/${name}.vbin')
 }

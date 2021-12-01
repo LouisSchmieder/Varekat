@@ -310,7 +310,7 @@ struct C.VkBufferCopy {
 [typedef]
 struct C.VkDescriptorSetLayoutBinding {
 	binding            u32
-	descriptorType     u32
+	descriptorType     DescriptorType
 	descriptorCount    u32
 	stageFlags         ShaderStageFlagBits
 	pImmutableSamplers &C.VkSampler
