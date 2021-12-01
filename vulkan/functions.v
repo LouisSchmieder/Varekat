@@ -361,10 +361,12 @@ pub fn find_memory_type_idx(filter u32, flags_array []MemoryPropertyFlagBits, de
 
 pub fn print_layer_properties(layer C.VkLayerProperties) string {
 	mut builder := strings.new_builder(100)
-	builder.writeln('${string(layer.layerName)}:')
-	builder.writeln('  SpecVersion: ${number_to_version(layer.specVersion)}')
-	builder.writeln('  ImplementationVersion: ${number_to_version(layer.implementationVersion)}')
-	builder.writeln('  Description: ${string(layer.description)}')
+	unsafe {
+		builder.writeln('${cstring_to_vstring(layer.layerName)}:')
+		builder.writeln('  SpecVersion: ${number_to_version(layer.specVersion)}')
+		builder.writeln('  ImplementationVersion: ${number_to_version(layer.implementationVersion)}')
+		builder.writeln('  Description: ${cstring_to_vstring(layer.description)}')
+	}
 	res := builder.str()
 	unsafe {
 		builder.free()
@@ -374,8 +376,10 @@ pub fn print_layer_properties(layer C.VkLayerProperties) string {
 
 pub fn print_extension_properties(extension C.VkExtensionProperties) string {
 	mut builder := strings.new_builder(100)
-	builder.writeln('${string(extension.extensionName)}:')
-	builder.writeln('  SpecVersion: ${number_to_version(extension.specVersion)}')
+	unsafe {
+		builder.writeln('${cstring_to_vstring(extension.extensionName)}:')
+		builder.writeln('  SpecVersion: ${number_to_version(extension.specVersion)}')
+	}
 	res := builder.str()
 	unsafe {
 		builder.free()

@@ -71,7 +71,7 @@ pub fn get_required_instance_extensions() []string {
 	mut res := []string{len: int(amount)}
 	for i in 0 .. amount {
 		unsafe {
-			res[i] = string(ptr[i])
+			res[i] = cstring_to_vstring(ptr[i])
 		}
 	}
 	return res

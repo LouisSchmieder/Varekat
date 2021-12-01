@@ -161,7 +161,7 @@ fn (mut game Game) start_vulkan() ? {
 	device_create_info := vulkan.create_vk_device_create_info(nullptr, 0, [
 		device_queue_create_info,
 	], [], [
-		string(charptr(C.VK_KHR_SWAPCHAIN_EXTENSION_NAME)),
+		unsafe { cstring_to_vstring(charptr(C.VK_KHR_SWAPCHAIN_EXTENSION_NAME)) },
 	], &enabled_features)
 	game.device = vulkan.create_vk_device(game.physical_device, device_create_info) ?
 	game.queue = vulkan.get_vk_device_queue(game.device, game.settings.queue_family_idx, 0)
