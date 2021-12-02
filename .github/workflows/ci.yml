@@ -14,10 +14,10 @@ jobs:
         repository: vlang/v
     - name: Build V
       run: make
-    - name: Checkout engine
+    - name: Checkout varekat
       uses: actions/checkout@v2
       with:
-        path: engine
+        path: varekat
 #     - name: V Vet
 #      run: ./v vet engine
   
@@ -28,10 +28,10 @@ jobs:
       uses: actions/checkout@v2
       with:
         repository: vlang/v
-    - name: Checkout engine
+    - name: Checkout varekat
       uses: actions/checkout@v2
       with:
-        path: engine
+        path: varekat
     - name: Install dependencies
       run: |
         sudo apt update
@@ -42,9 +42,9 @@ jobs:
         sudo ./v symlink
     - name: Verify fmt
       run: |
-        cd engine
+        cd varekat
         v run fmt.vsh verify
-    - name: Build engine
+    - name: Build varekat
       run: |
-        cd engine
+        cd varekat
         v .
