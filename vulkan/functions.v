@@ -353,7 +353,7 @@ pub fn find_memory_type_idx(filter u32, flags_array []MemoryPropertyFlagBits, de
 			misc.print_queue_flags(prop_flag)
 		}
 
-		full_filtered := filter | flags
+		full_filtered := filter & flags
 		if prop_flag & full_filtered == full_filtered {
 			$if debug {
 				eprintln('\t\tFound $i')

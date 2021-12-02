@@ -20,5 +20,5 @@ fn test_flags() {
 	eprint('C & (A | B) ')
 	misc.print_queue_flags(c & (a | b))
 
-	assert a | b == c & (a | b)
+	assert a & b == c & (a & b)
 }
