@@ -5,29 +5,53 @@ A 3d game engine with multiple backends, written in V
 
 # Installing
 
-## Apt
+## Glfw
+
+### Debian
 ```bash
-sudo apt install libglfw3-dev libvulkan-dev
+sudo apt install libglfw3-dev
 ```
 
-## Dnf
+### Fedora
 ```bash
-sudo dnf install glfw-devel vulkan-loader-devel
+sudo dnf install glfw-devel
 ```
 
-## Other
-
-### Linux
-https://vulkan.lunarg.com/doc/sdk/1.2.198.0/linux/getting_started.html
+### Arch
+```bash
+sudo pacman -S glfw-<x11/wayland>
+```
 
 ### MacOS
-https://vulkan.lunarg.com/doc/sdk/1.2.198.0/mac/getting_started.html
 ```bash
 brew install glfw
 ```
 
 ### Windows
-https://vulkan.lunarg.com/doc/sdk/1.2.198.0/windows/getting_started.html
+```shell
+start scripts\glfw_install_windows.bat
+```
+
+
+## Vulkan
+
+### Linux
+```bash
+sh scripts/vulkan_install_linux.sh
+```
+
+### MacOS
+```bash
+sh scripts/vulkan_install_macos.sh
+```
+
+### Windows
+```shell
+start scripts\vulkan_install_windows.bat
+```
+
+### Alternative
+Alternative you can try to build the whole project and install all dependencies, by using <a href="https://github.com/LouisSchmieder/Vuild">Vuild</a>. But it's in an very alpha stage.
 
 
 # Why?
