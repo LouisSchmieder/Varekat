@@ -1,6 +1,7 @@
 module vulkan
 
 import strings
+import misc
 
 const (
 	passable_error_codes = [0, 1000001003]
