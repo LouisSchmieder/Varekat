@@ -1,6 +1,7 @@
 # Binaries for programs and plugins
 main
-vengine
+varekat
+varekat_debug
 *.exe
 *.exe~
 *.so
