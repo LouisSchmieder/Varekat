@@ -1,0 +1,42 @@
+{
+    "v": {
+        "upstream": "main",
+        "minVersion": "0.1.24",
+        "cflags": ""
+    },
+    "defaultBuild": "dev",
+    "builds": {
+        "dev": {
+            "target": ".",
+            "output": "varekat",
+            "args": [""]
+        },
+        "debug": {
+            "target": ".",
+            "output": "varekat_debug",
+            "args": ["-cg"]
+        }
+    },
+    "dependencies": [
+        {
+            "name": "GLFW",
+            "lib": {
+                "arch": [],
+                "ubuntu": ["sudo apt install libglfw3-dev"],
+                "fedora": ["sudo dns install glfw-devel"],
+                "windows": [],
+                "mac": []
+            }
+        },
+        {
+            "name": "Vulkan",
+            "lib": {
+                "arch": [],
+                "ubuntu": ["sudo apt install libvulkan-dev"],
+                "fedora": ["sudo dns install vulkan-loader-devel"],
+                "windows": [],
+                "mac": []
+            }
+        }
+    ]
+}
