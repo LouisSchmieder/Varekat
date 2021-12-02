@@ -4,6 +4,33 @@
 
 Don't ask about the name I'm not creative, but it will change after the time hopefully
 
+# Installing
+
+## Apt
+```bash
+sudo apt install libglfw3-dev libvulkan-dev
+```
+
+## Dnf
+```bash
+sudo dnf install glfw-devel vulkan-loader-devel
+```
+
+## Other
+
+### Linux
+https://vulkan.lunarg.com/doc/sdk/1.2.198.0/linux/getting_started.html
+
+### MacOS
+https://vulkan.lunarg.com/doc/sdk/1.2.198.0/mac/getting_started.html
+```bash
+brew install glfw
+```
+
+### Windows
+https://vulkan.lunarg.com/doc/sdk/1.2.198.0/windows/getting_started.html
+
+
 # Why?
 
 I've started this project to first learn vulkan, but after now a bit of time I want to
@@ -21,6 +48,8 @@ Just create a fork, create a branch and write the code. Then just push the code 
 and create a pull request.
 
 # Pictures
-![Cube example](./assets/images/cube_example.gif)
-![Dragon Demo](./assets/images/dragon_demo.png)
-![Terrain Demo](./assets/images/terrain.png)
+<img src="./assets/images/cube_example.gif" alt="Cube demo" style="width: 100%">
+
+<img src="./assets/images/dragon_demo.png" alt="Dragon demo" style="width: 100%">
+
+<img src="./assets/images/terrain.png" alt="Terrain demo" style="width: 100%">
