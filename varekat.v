@@ -131,6 +131,10 @@ fn on_window_resized(window &C.GLFWwindow, width int, height int) {
 	}
 }
 
+fn on_glfw_error(code int, msg charptr) {
+	unsafe { eprintln('Glfw error $code: ${cstring_to_vstring(msg)}') }
+}
+
 fn (mut game Game) start_glfw() {
 	glfw.glfw_init()
 	glfw.window_hint(C.GLFW_CLIENT_API, C.GLFW_NO_API)
@@ -139,6 +143,7 @@ fn (mut game Game) start_glfw() {
 	glfw.set_user_ptr(game.window, &game)
 	glfw.set_window_resize_cb(game.window, on_window_resized)
 	glfw.set_key_cb(game.window, on_key_input)
+	glfw.set_error_cb(on_glfw_error)
 	game.required_instance_extensions = glfw.get_required_instance_extensions()
 }
 

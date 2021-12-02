@@ -1,8 +1,7 @@
 [![CI](https://github.com/LouisSchmieder/engine/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/LouisSchmieder/engine/actions/workflows/ci.yml)
 
 # Varekat
-
-Don't ask about the name I'm not creative, but it will change after the time hopefully
+A 3d game engine with multiple backends, written in V
 
 # Installing
 
