@@ -10,3 +10,4 @@ vengine
 *.vbin
 
 assets/shader/bin
+libs/

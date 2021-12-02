@@ -13,18 +13,15 @@ layout(location = 1) out vec3 fragNormal;
 layout(location = 2) out vec3 fragPos;
 
 layout(binding = 0) uniform UBO {
-	mat4 model;
-	mat4 view;
-	mat4 projection;
-	vec3 lightPosition;
-	vec4 lightColor;
+	mat4 mv;
+	mat4 mvp;
+	mat4 n;
 } ubo;
 
 void main() {
-    gl_Position = vec4(pos, 1) * ubo.model * ubo.view * ubo.projection;
-
-	fragNormal = normal;
-    fragColor = color;
-	fragPos = vec3(vec4(pos, 1) * ubo.model);
+    fragPos = vec3(ubo.mv * vec4(pos, 1.0));
+	fragColor = color;
+	fragNormal = vec3(ubo.n * vec4(normal, 1.0));
+	gl_Position = ubo.mvp * vec4(pos, 1.0);
 }
 

@@ -2,9 +2,6 @@ module glfw
 
 #define GLFW_INCLUDE_VULKAN
 
-#pkgconfig glfw3
-#include <GLFW/glfw3.h>
-
 [typedef]
 struct C.GLFWwindow {}
 

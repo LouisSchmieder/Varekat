@@ -69,7 +69,6 @@ mut:
 	camera                       g.Camera
 
 	fov                          f32
-	aspec_ratio                  f32
 	near_plane                   f32
 	far_plane                    f32
 
@@ -80,11 +79,9 @@ mut:
 
 struct UBO {
 mut:
-	model m4.Mat4
-	view m4.Mat4
-	projection m4.Mat4
-	light_direction mathf.Vec3<f32>
-	light_color mathf.Vec4<f32>
+	model_view m4.Mat4
+	mvp m4.Mat4
+	normal m4.Mat4
 }
 
 fn main() {

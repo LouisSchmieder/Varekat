@@ -21,9 +21,9 @@
         {
             "name": "GLFW",
             "lib": {
-                "arch": [],
-                "ubuntu": ["sudo apt install libglfw3-dev"],
-                "fedora": ["sudo dns install glfw-devel"],
+                "arch": ["sudo pacman install --noconfirm glfw-x11"],
+                "ubuntu": ["sudo apt install -y --quit libglfw3-dev"],
+                "fedora": ["sudo dnf install -y glfw-devel"],
                 "windows": [],
                 "mac": []
             }
@@ -31,9 +31,9 @@
         {
             "name": "Vulkan",
             "lib": {
-                "arch": [],
-                "ubuntu": ["sudo apt install libvulkan-dev"],
-                "fedora": ["sudo dns install vulkan-loader-devel"],
+                "arch": ["sh scripts/vulkan_install_linux.sh"],
+                "ubuntu": ["sh scripts/vulkan_install_linux.sh"],
+                "fedora": ["sh scripts/vulkan_install_linux.sh"],
                 "windows": [],
                 "mac": []
             }
