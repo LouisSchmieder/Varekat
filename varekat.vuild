@@ -1,42 +1,37 @@
 {
-    "v": {
-        "upstream": "main",
-        "minVersion": "0.1.24",
-        "cflags": ""
-    },
-    "defaultBuild": "dev",
-    "builds": {
-        "dev": {
-            "target": ".",
-            "output": "varekat",
-            "args": [""]
-        },
-        "debug": {
-            "target": ".",
-            "output": "varekat_debug",
-            "args": ["-cg"]
-        }
-    },
-    "dependencies": [
-        {
-            "name": "GLFW",
-            "lib": {
-                "arch": ["sudo pacman install --noconfirm glfw-x11"],
-                "ubuntu": ["sudo apt install -y --quit libglfw3-dev"],
-                "fedora": ["sudo dnf install -y glfw-devel"],
-                "windows": [],
-                "mac": []
-            }
-        },
-        {
-            "name": "Vulkan",
-            "lib": {
-                "arch": ["sh scripts/vulkan_install_linux.sh"],
-                "ubuntu": ["sh scripts/vulkan_install_linux.sh"],
-                "fedora": ["sh scripts/vulkan_install_linux.sh"],
-                "windows": [],
-                "mac": []
-            }
-        }
-    ]
+	"v": {
+		"upstream": "main",
+		"minVersion": "0.1.24",
+		"cflags": ""
+	},
+	"defaultBuild": "dev",
+	"builds": {
+		"dev": {
+			"target": ".",
+			"output": "varekat",
+			"args": [""]
+		},
+		"debug": {
+			"target": ".",
+			"output": "varekat_debug",
+			"args": ["-cg"]
+		}
+	},
+	"dependencies": [
+		{
+			"name": "GLFW",
+			"lib": {
+				"windows": [],
+				"mac": []
+			}
+		},
+		{
+			"name": "Vulkan",
+			"lib": {
+				"linux": ["sh scripts/vulkan_install_linux.sh"],
+				"windows": [],
+				"mac": []
+			}
+		}
+	]
 }
