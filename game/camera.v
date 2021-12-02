@@ -5,11 +5,11 @@ import gg.m4
 
 pub struct Camera {
 pub mut:
-	pos                          mathf.Vec3<f32>
-	facing                       mathf.Vec3<f32>
-	up                           mathf.Vec3<f32>
+	pos    mathf.Vec3<f32>
+	facing mathf.Vec3<f32>
+	up     mathf.Vec3<f32>
 
-	camera_speed                 f32 = 2.0
+	camera_speed f32 = 2.0
 }
 
 pub fn create_camera(pos mathf.Vec3<f32>, facing mathf.Vec3<f32>, up mathf.Vec3<f32>, camera_speed f32) Camera {

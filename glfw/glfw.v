@@ -12,7 +12,8 @@ struct C.GLFWwindow {}
 struct C.GLFWmonitor {}
 
 type WindowSizeCb = fn (window voidptr, width int, height int)
-type KeyCb = fn(window &C.GLFWwindow, key int, scancode int, action int, mods int)
+
+type KeyCb = fn (window &C.GLFWwindow, key int, scancode int, action int, mods int)
 
 fn C.glfwInit()
 fn C.glfwWindowHint(int, int)

@@ -14,10 +14,9 @@ pub:
 }
 
 pub struct World {
-pub:
 	WorldSettings
 pub mut:
-	meshes           []&graphics.Mesh
+	meshes []&graphics.Mesh
 }
 
 pub fn create_world(settings WorldSettings) World {

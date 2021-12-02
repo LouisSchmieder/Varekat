@@ -57,7 +57,7 @@ fn analyse_family(device C.VkPhysicalDevice, needed_family_flags []u32) ?(u32, u
 				eprintln('Family properties $i:')
 				misc.print_queue_flags(prop.queueFlags)
 			}
-			
+
 			if (prop.queueFlags & flags) == 0 {
 				continue
 			}
@@ -77,5 +77,3 @@ fn analyse_family(device C.VkPhysicalDevice, needed_family_flags []u32) ?(u32, u
 
 	return idx, len
 }
-
-

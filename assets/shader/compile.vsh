@@ -7,7 +7,7 @@ mkdir('bin') or { panic(err) }
 shaders := read_file('shaders.list') or { '' }
 for shader in shaders.fields() {
 	s := shader.trim_space().split('.')
-	res := execute('glslangValidator -V ${shader.trim_space()}')
+	res := execute('glslangValidator -V $shader.trim_space()')
 	if res.exit_code != 0 {
 		eprintln(res.output)
 		exit(res.exit_code)

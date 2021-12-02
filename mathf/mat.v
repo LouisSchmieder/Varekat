@@ -182,10 +182,22 @@ pub fn look_at(eye Vec3<f32>, at Vec3<f32>, up Vec3<f32>) m4.Mat4 {
 
 	return m4.Mat4{
 		e: [
-			xaxis.x, yaxis.x, zaxis.x, 0,
-			xaxis.y, yaxis.y, zaxis.y, 0,
-			xaxis.z, yaxis.z, zaxis.z, 0,
-			dot(xaxis, eye), dot(yaxis, eye), dot(zaxis, eye), 1
+			xaxis.x,
+			yaxis.x,
+			zaxis.x,
+			0,
+			xaxis.y,
+			yaxis.y,
+			zaxis.y,
+			0,
+			xaxis.z,
+			yaxis.z,
+			zaxis.z,
+			0,
+			dot(xaxis, eye),
+			dot(yaxis, eye),
+			dot(zaxis, eye),
+			1,
 		]!
 	}
 }
