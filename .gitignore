@@ -10,5 +10,7 @@ varekat_debug
 *.spv
 *.vbin
 
-assets/shader/bin
+# Folders
+assets/shader/bin/
 libs/
+scripts/tmp/
