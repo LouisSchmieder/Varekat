@@ -92,6 +92,13 @@ pub fn load_obj(path string, model_idx int, mut progress Progress, optimize bool
 }
 
 fn validate_face_vertex(field string, spliter string, face_type FaceType, mut verticies []Vertex, mut indicies []u32, raw_verticies []mathf.Vec3<f32>, raw_textures []mathf.Vec2<f32>, raw_normals []mathf.Vec3<f32>, model_idx int, optimize bool, mut indexes map[string]u32) {
+	if optimize {
+		if field in indexes {
+			indicies << indexes[field]
+			return
+		}
+	}
+
 	data := field.split(spliter)
 	mut vertex := match face_type {
 		.vertex {
@@ -116,12 +123,6 @@ fn validate_face_vertex(field string, spliter string, face_type FaceType, mut ve
 	}
 	vertex.pos = raw_verticies[data[0].int() - 1]
 	vertex.model = model_idx
-
-	if optimize {
-		if field in indexes {
-			indicies << indexes[field]
-		}
-	}
 
 	verticies << vertex
 	idx := u32(verticies.len - 1)

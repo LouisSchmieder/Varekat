@@ -102,3 +102,12 @@ pub fn (vec Vec3<T>) mod() T {
 pub fn (vec Vec3<T>) location_idx() T {
 	return vec.x * vec.z + vec.y
 }
+
+pub fn (mut vec Vec3<T>) free() {
+}
+
+pub fn (mut vec Vec2<T>) free() {
+}
+
+pub fn (mut vec Vec4<T>) free() {
+}

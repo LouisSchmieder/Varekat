@@ -27,25 +27,8 @@ pub fn create_world(settings WorldSettings) World {
 	}
 }
 
-pub fn (world World) get_world_verticies() []misc.Vertex {
-	mut verticies := []misc.Vertex{}
-
-	for mesh in world.meshes {
-		v, _ := mesh.mesh_data()
-		verticies << v
-	}
-	return verticies
-}
-
-pub fn (world World) get_world_indicies() []u32 {
-	mut indicies := []u32{}
-
-	for mesh in world.meshes {
-		_, i := mesh.mesh_data()
-		indicies << i
-	}
-
-	return indicies
+pub fn (world World) meshes() []&graphics.Mesh {
+	return world.meshes
 }
 
 pub fn (mut world World) load_mesh(path string, loc mathf.Vec3<f32>, rot mathf.Vec3<f32>, scale mathf.Vec3<f32>, mut progress misc.Progress) ? {

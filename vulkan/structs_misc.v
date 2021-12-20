@@ -1,6 +1,6 @@
 module vulkan
 
-type VkResult = u32
+type VkResult = int
 type VkDeviceAddress = u64
 type VkDeviceSize = u64
 type VkPresentModeKHR = u32
@@ -118,6 +118,7 @@ struct C.VkQueueFamilyProperties {
 
 [typedef]
 struct C.VkExtent2D {
+mut:
 	width  u32
 	height u32
 }

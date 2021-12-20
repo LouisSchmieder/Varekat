@@ -35,3 +35,10 @@ pub fn vertex_offsets() []u32 {
 pub fn (vertex Vertex) str() string {
 	return 'pos: $vertex.pos.x $vertex.pos.y $vertex.pos.z'
 }
+
+pub fn (mut vertex Vertex) free() {
+	vertex.pos.free()
+	vertex.color.free()
+	vertex.normal.free()
+	vertex.texture.free()
+}

@@ -149,6 +149,7 @@ pub fn create_vk_subpass_dependency(src_subpass u32, dst_subpass u32, src_stage_
 pub fn create_vk_instance(create_info &C.VkInstanceCreateInfo) ?C.VkInstance {
 	mut instance := unsafe { &C.VkInstance(malloc(int(sizeof(C.VkInstance)))) }
 	result := C.vkCreateInstance(create_info, voidptr(0), instance)
+	eprintln(result)
 	handle_error(result, 'create_vk_instance') ?
 	return *instance
 }
