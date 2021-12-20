@@ -1,2 +1,5 @@
 ./vk/pipeline.v
 ./vk/swapchain.v
+./game/loader/loader.v
+./vulkan/functions_array.v
+./vulkan/functions.v
