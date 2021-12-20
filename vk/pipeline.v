@@ -313,6 +313,21 @@ pub fn (mut p Pipeline) free() {
 		vulkan.vk_free_memory(p.device, p.vertex_memory, nullptr)
 		vulkan.vk_destroy_buffer(p.device, p.vertex_buffer, nullptr)
 	}
-	p.destroy()
-	unsafe { p.shader_modules.free() }
+}
+
+pub fn (mut p Pipeline) free_pipeline() {
+	vulkan.vk_destroy_command_pool(p.device, p.command_pool, nullptr)
+	for framebuffer in p.framebuffers {
+		vulkan.vk_destroy_framebuffer(p.device, framebuffer, nullptr)
+	}
+	p.framebuffers = []C.VkFramebuffer{}
+	vulkan.vk_destroy_graphics_pipeline(p.device, p.pipeline, nullptr)
+	vulkan.vk_destroy_render_pass(p.device, p.render_pass, nullptr)
+	vulkan.vk_destroy_pipeline_layout(p.device, p.pipeline_layout, nullptr)
+}
+
+pub fn (mut p Pipeline) free_shaders() {
+	for m in p.shader_modules {
+		vulkan.vk_destroy_shader_module(p.device, m, nullptr)
+	}
 }

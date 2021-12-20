@@ -159,12 +159,24 @@ pub fn (mut sw Swapchain) draw_frame() ? {
 }
 
 pub fn (mut sw Swapchain) free() {
+	for i, _ in sw.raw_pipelines {
+		sw.raw_pipelines[i].free()
+	}
+
 	vulkan.vk_destroy_semaphore(sw.device, sw.image_available, nullptr)
 	vulkan.vk_destroy_semaphore(sw.device, sw.rendering_done, nullptr)
+
+	for i, _ in sw.raw_pipelines {
+		sw.raw_pipelines[i].free_pipeline()
+	}
+
 	for view in sw.image_views {
 		vulkan.vk_destroy_image_view(sw.device, view, nullptr)
 	}
-	unsafe { sw.image_views.free() }
-	unsafe { sw.raw_pipelines.free() }
+
+	for i, _ in sw.raw_pipelines {
+		sw.raw_pipelines[i].free_shaders()
+	}
+
 	vulkan.vk_destroy_swapchain(sw.device, sw.swapchain, nullptr)
 }

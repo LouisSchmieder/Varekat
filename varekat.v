@@ -236,6 +236,7 @@ fn (mut game Game) game_loop() ? {
 }
 
 fn (mut game Game) shutdown_vulkan() {
+	game.instance.free()
 }
 
 fn (mut game Game) shutdown_glfw() {
