@@ -5,6 +5,7 @@ import mathf
 import graphics
 import misc
 import terrain
+import gg.m4
 
 fn init_fn(game_ptr voidptr) {
 	mut game := &Game(game_ptr)
@@ -62,15 +63,16 @@ fn loop_fn(delta time.Duration, game_ptr voidptr) ? {
 
 	proj := mathf.perspective(game.fov, f32(game.height) / f32(game.width), game.near_plane,
 		game.far_plane)
-	view := mathf.look_at(mathf.vec3<f32>(0, 0, -10), mathf.vec3<f32>(0, 0, 0), mathf.vec3<f32>(0,
+	view := mathf.look_at(mathf.vec3<f32>(0, 0, -1), mathf.vec3<f32>(0, 0, 0), mathf.vec3<f32>(0,
 		1, 0))
 
-	view_proj := view * proj
+	view_proj := proj * view
 
 	rxm := mathf.rot_x(0)
 	rym := mathf.rot_y(0)
 
 	model_pos := mathf.translate(0, 0, 0)
+
 	model_m := (rym * rxm) * model_pos
 	scale_m := mathf.scale(1, 1, 1)
 
@@ -78,9 +80,9 @@ fn loop_fn(delta time.Duration, game_ptr voidptr) ? {
 	nm := mv.inverse().transpose()
 	mvp := mv * view_proj
 
-	game.ubo.model_view = mv
-	game.ubo.mvp = mvp
-	game.ubo.normal = nm
+	game.ubo.model_view = mathf.make_vulkan_mat(mv)
+	game.ubo.mvp = mathf.make_vulkan_mat(mvp)
+	game.ubo.normal = mathf.make_vulkan_mat(nm)
 
 	game.uniform_buffer.map_buffer<UBO>(&game.ubo) ?
 }

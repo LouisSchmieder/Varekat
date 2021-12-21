@@ -33,6 +33,7 @@ pub fn (world World) meshes() []&graphics.Mesh {
 
 pub fn (mut world World) load_mesh(path string, loc mathf.Vec3<f32>, rot mathf.Vec3<f32>, scale mathf.Vec3<f32>, mut progress misc.Progress) ? {
 	if loader.exists(path.split('/').last()) {
+		eprintln('Using optimized mesh')
 		world.meshes << load_mesh(path.split('/').last(), mut progress)
 		return
 	}
@@ -54,7 +55,7 @@ pub fn (mut world World) add_mesh(mesh &graphics.Mesh, loc mathf.Vec3<f32>, rot 
 
 fn save_mesh(len int, mut progress misc.Progress, path string, name string) {
 	eprintln('Optimize mesh...')
-	verticies, indicies := misc.load_obj(path, len, mut progress, false) or { panic(err) }
+	verticies, indicies := misc.load_obj(path, len, mut progress, true) or { panic(err) }
 	eprintln('Loaded mesh...')
 	mesh := graphics.create_mesh(verticies, indicies, path)
 	loader := loader.create_loader(name, mesh)

@@ -181,7 +181,7 @@ fn (mut game Game) start_vulkan() ? {
 			line_width: 1
 			fill_mode: u32(C.VK_POLYGON_MODE_LINE)
 			cull_mode: u32(C.VK_CULL_MODE_BACK_BIT)
-			front_face: u32(C.VK_FRONT_FACE_CLOCKWISE)
+			front_face: u32(C.VK_FRONT_FACE_COUNTER_CLOCKWISE)
 			depth_bias_enable: vulkan.vk_false
 			depth_bias_constant_factor: 0
 			depth_bias_clamp: 0

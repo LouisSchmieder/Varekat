@@ -46,7 +46,7 @@ pub fn translate(x f32, y f32, z f32) m4.Mat4 {
 			x,
 			y,
 			z,
-			0,
+			1,
 		]!
 	}
 }
@@ -69,7 +69,7 @@ pub fn scale(x f32, y f32, z f32) m4.Mat4 {
 			0,
 			0,
 			0,
-			0,
+			1,
 		]!
 	}
 }
