@@ -15,6 +15,8 @@ pub type GameLoopFn = fn (time.Duration, voidptr) ?
 
 pub type GameKeyFn = fn (voidptr, misc.Key, misc.Action, int)
 
+pub type GameMouseFn = fn (voidptr)
+
 const (
 	shader_path = './assets/shader/bin'
 	nullptr     = voidptr(0)
@@ -40,6 +42,7 @@ mut:
 	game_loop_fn                 GameLoopFn
 	game_init_fn                 GameInitFn
 	game_key_fn                  GameKeyFn
+	game_mouse_fn                GameMouseFn
 
 	camera g.Camera
 
@@ -50,6 +53,9 @@ mut:
 	rotation f32
 
 	world g.World
+
+	keyboard misc.Keyboard
+	mouse    misc.Mouse
 }
 
 struct UBO {
@@ -68,12 +74,15 @@ fn main() {
 		last: time.now()
 		game_loop_fn: loop_fn
 		game_init_fn: init_fn
-		game_key_fn: key_fn
+		game_mouse_fn: mouse_fn
+		//	game_key_fn: key_fn
 		fov: 80.0
 		near_plane: 0.01
-		far_plane: 10.0
-		camera: g.create_camera(mathf.vec3<f32>(0, 0, -5), mathf.vec3<f32>(0, 0, -2),
-			mathf.vec3<f32>(0, 1, 0), 1)
+		far_plane: 100.0
+		camera: g.create_camera(mathf.vec3<f32>(0, 0, -3), mathf.vec3<f32>(0, 0, 1), mathf.vec3<f32>(0,
+			1, 0), 2, 0, 90)
+		keyboard: misc.create_keyboard()
+		mouse: misc.create_mouse()
 	}
 
 	game.user_ptr = &game
@@ -94,7 +103,14 @@ fn main() {
 
 fn on_key_input(window &C.GLFWwindow, key int, scancode int, action int, mods int) {
 	mut game := &Game(glfw.get_user_ptr(window))
-	game.game_key_fn(game.user_ptr, misc.Key(key), misc.Action(action), mods)
+	game.keyboard.update(misc.Key(key), misc.Action(action), mods)
+	// game.game_key_fn(game.user_ptr, misc.Key(key), misc.Action(action), mods)
+}
+
+fn on_mouse_input(window &C.GLFWwindow, x f64, y f64) {
+	mut game := &Game(glfw.get_user_ptr(window))
+	game.mouse.update(f32(x), f32(y))
+	game.game_mouse_fn(game.user_ptr)
 }
 
 fn on_window_resized(window &C.GLFWwindow, width int, height int) {
@@ -116,7 +132,9 @@ fn (mut game Game) start_glfw() {
 	glfw.window_hint(C.GLFW_CLIENT_API, C.GLFW_NO_API)
 	game.window = glfw.create_window(int(game.width), int(game.height), 'Testing vulkan',
 		nullptr)
+	glfw.hide_mouse(game.window)
 	glfw.set_user_ptr(game.window, &game)
+	glfw.set_mouse_cb(game.window, on_mouse_input)
 	glfw.set_window_resize_cb(game.window, on_window_resized)
 	glfw.set_key_cb(game.window, on_key_input)
 	glfw.set_error_cb(on_glfw_error)

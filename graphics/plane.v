@@ -34,12 +34,12 @@ pub fn create_plane(settings PlaneSettings) &Plane {
 			}
 
 			indicies << mathf.vec3<u32>(x, z, u32(settings.height)).location_idx()
-			indicies << mathf.vec3<u32>(x, z + 1, u32(settings.height)).location_idx()
 			indicies << mathf.vec3<u32>(x + 1, z, u32(settings.height)).location_idx()
+			indicies << mathf.vec3<u32>(x, z + 1, u32(settings.height)).location_idx()
 
 			indicies << mathf.vec3<u32>(x + 1, z, u32(settings.height)).location_idx()
-			indicies << mathf.vec3<u32>(x, z + 1, u32(settings.height)).location_idx()
 			indicies << mathf.vec3<u32>(x + 1, z + 1, u32(settings.height)).location_idx()
+			indicies << mathf.vec3<u32>(x, z + 1, u32(settings.height)).location_idx()
 		}
 	}
 

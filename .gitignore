@@ -9,6 +9,7 @@ varekat_debug
 *.dll
 *.spv
 *.vbin
+*.log
 
 # Folders
 assets/shader/bin/
