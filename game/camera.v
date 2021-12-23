@@ -22,5 +22,5 @@ pub fn create_camera(pos mathf.Vec3<f32>, facing mathf.Vec3<f32>, up mathf.Vec3<
 }
 
 pub fn (mut c Camera) look_at() m4.Mat4 {
-	return mathf.make_vulkan_mat(mathf.look_at(c.pos, c.pos + c.facing, c.up))
+	return mathf.look_at(c.pos, c.pos + c.facing, c.up)
 }

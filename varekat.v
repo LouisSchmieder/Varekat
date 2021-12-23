@@ -72,9 +72,10 @@ fn main() {
 		fov: 80.0
 		near_plane: 0.01
 		far_plane: 10.0
-		camera: g.create_camera(mathf.vec3<f32>(0, 0, 0), mathf.vec3<f32>(0, 0, -1), mathf.vec3<f32>(0,
-			1, 0), 1)
+		camera: g.create_camera(mathf.vec3<f32>(0, 0, -5), mathf.vec3<f32>(0, 0, -2),
+			mathf.vec3<f32>(0, 1, 0), 1)
 	}
+
 	game.user_ptr = &game
 	game.world = g.create_world(
 		name: 'test'
@@ -179,9 +180,9 @@ fn (mut game Game) start_vulkan() ? {
 			depth_clamp_enabled: vulkan.vk_false
 			rasterizer_discard_enable: vulkan.vk_false
 			line_width: 1
-			fill_mode: u32(C.VK_POLYGON_MODE_LINE)
+			fill_mode: u32(C.VK_POLYGON_MODE_FILL)
 			cull_mode: u32(C.VK_CULL_MODE_BACK_BIT)
-			front_face: u32(C.VK_FRONT_FACE_COUNTER_CLOCKWISE)
+			front_face: u32(C.VK_FRONT_FACE_CLOCKWISE)
 			depth_bias_enable: vulkan.vk_false
 			depth_bias_constant_factor: 0
 			depth_bias_clamp: 0
