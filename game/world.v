@@ -5,6 +5,7 @@ import mathf
 import time
 import misc
 import game.loader
+import vk
 
 pub struct WorldSettings {
 pub:
@@ -16,7 +17,8 @@ pub:
 pub struct World {
 	WorldSettings
 pub mut:
-	meshes []&graphics.Mesh
+	meshes          []&graphics.Mesh
+	uniform_buffers []&vk.UniformBuffer
 }
 
 pub fn create_world(settings WorldSettings) World {
@@ -34,7 +36,12 @@ pub fn (world World) meshes() []&graphics.Mesh {
 pub fn (mut world World) load_mesh(path string, loc mathf.Vec3<f32>, rot mathf.Vec3<f32>, scale mathf.Vec3<f32>, mut progress misc.Progress) ? {
 	if loader.exists(path.split('/').last()) {
 		eprintln('Using optimized mesh')
-		world.meshes << load_mesh(path.split('/').last(), mut progress)
+		mut stopwatch := time.new_stopwatch(time.StopWatchOptions{})
+		mut mesh := load_mesh(path.split('/').last(), mut progress)
+		mesh.update_abs(loc, rot, scale)
+		world.meshes << mesh
+		stopwatch.stop()
+		eprintln('Loading took ${stopwatch.elapsed().milliseconds()}ms')
 		return
 	}
 

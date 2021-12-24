@@ -22,8 +22,8 @@ mut:
 	desc_set        C.VkDescriptorSet
 }
 
-pub fn (instance Instance) create_uniform_buffer<T>(settings UniformBufferConfig) ?UniformBuffer {
-	mut buffer := UniformBuffer{
+pub fn (instance Instance) create_uniform_buffer<T>(settings UniformBufferConfig) ?&UniformBuffer {
+	mut buffer := &UniformBuffer{
 		device: &instance.device
 		physical_device: &instance.ph_device
 		settings: settings

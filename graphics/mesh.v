@@ -13,6 +13,8 @@ pub mut:
 	position mathf.Vec3<f32>
 	rotation mathf.Vec3<f32>
 	scale    mathf.Vec3<f32>
+
+	ubo mathf.UBO
 mut:
 	verticies []misc.Vertex
 	indicies  []u32

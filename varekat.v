@@ -3,7 +3,6 @@ module main
 import glfw
 import vulkan
 import misc
-import gg.m4
 import time
 import game as g
 import mathf
@@ -20,23 +19,18 @@ pub type GameMouseFn = fn (voidptr)
 const (
 	shader_path = './assets/shader/bin'
 	nullptr     = voidptr(0)
-
-	// Workaround
-	a           = []UBO{}
 )
 
 struct Game {
 mut:
 	instance vk.Instance
 
-	running        bool
-	uniform_buffer vk.UniformBuffer
+	running bool
 
 	window                       &C.GLFWwindow
 	required_instance_extensions []string
 	width                        u32
 	height                       u32
-	ubo                          UBO
 	last                         time.Time
 	user_ptr                     voidptr
 	game_loop_fn                 GameLoopFn
@@ -56,13 +50,6 @@ mut:
 
 	keyboard misc.Keyboard
 	mouse    misc.Mouse
-}
-
-struct UBO {
-mut:
-	model_view m4.Mat4
-	mvp        m4.Mat4
-	normal     m4.Mat4
 }
 
 fn main() {
@@ -170,11 +157,6 @@ fn (mut game Game) start_vulkan() ? {
 	)
 	game.instance.setup() ?
 
-	game.uniform_buffer = game.instance.create_uniform_buffer<UBO>(
-		stage: .vk_shader_stage_vertex_bit
-		descriptor_type: .vk_descriptor_type_uniform_buffer
-	) ?
-
 	swapchain_settings := vk.SwapchainSettings{
 		width: &game.width
 		height: &game.height
@@ -189,50 +171,15 @@ fn (mut game Game) start_vulkan() ? {
 
 	mut swapchain := vk.create_swapchain(swapchain_settings, game.instance.to_swapchain_info())
 
-	pipeline_settings := vk.PipelineSettings{
-		primitive: u32(C.VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST)
-		primitive_restart_enable: vulkan.vk_false
-		width: &game.width
-		height: &game.height
-		rasterizer: vk.RasterizerStateSettings{
-			depth_clamp_enabled: vulkan.vk_false
-			rasterizer_discard_enable: vulkan.vk_false
-			line_width: 1
-			fill_mode: u32(C.VK_POLYGON_MODE_FILL)
-			cull_mode: u32(C.VK_CULL_MODE_BACK_BIT)
-			front_face: u32(C.VK_FRONT_FACE_CLOCKWISE)
-			depth_bias_enable: vulkan.vk_false
-			depth_bias_constant_factor: 0
-			depth_bias_clamp: 0
-			depth_bias_slope_factor: 0
-		}
-		blend: vk.ColorBlendSettings{
-			blend_enable: vulkan.vk_true
-			src_color_blend_factor: .vk_blend_factor_src_alpha
-			dst_color_blend_factor: .vk_blend_factor_one_minus_src_alpha
-			color_blend_op: .vk_blend_op_add
-			src_alpha_blend_factor: .vk_blend_factor_one
-			dst_alpha_blend_factor: .vk_blend_factor_zero
-			alpha_blend_op: .vk_blend_op_add
-			color_write_mask: vulkan.vk_color_component_all
-		}
-		subpass: vk.SubpassDepSettings{
-			src_subpass: u32(C.VK_SUBPASS_EXTERNAL)
-			dst_subpass: 0
-			src_stage_mask: .vk_pipeline_stage_color_attachment_output_bit
-			dst_stage_mask: .vk_pipeline_stage_color_attachment_output_bit
-			src_access_mask: 0
-			dst_access_mask: u32(C.VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | C.VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT)
-			dependency_flags: 0
-		}
-		sample_count: u32(C.VK_SAMPLE_COUNT_1_BIT)
-		logic_op_enable: vulkan.vk_false
-		logic_op: .vk_logic_op_no_op
-		bind_point: .vk_pipeline_bind_point_graphics
-		uniform_buffers: [&game.uniform_buffer]
+	for i, _ in game.world.meshes {
+		game.world.uniform_buffers << game.instance.create_uniform_buffer<mathf.UBO>(
+			stage: .vk_shader_stage_vertex_bit
+			descriptor_type: .vk_descriptor_type_uniform_buffer
+		) ?
+		swapchain.add_pipeline(vk.create_pipeline(vk.default_pipeline_settings(&game.width,
+			&game.height, game.world.uniform_buffers[i]), game.instance.to_pipeline_info('cube')))
 	}
 
-	swapchain.add_pipeline(vk.create_pipeline(pipeline_settings, game.instance.to_pipeline_info('cube')))
 	game.instance.add_swapchain(swapchain)
 
 	game.instance.update_swapchain() ?
