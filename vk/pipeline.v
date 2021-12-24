@@ -1,7 +1,6 @@
 module vk
 
 import vulkan
-import graphics
 
 pub struct PipelineSettings {
 	primitive                u32
@@ -72,7 +71,7 @@ mut:
 	framebuffers []C.VkFramebuffer
 	command_pool C.VkCommandPool
 
-	mesh &graphics.Mesh
+	mesh Mesh
 
 	vertex_buffer C.VkBuffer
 	vertex_memory C.VkDeviceMemory
@@ -84,7 +83,7 @@ pub mut:
 
 pub fn create_pipeline(settings PipelineSettings, instance_info PipelineInstanceInfo) Pipeline {
 	return Pipeline{
-		mesh: voidptr(0)
+		mesh: Mesh{}
 		PipelineInstanceInfo: instance_info
 		PipelineSettings: settings
 	}
@@ -176,7 +175,7 @@ pub fn (mut p Pipeline) set_pipeline(pipeline C.VkPipeline) {
 	p.pipeline = pipeline
 }
 
-pub fn (mut p Pipeline) set_mesh(mesh &graphics.Mesh) {
+pub fn (mut p Pipeline) set_mesh(mesh Mesh) {
 	p.mesh = mesh
 }
 
@@ -198,9 +197,8 @@ fn (mut p Pipeline) setup_command_pool(len u32) ? {
 	command_buffer_begin_info := vulkan.create_vk_command_buffer_begin_info(nullptr, u32(C.VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT),
 		nullptr)
 
-	verticies, indicies := p.mesh.mesh_data()
-	p.vertex_buffer, p.vertex_memory = p.create_buffer(verticies, .vk_buffer_usage_vertex_buffer_bit) ?
-	p.index_buffer, p.index_memory = p.create_buffer(indicies, .vk_buffer_usage_index_buffer_bit) ?
+	p.vertex_buffer, p.vertex_memory = p.create_buffer(p.mesh.verticies, .vk_buffer_usage_vertex_buffer_bit) ?
+	p.index_buffer, p.index_memory = p.create_buffer(p.mesh.indicies, .vk_buffer_usage_index_buffer_bit) ?
 
 	for i, _ in p.uniform_buffers {
 		p.uniform_buffers[i].create_buffer() ?
@@ -241,7 +239,7 @@ fn (mut p Pipeline) setup_command_pool(len u32) ? {
 		vulkan.vk_cmd_bind_descriptor_sets(buffer, .vk_pipeline_bind_point_graphics, p.pipeline_layout,
 			0, sets, [])
 
-		vulkan.vk_cmd_draw_indexed(buffer, u32(indicies.len), 1, 0, 0, 0)
+		vulkan.vk_cmd_draw_indexed(buffer, u32(p.mesh.indicies.len), 1, 0, 0, 0)
 
 		vulkan.vk_cmd_end_render_pass(buffer)
 		vulkan.vk_end_command_buffer(buffer) ?

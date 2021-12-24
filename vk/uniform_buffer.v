@@ -29,6 +29,7 @@ pub fn (instance Instance) create_uniform_buffer<T>(settings UniformBufferConfig
 		settings: settings
 	}
 	buffer.settings.buffer_size = sizeof(T)
+	eprintln(buffer.settings.buffer_size)
 	return buffer
 }
 

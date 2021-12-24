@@ -166,18 +166,18 @@ fn (mut game Game) start_vulkan() ? {
 		pre_transform: u32(C.VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR)
 		composite_alpha: u32(C.VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR)
 		clipped: vulkan.vk_true
-		objects: game.world.meshes()
+		objects: game.world.to_vk_meshes()
 	}
 
 	mut swapchain := vk.create_swapchain(swapchain_settings, game.instance.to_swapchain_info())
 
-	for i, _ in game.world.meshes {
-		game.world.uniform_buffers << game.instance.create_uniform_buffer<mathf.UBO>(
-			stage: .vk_shader_stage_vertex_bit
-			descriptor_type: .vk_descriptor_type_uniform_buffer
-		) ?
+	eprint('Camera ')
+	game.camera.create_ub(game.instance) ?
+
+	for i, obj in game.world.objects {
+		game.world.objects[i].create_ub(game.instance) ?
 		swapchain.add_pipeline(vk.create_pipeline(vk.default_pipeline_settings(&game.width,
-			&game.height, game.world.uniform_buffers[i]), game.instance.to_pipeline_info('cube')))
+			&game.height, obj.ub, game.camera.buffer), game.instance.to_pipeline_info('cube')))
 	}
 
 	game.instance.add_swapchain(swapchain)

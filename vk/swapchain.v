@@ -1,7 +1,6 @@
 module vk
 
 import vulkan
-import graphics
 
 pub struct SwapchainSettings {
 	width                 &u32
@@ -13,7 +12,7 @@ pub struct SwapchainSettings {
 	composite_alpha       u32
 	clipped               C.VkBool32
 
-	objects []&graphics.Mesh
+	objects []Mesh
 mut:
 	image_available C.VkSemaphore
 	rendering_done  C.VkSemaphore

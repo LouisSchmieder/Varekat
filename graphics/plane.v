@@ -5,7 +5,6 @@ import terrain
 import mathf
 
 pub struct PlaneSettings {
-	ObjectSettings
 	quad_length f32
 	width       int
 	height      int
@@ -15,7 +14,8 @@ pub struct PlaneSettings {
 pub struct Plane {
 	PlaneSettings
 mut:
-	mesh Mesh
+	settings ObjectSettings
+	mesh     Mesh
 }
 
 pub fn create_plane(settings PlaneSettings) &Plane {

@@ -14,17 +14,6 @@ pub fn (mut ubo UBO) update_ubo(fov f32, ar f32, np f32, fp f32, view m4.Mat4, p
 	proj := perspective(fov, ar, np, fp)
 	view_proj := view * proj
 
-	rxm := rot(r.x, vec3<f32>(1, 0, 0))
-	rym := rot(r.y, vec3<f32>(0, 1, 0))
-	rzm := rot(r.z, vec3<f32>(0, 0, 1))
-
-	model_pos := translate(pos)
-
-	model_m := (rzm * rym * rxm) * model_pos
-	scale_m := scale(s)
-
-	ubo.model_view = scale_m * model_m
-	ubo.normal = ubo.model_view.inverse().transpose()
 	ubo.mvp = ubo.model_view * view_proj
 }
 

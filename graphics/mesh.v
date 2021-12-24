@@ -9,12 +9,6 @@ import buffer
 pub struct Mesh {
 pub:
 	path string
-pub mut:
-	position mathf.Vec3<f32>
-	rotation mathf.Vec3<f32>
-	scale    mathf.Vec3<f32>
-
-	ubo mathf.UBO
 mut:
 	verticies []misc.Vertex
 	indicies  []u32
@@ -29,13 +23,6 @@ pub fn create_mesh(verticies []misc.Vertex, indicies []u32, path string) Mesh {
 	}
 
 	return mesh
-}
-
-// Replace the position, rotation and scale of the mesh
-pub fn (mut mesh Mesh) update_abs(pos mathf.Vec3<f32>, rot mathf.Vec3<f32>, scale mathf.Vec3<f32>) {
-	mesh.position = pos
-	mesh.rotation = rot
-	mesh.scale = scale
 }
 
 // Get the the verticies and indicies of the mesh
@@ -55,9 +42,6 @@ pub fn (mesh Mesh) get_vertex(idx int) ?&misc.Vertex {
 // Store the mesh to a .vbin file in binary format
 pub fn (mesh Mesh) store(path string) {
 	mut bos := buffer.new_binary_output_stream()
-	bos.write_vec3(mesh.position)
-	bos.write_vec3(mesh.rotation)
-	bos.write_vec3(mesh.scale)
 	bos.write_int(mesh.verticies.len)
 	for vertex in mesh.verticies {
 		bos.write_vec3(vertex.pos)
@@ -78,10 +62,6 @@ pub fn (mut mesh Mesh) load(path string, mut progress misc.Progress) {
 	mut bis := buffer.new_binary_input_stream(bytes, mut progress)
 
 	mesh = Mesh{}
-
-	mesh.position = bis.read_vec3()
-	mesh.rotation = bis.read_vec3()
-	mesh.scale = bis.read_vec3()
 	vertex_len := bis.read_int()
 
 	for _ in 0 .. vertex_len {

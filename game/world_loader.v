@@ -18,6 +18,7 @@ struct WorldMesh {
 	scale mathf.Vec3<f32>
 }
 
+/*
 pub fn (world World) store(path string) ? {
 	mut meshes := []WorldMesh{}
 
@@ -49,3 +50,4 @@ pub fn (mut world World) load(path string, mut progress misc.Progress) ? {
 		world.load_mesh(mesh.path, mesh.pos, mesh.rot, mesh.scale, mut progress) ?
 	}
 }
+*/

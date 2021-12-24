@@ -11,9 +11,15 @@ fn init_fn(game_ptr voidptr) {
 	mut game := &Game(game_ptr)
 	mut progress := misc.create_progress()
 
-	game.world.load_mesh('assets/objects/cube.obj', mathf.vec3<f32>(0, 0, 5), mathf.vec3<f32>(0,
-		0, 0), mathf.vec3<f32>(1, 1, 1), mut progress) or { panic(err) }
+	eprintln('1')
 
+	mesh := graphics.load_mesh('assets/objects/cube.obj', mut progress) or { panic(err) }
+	eprintln('2')
+	object := graphics.create_object(mesh, position: mathf.vec3<f32>(0, 0, 5), rotation: mathf.vec3<f32>(0,
+		0, 0), scale: mathf.vec3<f32>(1, 1, 1))
+	game.world.add_object(object)
+
+	/*
 	mut plane := graphics.create_plane(quad_length: 1, height: 20, width: 20, y_mult: 0.01)
 	seed := time.now().unix
 
@@ -21,8 +27,8 @@ fn init_fn(game_ptr voidptr) {
 
 	plane.update_by_heightmap(heightmap) or { panic(err) }
 
-	game.world.add_mesh(plane.mesh(), mathf.vec3<f32>(0, 0, 5), mathf.vec3<f32>(0, 0,
-		0), mathf.vec3<f32>(1, 1, 1))
+	game.world.add_object(plane, mathf.vec3<f32>(0, 0, 5), mathf.vec3<f32>(0, 0,
+		0), mathf.vec3<f32>(1, 1, 1))*/
 }
 
 fn mouse_fn(game_ptr voidptr) {
@@ -55,10 +61,11 @@ fn loop_fn(delta time.Duration, game_ptr voidptr) ? {
 
 	game.rotation += delta_seconds * 0.25
 
-	for i, mesh in game.world.meshes {
+	for i, obj in game.world.objects {
+		/*
 		game.world.meshes[i].ubo.update_ubo(game.fov, f32(game.width) / f32(game.height),
 			game.near_plane, game.far_plane, game.camera.look_at(), mesh.position, mesh.rotation,
 			mesh.scale)
-		game.world.uniform_buffers[i].map_buffer<mathf.UBO>(&mesh.ubo) ?
+		game.world.uniform_buffers[i].map_buffer<mathf.UBO>(&mesh.ubo) ?*/
 	}
 }

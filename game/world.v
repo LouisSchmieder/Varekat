@@ -17,8 +17,7 @@ pub:
 pub struct World {
 	WorldSettings
 pub mut:
-	meshes          []&graphics.Mesh
-	uniform_buffers []&vk.UniformBuffer
+	objects []&graphics.ObjectI
 }
 
 pub fn create_world(settings WorldSettings) World {
@@ -29,49 +28,22 @@ pub fn create_world(settings WorldSettings) World {
 	}
 }
 
-pub fn (world World) meshes() []&graphics.Mesh {
-	return world.meshes
+pub fn (world World) objects() []&graphics.ObjectI {
+	return world.objects
 }
 
-pub fn (mut world World) load_mesh(path string, loc mathf.Vec3<f32>, rot mathf.Vec3<f32>, scale mathf.Vec3<f32>, mut progress misc.Progress) ? {
-	if loader.exists(path.split('/').last()) {
-		eprintln('Using optimized mesh')
-		mut stopwatch := time.new_stopwatch(time.StopWatchOptions{})
-		mut mesh := load_mesh(path.split('/').last(), mut progress)
-		mesh.update_abs(loc, rot, scale)
-		world.meshes << mesh
-		stopwatch.stop()
-		eprintln('Loading took ${stopwatch.elapsed().milliseconds()}ms')
-		return
+pub fn (mut world World) add_object(obj &graphics.ObjectI) {
+	world.objects << unsafe { obj }
+}
+
+pub fn (world World) to_vk_meshes() []vk.Mesh {
+	mut meshes := []vk.Mesh{}
+	for obj in world.objects {
+		verticies, indicies := obj.mesh.mesh_data()
+		meshes << vk.Mesh{
+			verticies: verticies
+			indicies: indicies
+		}
 	}
-
-	go save_mesh(world.meshes.len, mut progress, path, path.split('/').last())
-	mut stopwatch := time.new_stopwatch(time.StopWatchOptions{})
-	verticies, indicies := misc.load_obj(path, world.meshes.len, mut progress, false) ?
-	stopwatch.stop()
-	mut mesh := graphics.create_mesh(verticies, indicies, path)
-	mesh.update_abs(loc, rot, scale)
-	world.meshes << &mesh
-}
-
-pub fn (mut world World) add_mesh(mesh &graphics.Mesh, loc mathf.Vec3<f32>, rot mathf.Vec3<f32>, scale mathf.Vec3<f32>) {
-	mut m := mesh
-	m.update_abs(loc, rot, scale)
-	world.meshes << m
-}
-
-fn save_mesh(len int, mut progress misc.Progress, path string, name string) {
-	eprintln('Optimize mesh...')
-	verticies, indicies := misc.load_obj(path, len, mut progress, true) or { panic(err) }
-	eprintln('Loaded mesh...')
-	mesh := graphics.create_mesh(verticies, indicies, path)
-	loader := loader.create_loader(name, mesh)
-	loader.store() or { panic(err) }
-	eprintln('Stored mesh...')
-}
-
-fn load_mesh(name string, mut progress misc.Progress) &graphics.Mesh {
-	mut loader := loader.create_loader(name, graphics.Mesh{})
-	loader.load(mut progress) or { panic(err) }
-	return &loader.data
+	return meshes
 }

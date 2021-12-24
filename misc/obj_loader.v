@@ -12,7 +12,7 @@ enum FaceType {
 
 // Get the verticies and indicies from a `.obj` file at path `path`
 // Optimization is WIP
-pub fn load_obj(path string, model_idx int, mut progress Progress, optimize bool) ?([]Vertex, []u32) {
+pub fn load_obj(path string, mut progress Progress, optimize bool) ?([]Vertex, []u32) {
 	data := os.read_file(path) ?
 
 	mut raw_verticies := []mathf.Vec3<f32>{}
@@ -73,8 +73,8 @@ pub fn load_obj(path string, model_idx int, mut progress Progress, optimize bool
 
 					for i in 1 .. fields.len {
 						validate_face_vertex(fields[i], spliter, face_type, mut verticies, mut
-							indicies, raw_verticies, raw_textures, raw_normals, model_idx,
-							optimize, mut indexes)
+							indicies, raw_verticies, raw_textures, raw_normals, optimize, mut
+							indexes)
 					}
 				}
 				else {
@@ -91,7 +91,7 @@ pub fn load_obj(path string, model_idx int, mut progress Progress, optimize bool
 	return verticies, indicies
 }
 
-fn validate_face_vertex(field string, spliter string, face_type FaceType, mut verticies []Vertex, mut indicies []u32, raw_verticies []mathf.Vec3<f32>, raw_textures []mathf.Vec2<f32>, raw_normals []mathf.Vec3<f32>, model_idx int, optimize bool, mut indexes map[string]u32) {
+fn validate_face_vertex(field string, spliter string, face_type FaceType, mut verticies []Vertex, mut indicies []u32, raw_verticies []mathf.Vec3<f32>, raw_textures []mathf.Vec2<f32>, raw_normals []mathf.Vec3<f32>, optimize bool, mut indexes map[string]u32) {
 	if optimize {
 		if field in indexes {
 			indicies << indexes[field]
@@ -122,7 +122,6 @@ fn validate_face_vertex(field string, spliter string, face_type FaceType, mut ve
 		}
 	}
 	vertex.pos = raw_verticies[data[0].int() - 1]
-	vertex.model = model_idx
 
 	verticies << vertex
 	idx := u32(verticies.len - 1)
