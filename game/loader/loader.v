@@ -15,6 +15,9 @@ pub mut:
 }
 
 pub fn create_loader<T>(name string, data T) Loader<T> {
+	if !os.exists(path) {
+		os.mkdir(path) or { panic(err) }
+	}
 	return Loader<T>{
 		name: name
 		data: data

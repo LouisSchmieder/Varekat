@@ -15,6 +15,7 @@ pub fn create_vk_application_info(p_next voidptr, app_name string, app_version m
 }
 
 pub fn create_vk_instance_create_info(p_next voidptr, flags u32, app_info &C.VkApplicationInfo, enabled_layers []string, enabled_extensions []string) C.VkInstanceCreateInfo {
+	eprintln(enabled_layers)
 	return C.VkInstanceCreateInfo{
 		sType: .vk_structure_type_instance_create_info
 		pNext: p_next

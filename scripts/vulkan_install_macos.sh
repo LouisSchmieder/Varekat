@@ -14,14 +14,4 @@ mkdir $LIBS
 mkdir $LIBS/vulkan
 mkdir $TMP
 
-# Download vulkan
-wget -O "$TMP/vulkan-sdk.tar.gz" https://sdk.lunarg.com/sdk/download/latest/linux/vulkan-sdk.tar.gz
-tar -xvf "$TMP/vulkan-sdk.tar.gz" -C "$LIBS/vulkan"
-
-mv `dirname $LIBS/vulkan/1.*/.` "$LIBS/vulkan/latest"
-
-# Clear tmp
-rm -r $TMP
-
-# Install vulkan
-sh $LIBS/vulkan/*/vulkansdk
+wget -O "$TMP/vulkan-sdk.dmg" https://sdk.lunarg.com/sdk/download/latest/mac/vulkan-sdk.dmg

@@ -149,29 +149,28 @@ pub fn create_vk_subpass_dependency(src_subpass u32, dst_subpass u32, src_stage_
 pub fn create_vk_instance(create_info &C.VkInstanceCreateInfo) ?C.VkInstance {
 	mut instance := unsafe { &C.VkInstance(malloc(int(sizeof(C.VkInstance)))) }
 	result := C.vkCreateInstance(create_info, voidptr(0), instance)
-	eprintln(result)
-	handle_error(result, 'create_vk_instance') ?
+	handle_error(result, @FN) ?
 	return *instance
 }
 
 pub fn create_vk_device(physical_device C.VkPhysicalDevice, device_create_info &C.VkDeviceCreateInfo) ?C.VkDevice {
 	mut device := unsafe { &C.VkDevice(malloc(int(sizeof(C.VkDevice)))) }
 	result := C.vkCreateDevice(physical_device, device_create_info, voidptr(0), device)
-	handle_error(result, 'create_vk_device') ?
+	handle_error(result, @FN) ?
 	return *device
 }
 
 pub fn create_vk_create_window_surface(instance C.VkInstance, window &C.GLFWwindow, alloc voidptr) ?C.VkSurfaceKHR {
 	mut surface := unsafe { &C.VkSurfaceKHR(malloc(int(sizeof(C.VkSurfaceKHR)))) }
 	res := C.glfwCreateWindowSurface(instance, window, alloc, surface)
-	handle_error(res, 'create_vk_create_window_surface') ?
+	handle_error(res, @FN) ?
 	return *surface
 }
 
 pub fn create_vk_swapchain(device C.VkDevice, create_info &C.VkSwapchainCreateInfoKHR, alloc voidptr) ?C.VkSwapchainKHR {
 	mut swapchain := unsafe { &C.VkSwapchainKHR(malloc(int(sizeof(C.VkSwapchainKHR)))) }
 	res := C.vkCreateSwapchainKHR(device, create_info, alloc, swapchain)
-	handle_error(res, 'create_vk_swapchain') ?
+	handle_error(res, @FN) ?
 	return *swapchain
 }
 

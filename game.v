@@ -15,8 +15,11 @@ fn init_fn(game_ptr voidptr) {
 
 	mesh := graphics.load_mesh('assets/objects/cube.obj', mut progress) or { panic(err) }
 	eprintln('2')
-	object := graphics.create_object(mesh, position: mathf.vec3<f32>(0, 0, 5), rotation: mathf.vec3<f32>(0,
-		0, 0), scale: mathf.vec3<f32>(1, 1, 1))
+	object := graphics.create_object(mesh,
+		position: mathf.vec3<f32>(0, 0, 5)
+		rotation: mathf.vec3<f32>(0, 0, 0)
+		scale: mathf.vec3<f32>(1, 1, 1)
+	)
 	game.world.add_object(object)
 
 	/*

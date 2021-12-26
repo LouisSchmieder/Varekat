@@ -171,7 +171,6 @@ fn (mut game Game) start_vulkan() ? {
 
 	mut swapchain := vk.create_swapchain(swapchain_settings, game.instance.to_swapchain_info())
 
-	eprint('Camera ')
 	game.camera.create_ub(game.instance) ?
 
 	for i, obj in game.world.objects {
