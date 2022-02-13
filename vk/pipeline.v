@@ -168,7 +168,7 @@ pub fn (mut p Pipeline) create() ?C.VkGraphicsPipelineCreateInfo {
 	return vulkan.create_vk_graphics_pipeline_create_info(nullptr, 0, stage_infos, &vertex_input_create_info,
 		&input_assembly_creat_info, nullptr, &pipeline_viewport_state_info, &pipeline_rasterization_state_info,
 		&pipeline_multisample_state_info, nullptr, &pipeline_blend_create_info, &dynamic_state_create_info,
-		p.pipeline_layout, p.render_pass, 0, vulkan.null<VkPipeline>(), -1)
+		p.pipeline_layout, p.render_pass, 0, vulkan.null<C.VkPipeline>(), -1)
 }
 
 pub fn (mut p Pipeline) set_pipeline(pipeline C.VkPipeline) {
