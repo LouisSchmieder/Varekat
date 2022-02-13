@@ -1,6 +1,5 @@
 module graphics
 
-import mathf
 import os
 import misc
 import buffer

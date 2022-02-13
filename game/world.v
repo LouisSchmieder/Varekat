@@ -2,9 +2,6 @@ module game
 
 import graphics
 import mathf
-import time
-import misc
-import game.loader
 import vk
 
 pub struct WorldSettings {
