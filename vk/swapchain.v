@@ -34,7 +34,7 @@ pub fn create_swapchain(settings SwapchainSettings, instance_info SwapchainInsta
 	return Swapchain{
 		SwapchainSettings: settings
 		SwapchainInstanceInfo: instance_info
-		swapchain: vulkan.null<C.VkSwapchainKHR>()
+		swapchain: vulkan.null<VkSwapchainKHR>()
 	}
 }
 
@@ -63,7 +63,7 @@ pub fn (mut sw Swapchain) create() ? {
 		pipeline_infos[i] = sw.raw_pipelines[i].create() ?
 	}
 
-	pipelines := vulkan.create_vk_graphics_pipelines(sw.device, vulkan.null<C.VkPipelineCache>(),
+	pipelines := vulkan.create_vk_graphics_pipelines(sw.device, vulkan.null<VkPipelineCache>(),
 		pipeline_infos, nullptr) ?
 
 	for i, pipeline in pipelines {
@@ -136,7 +136,7 @@ pub fn (mut sw Swapchain) add_pipeline(pipeline Pipeline) {
 
 pub fn (mut sw Swapchain) draw_frame() ? {
 	img_idx := vulkan.acquire_vk_next_image(*sw.device, sw.swapchain, u64(-1), sw.image_available,
-		vulkan.null<C.VkFence>()) ?
+		vulkan.null<VkFence>()) ?
 
 	mut command_buffers := []C.VkCommandBuffer{len: sw.raw_pipelines.len}
 
@@ -148,7 +148,7 @@ pub fn (mut sw Swapchain) draw_frame() ? {
 		.vk_pipeline_stage_color_attachment_output_bit,
 	], command_buffers, [sw.rendering_done])
 
-	vulkan.vk_queue_submit(sw.queue, [submit_info], vulkan.null<C.VkFence>()) ?
+	vulkan.vk_queue_submit(sw.queue, [submit_info], vulkan.null<VkFence>()) ?
 
 	present_info := vulkan.create_vk_present_info(nullptr, [sw.rendering_done], [
 		sw.swapchain,

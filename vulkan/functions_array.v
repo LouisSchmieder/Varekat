@@ -19,25 +19,25 @@ fn create_c_array<T>(len u32) &T {
 
 pub fn get_vk_physical_devices(instance C.VkInstance) ?[]C.VkPhysicalDevice {
 	amount := get_vk_physical_devices_amount(instance) ?
-	devices := create_c_array<C.VkPhysicalDevice>(amount)
+	devices := create_c_array<VkPhysicalDevice>(amount)
 	result := C.vkEnumeratePhysicalDevices(instance, &amount, devices)
 	handle_error(result, 'get_vk_physical_devices') ?
-	return to_v_array<C.VkPhysicalDevice>(devices, amount)
+	return to_v_array<VkPhysicalDevice>(devices, amount)
 }
 
 pub fn get_vk_physical_device_queue_family_properties(device C.VkPhysicalDevice) []C.VkQueueFamilyProperties {
 	amount := get_vk_physical_device_queue_family_properties_amount(device)
-	properties := create_c_array<C.VkQueueFamilyProperties>(amount)
+	properties := create_c_array<VkQueueFamilyProperties>(amount)
 	C.vkGetPhysicalDeviceQueueFamilyProperties(device, &amount, properties)
-	return to_v_array<C.VkQueueFamilyProperties>(properties, amount)
+	return to_v_array<VkQueueFamilyProperties>(properties, amount)
 }
 
 pub fn get_vk_instance_layer_properties() ?[]C.VkLayerProperties {
 	amount := get_vk_instance_layer_properties_amount() ?
-	properties := create_c_array<C.VkLayerProperties>(amount)
+	properties := create_c_array<VkLayerProperties>(amount)
 	result := C.vkEnumerateInstanceLayerProperties(&amount, properties)
 	handle_error(result, 'get_vk_instance_layer_properties') ?
-	return to_v_array<C.VkLayerProperties>(properties, amount)
+	return to_v_array<VkLayerProperties>(properties, amount)
 }
 
 pub fn get_vk_instance_extension_properties(layer_name string) ?[]C.VkExtensionProperties {
@@ -46,18 +46,18 @@ pub fn get_vk_instance_extension_properties(layer_name string) ?[]C.VkExtensionP
 	if layer_name.len == 0 {
 		name = charptr(0)
 	}
-	properties := create_c_array<C.VkExtensionProperties>(amount)
+	properties := create_c_array<VkExtensionProperties>(amount)
 	res := C.vkEnumerateInstanceExtensionProperties(name, &amount, properties)
 	handle_error(res, 'get_vk_instance_extension_properties') ?
-	return to_v_array<C.VkExtensionProperties>(properties, amount)
+	return to_v_array<VkExtensionProperties>(properties, amount)
 }
 
 pub fn get_vk_physical_device_surface_formats(device C.VkPhysicalDevice, surface C.VkSurfaceKHR) ?[]C.VkSurfaceFormatKHR {
 	amount := get_vk_physical_device_surface_formats_amount(device, surface) ?
-	formats := create_c_array<C.VkSurfaceFormatKHR>(amount)
+	formats := create_c_array<VkSurfaceFormatKHR>(amount)
 	res := C.vkGetPhysicalDeviceSurfaceFormatsKHR(device, surface, &amount, formats)
 	handle_error(res, 'get_vk_physical_device_surface_formats') ?
-	return to_v_array<C.VkSurfaceFormatKHR>(formats, amount)
+	return to_v_array<VkSurfaceFormatKHR>(formats, amount)
 }
 
 pub fn get_vk_physical_device_surface_present_modes(device C.VkPhysicalDevice, surface C.VkSurfaceKHR) ?[]VkPresentModeKHR {
@@ -70,23 +70,23 @@ pub fn get_vk_physical_device_surface_present_modes(device C.VkPhysicalDevice, s
 
 pub fn get_vk_swapchain_image(device C.VkDevice, swapchain C.VkSwapchainKHR) ?[]C.VkImage {
 	amount := get_vk_swapchain_image_amount(device, swapchain) ?
-	images := create_c_array<C.VkImage>(amount)
+	images := create_c_array<VkImage>(amount)
 	res := C.vkGetSwapchainImagesKHR(device, swapchain, &amount, images)
 	handle_error(res, 'get_vk_swapchain_image') ?
-	return to_v_array<C.VkImage>(images, amount)
+	return to_v_array<VkImage>(images, amount)
 }
 
 pub fn create_vk_graphics_pipelines(device C.VkDevice, cache C.VkPipelineCache, create_infos []C.VkGraphicsPipelineCreateInfo, alloc voidptr) ?[]C.VkPipeline {
-	mut pipelines := create_c_array<C.VkPipeline>(u32(create_infos.len))
+	mut pipelines := create_c_array<VkPipeline>(u32(create_infos.len))
 	res := C.vkCreateGraphicsPipelines(device, cache, create_infos.len, create_infos.data,
 		alloc, pipelines)
 	handle_error(res, 'create_vk_graphics_pipelines') ?
-	return to_v_array<C.VkPipeline>(pipelines, u32(create_infos.len))
+	return to_v_array<VkPipeline>(pipelines, u32(create_infos.len))
 }
 
 pub fn allocate_vk_command_buffers(device C.VkDevice, create_info &C.VkCommandBufferAllocateInfo) ?[]C.VkCommandBuffer {
-	mut buffers := create_c_array<C.VkCommandBuffer>(create_info.commandBufferCount)
+	mut buffers := create_c_array<VkCommandBuffer>(create_info.commandBufferCount)
 	res := C.vkAllocateCommandBuffers(device, create_info, buffers)
 	handle_error(res, 'allocate_vk_command_buffers') ?
-	return to_v_array<C.VkCommandBuffer>(buffers, create_info.commandBufferCount)
+	return to_v_array<VkCommandBuffer>(buffers, create_info.commandBufferCount)
 }

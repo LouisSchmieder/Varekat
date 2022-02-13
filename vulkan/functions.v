@@ -312,7 +312,7 @@ pub fn copy_buffer(src C.VkBuffer, dst C.VkBuffer, size u32, command_pool C.VkCo
 
 	submit_info := create_vk_submit_info(voidptr(0), [], [], [command_buffer], [])
 
-	vk_queue_submit(queue, [submit_info], null<C.VkFence>()) ?
+	vk_queue_submit(queue, [submit_info], null<VkFence>()) ?
 	vk_queue_wait_idle(queue)
 	vk_free_command_buffers(device, command_pool, buffers)
 }
@@ -342,7 +342,6 @@ pub fn find_memory_type_idx(filter u32, flags_array []MemoryPropertyFlagBits, de
 		eprint('\tRequired memory types: ')
 		misc.print_queue_flags(flags)
 	}
-
 
 	for i in 0 .. physical_device_props.memoryTypeCount {
 		prop_flag := unsafe { physical_device_props.memoryTypes[i].propertyFlags }
