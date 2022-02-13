@@ -39,6 +39,9 @@ start scripts\glfw_install_windows.bat
 ## Vulkan
 
 ### Linux
+
+**ATTENTION!** Make sure you have clang installed before run `vulkan_install_linux.sh` script.
+
 ```bash
 sh scripts/vulkan_install_linux.sh
 ```
