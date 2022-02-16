@@ -1,9 +1,6 @@
 module game
 
 import mathf
-import misc
-import json
-import os
 
 struct WorldLoad {
 	settings WorldSettings

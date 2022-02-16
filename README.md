@@ -39,6 +39,9 @@ start scripts\glfw_install_windows.bat
 ## Vulkan
 
 ### Linux
+
+**ATTENTION!** Make sure you have clang and ninja installed before run `vulkan_install_linux.sh` script.
+
 ```bash
 sh scripts/vulkan_install_linux.sh
 ```
@@ -52,6 +55,10 @@ sh scripts/vulkan_install_macos.sh
 ```shell
 start scripts\vulkan_install_windows.bat
 ```
+
+### Uninstalling
+
+You can use `scripts/vulkan_delete.sh` script to uninstall Vulkan. You can also remove it manually by deleting folder *vulkan* in *Varekat/libs*
 
 ### Alternative
 Alternative you can try to build the whole project and install all dependencies, by using <a href="https://github.com/LouisSchmieder/Vuild">Vuild</a>. But it's in an very alpha stage.

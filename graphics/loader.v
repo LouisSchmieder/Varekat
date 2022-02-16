@@ -1,7 +1,6 @@
 module graphics
 
 import misc
-import mathf
 import game.loader
 
 pub fn load_mesh(path string, mut progress misc.Progress) ?Mesh {
